@@ -1,0 +1,108 @@
+.cover {
+    height: 200px;
+    background: rgb(247,185,185);
+    background: linear-gradient(90deg, rgba(247,185,185,1) 0%, rgba(255,240,196,1) 50%, rgba(255,183,213,1) 100%);
+}
+
+.bg-primary {
+    background: rgb(247,185,185);
+    background: linear-gradient(90deg, rgba(247,185,185,1) 0%, rgba(255,240,196,1) 50%, rgba(255,183,213,1) 100%);
+}
+
+.navbar-nav.actions {
+    flex-direction: row;
+}
+
+.small {
+    color: rgba(97, 97, 97, 0.8);
+}
+
+.card .row {
+    width: 100%;
+}
+
+.alert {
+    margin-bottom: 30px;
+}
+
+#left {
+    padding: 3px;
+    margin-top: -150px;
+    flex: 0 0 300px;
+}
+
+#user .fa {
+    font-size: 20px;
+}
+
+#user #userImage {
+    height: 200px;
+}
+
+#user #renew {
+    display: block;
+    width: 100%;
+}
+
+#user .row {
+    width: auto;
+}
+
+#connections {
+    margin-top: 7px;
+}
+
+#connections .list {
+    margin: 15px 30px;
+}
+
+#connections .list .list-item {
+    width: 30px;
+    height: 30px;
+    margin: 5px;
+    color: #fff;
+    cursor: pointer;
+}
+
+#connections .list .list-item:hover {
+    background: #3d8b40;
+}
+
+#upcomingClasses .view {
+    flex: 0 0 60px;
+}
+
+#goals {
+    margin-top: 5px;
+}
+
+#goals .row .details {
+    flex: 0 0 60px;
+}
+
+#recentActivity {
+    margin-top: 5px;
+}
+
+#recentActivity em {
+    font-style: normal;
+    color: #4caf50;
+}
+
+#recentActivity .right {
+    flex: 0 0 100px;
+    height: 100%;
+}
+
+#recentActivity .right .view {
+    display: flex;
+    justify-content: center;
+}
+
+.notifs-holder {
+    margin-top: 10px;
+}
+
+body {
+    margin-bottom: 10px;
+}

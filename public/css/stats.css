@@ -1,0 +1,34 @@
+#holder {
+    background: rgb(255, 255, 255);
+}
+
+#pb-right {
+    background: rgb(67, 221, 67);
+    border: 3px whitesmoke;
+}
+
+#pb-wrong {
+    background: rgb(236, 124, 124);
+    border: 3px whitesmoke;
+}
+
+#pb-left {
+    background: gray;
+    border: 3px whitesmoke;
+}
+
+#stats_info_holder{
+    border: 2px dashed #fff;
+}
+
+.dropdown {
+    padding: 2px;
+}
+
+.chartholder {
+    background: #fff;
+}
+
+#score {
+    color: antiquewhite;
+}

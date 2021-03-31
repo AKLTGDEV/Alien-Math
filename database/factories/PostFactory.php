@@ -1,0 +1,44 @@
+<?php
+
+use Faker\Generator as Faker;
+use App\TagsModel;
+use App\UserModel;
+use App\numbersT;
+
+$factory->define(App\PostModel::class, function (Faker $faker) {
+    $tags_halfmark = floor(numbersT::tags() / 2);
+    $tag1 = TagsModel::where('id', rand(1, $tags_halfmark))->first();
+    $tag2 = TagsModel::where('id', rand($tags_halfmark + 1, numbersT::tags()))->first();
+    $tag3 = TagsModel::where('id', rand(1, numbersT::tags()))->first();
+    while ($tag3 == $tag1 || $tag3 == $tag2) {
+        $tag3 = TagsModel::where('id', rand(1, numbersT::tags()))->first();
+    }
+    $taglist = json_encode([$tag1->name, $tag2->name, $tag3->name]);
+    $opts = "[\"A\",\"B\"]";
+
+    $text_body = $faker->unique()->paragraph(3);
+    $body_md = md5($text_body);
+
+    $title = $faker->unique()->paragraph(1);
+
+    Storage::put("posts/" . $body_md, $text_body);
+
+    $author_id = rand(1, numbersT::users());
+    $author = UserModel::where('id', $author_id)->first();
+    $author->nos_Q++;
+    $author->save();
+
+    $pretext = $title . " Question by " . $author->username;
+
+    echo "Creating Post: " . $body_md . ".. [[ ${text_body} ]] \n";
+
+    return [
+        'text' => $body_md,
+        'opts' => $opts,
+        'tags' => $taglist,
+        'correctopt' => rand(1, 2),
+        'author' => $author_id,
+        'title' => $title,
+        'slug' => str_slug($pretext),
+    ];
+});
