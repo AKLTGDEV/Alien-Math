@@ -18,7 +18,7 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Online Classrooms / {{ config('app.name', 'Crowdoubt') }}</title>
+    <title>Online Classrooms / {{ config('app.name', 'Alien Math') }}</title>
     <link rel="stylesheet" href="wlc-assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -27,9 +27,9 @@
 
     <meta property="og:type" content="website" />
     <meta property="og:url" content="{{ Request::url() }}" />
-    <meta property="og:site_name" content="{{ config('app.name', 'Crowdoubt') }}" />
+    <meta property="og:site_name" content="{{ config('app.name', 'Alien Math') }}" />
     <meta property="og:image" itemprop="image primaryImageOfPage" content="{{ config('app.url') }}/favicon.png" />
-    <meta property="og:title" content="Online Classrooms / {{ config('app.name', 'Crowdoubt') }}" />
+    <meta property="og:title" content="Online Classrooms / {{ config('app.name', 'Alien Math') }}" />
 
     <link rel="icon" type="image/png" href="{{ config('app.url') }}/favicon.png" />
     <link href='//fonts.googleapis.com/css?family=Merriweather|Montserrat:400,700|Dancing+Script:400,700' rel='stylesheet' type='text/css'>
@@ -65,7 +65,7 @@
             <a class="navbar-brand" href="{{ url('/') }}">
                 <img src="{{ config('app.url') }}/favicon.png" height="30" alt="CD">
                 <div class="d-none d-sm-inline-block">
-                    {{ config('app.name', 'Crowdoubt') }}
+                    {{ config('app.name', 'Alien Math') }}
                 </div>
             </a>
             <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1">
@@ -94,7 +94,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-xl-9 mx-auto">
-                    <h1 class="mb-5 title_hd">CrowDoubt</h1>
+                    <h1 class="mb-5 title_hd">Alien Math</h1>
                     <p style="font-size: 28px;">Community-driven classrooms</p>
                 </div>
             </div>
@@ -139,7 +139,7 @@
             <div class="row no-gutters">
                 <div class="col-lg-6 text-white showcase-img" style="background-image:url(&quot;wlc-assets/img/2.png&quot;);"><span></span></div>
                 <div class="col-lg-6 my-auto order-lg-1 showcase-text">
-                    <h2>Why CrowDoubt?</h2>
+                    <h2>Why Alien Math?</h2>
                     <p class="lead mb-0">Existing classroom systems act more like chatting apps plus the feature of sending/recieving documents. In fact, most students prefer classes and tests to be conducted over regular video-calling apps instead. We aim to create a rich
                         classroom environment for the students and teachers, where they can collaborate freely.</p>
                 </div>
@@ -219,13 +219,13 @@
                         <li class="list-inline-item"><span>⋅</span></li>
                         <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
                     </ul>
-                    <p class="text-muted small mb-4 mb-lg-0">© CrowDoubt 2020. All Rights Reserved.</p>
+                    <p class="text-muted small mb-4 mb-lg-0">© Alien Math 2020. All Rights Reserved.</p>
                 </div>
                 <div class="col-lg-6 my-auto h-100 text-center text-lg-right">
                     <ul class="list-inline mb-0">
                         <li class="list-inline-item"><a href="#"><i class="fa fa-facebook fa-2x fa-fw"></i></a></li>
                         <li class="list-inline-item"><a href="https://twitter.com/hatless_hacker"><i class="fa fa-twitter fa-2x fa-fw"></i></a></li>
-                        <li class="list-inline-item"><a href="https://www.instagram.com/crowdoubt"><i class="fa fa-instagram fa-2x fa-fw"></i></a></li>
+                        <li class="list-inline-item"><a href="https://www.instagram.com/Alien Math"><i class="fa fa-instagram fa-2x fa-fw"></i></a></li>
                     </ul>
                 </div>
             </div>
