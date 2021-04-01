@@ -117,6 +117,14 @@ class searchindex extends Command
             $tags_indexer = $tnt->createIndex('tags.index');
             $tags_indexer->query('SELECT id, name FROM tags;');
             $tags_indexer->run();
+
+            $saq_indexer = $tnt->createIndex('saq.index');
+            $saq_indexer->query('SELECT id, digest FROM SAQ;');
+            $saq_indexer->run();
+
+            /*$sqa_indexer = $tnt->createIndex('sqa.index');
+            $sqa_indexer->query('SELECT id, digest FROM SQA;');
+            $sqa_indexer->run();*/
         }
     }
 }

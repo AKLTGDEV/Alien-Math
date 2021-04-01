@@ -73,9 +73,10 @@ Route::get('/posts/view/{id}', 'PostController@view')->name('viewpost');
 Route::get('/posts/view/{id}/image', 'PostController@viewimage')->name('viewpostimage');
 Route::get('/posts/new', 'PostController@new')->name('newpost');
 Route::post('/posts/new', 'PostController@new_validate')->name('newpostsubmit');
-
 Route::any('/posts/answer', 'PostController@answer')->name('answerpost');
 
+Route::get('/saq/new', 'SAQController@new')->name('newsaq');
+Route::post('/saq/new', 'SAQController@new_submit')->name('newsaqsubmit');
 
 Route::get('/user/{uname}/follow', 'ProfileController@follow')->name('userfollow');
 Route::get('/user/{uname}/unfollow', 'ProfileController@unfollow')->name('userunfollow');

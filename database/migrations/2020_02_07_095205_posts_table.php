@@ -26,6 +26,15 @@ class PostsTable extends Migration
             /*$table->string('attemptees')->default("[]");*/
             $table->bigInteger('success')->default(0);
             $table->string('title')->default("--");
+
+            $table->enum("type", [
+                "P1", "P2", "P3", "P4", "P5", "P6",
+                "S1", "S2", "S3", "S4",
+            ]);
+            $table->enum("difficulty", [
+                1, 2, 3
+            ]);
+
             $table->timestamps();
         });
     }

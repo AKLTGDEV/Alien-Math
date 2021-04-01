@@ -188,7 +188,12 @@
                     <ul class="dropdown-menu" role="menu">
                         <li>
                             <a class="dropdown-item" href="{{ route('newpost') }}">
-                                Post Question
+                                Post MCQ
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('newsaq') }}">
+                                Post SAQ
                             </a>
                         </li>
                         <li>
