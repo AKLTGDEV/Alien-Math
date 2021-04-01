@@ -76,6 +76,8 @@ Route::post('/posts/new', 'PostController@new_validate')->name('newpostsubmit');
 Route::any('/posts/answer', 'PostController@answer')->name('answerpost');
 Route::get('/posts/upload', 'PostController@upload')->name('uploadpost');
 Route::post('/posts/upload', 'PostController@upload_validate')->name('uploadpost.validate');
+Route::get('/posts/edit/{id}', 'PostController@edit')->name('editpost');
+Route::post('/posts/edit/{id}', 'PostController@edit_submit')->name('editpost.submit');
 
 Route::get('/saq/new', 'SAQController@new')->name('newsaq');
 Route::post('/saq/new', 'SAQController@new_submit')->name('newsaqsubmit');

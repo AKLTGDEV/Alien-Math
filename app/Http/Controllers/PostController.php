@@ -219,6 +219,77 @@ class PostController extends Controller
         return posts::get($id);
     }
 
+    public function edit($id)
+    {
+        $question = PostModel::where("id", $id)->first();
+
+        if ($question != null) {
+            $opts = json_decode($question->opts);
+
+            return view("post.edit", [
+                "searchbar" => false,
+                "question" => $question,
+                "tags_suggested" => tags::top20(),
+                "opts" => $opts,
+            ]);
+        } else {
+            return abort(404);
+        }
+    }
+
+    public function edit_submit(Request $request, $id)
+    {
+        $question = PostModel::where("id", $id)->first();
+
+        if ($question != null) {
+
+            /***
+             * 
+             * Error Checking :: FIXME
+             * 
+             */
+
+            $all = $request->all();
+            $author = Auth::user();
+
+            $post = $question;
+
+            //$options = [$all['option1'], $all['option2']];
+            $options = [];
+            for ($i = 1; $i <= $all['opt_nos']; $i++) {
+                array_push($options, $all['option' . $i]);
+            }
+
+            $options = json_encode($options);
+
+            $tags = explode(",", $all['question_tags']);
+            $tags_new = array();
+            foreach ($tags as $tag) {
+                $tag = trim($tag);
+                $tag_entry = TagsModel::where('name', $tag)->first();
+                array_push($tags_new, $tag_entry->name);
+            }
+            $tags = $tags_new;
+
+            $correct_opt = $all['correct'];
+
+            $author->nos_Q++;
+            $author->save();
+            $post->opts = $options;
+            $post->correctopt = $correct_opt;
+            $post->tags = json_encode($tags);
+            $post->title = $all['title'];
+
+            Storage::put("posts/" . $post->text, $all['Qbody']);
+
+            $post->save(); //Hopefully.
+
+            return redirect()->route("viewpost", [$post->id]);
+        } else {
+            return abort(404);
+        }
+    }
+
     public function upload()
     {
         return view("post.upload", [

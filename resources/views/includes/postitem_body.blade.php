@@ -47,6 +47,9 @@
         `;
         if(feeditem.own == true){
             header_string = `
+            <a href="{{ config('app.url') }}/posts/edit/${pid}" id="XYZ" class="dropdown-item" role="presentation">
+                &nbsp;Edit
+            </a>
             <a href="#" id="XYZ" class="dropdown-item text-danger" role="presentation">
                 &nbsp;Delete Post
             </a>

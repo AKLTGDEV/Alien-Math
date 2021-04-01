@@ -8,32 +8,18 @@ class PostModel extends Model
 {
     protected $table = 'posts';
 
-    public static function boot()
+    public function getBody()
     {
-        parent::boot();
+        $post_body = posts::getbody($this->text);
 
-        self::creating(function ($model) {
-            //
-        });
+        $img_present = false;
+        if (strpos($post_body, '<img style=') !== false) {
+            $img_present = true;
+        }
 
-        self::created(function ($model) {
-            // UPDATE AUTHOR'S NEWSFEED
-        });
+        // Normalize the images
+        $body_new = str_replace('<img style=', '<img id="postimg-' . $this->id . '" class="img-fluid" style=', $post_body);
 
-        self::updating(function ($model) {
-            // ... code here
-        });
-
-        self::updated(function ($model) {
-            // ... code here
-        });
-
-        self::deleting(function ($model) {
-            // ... code here
-        });
-
-        self::deleted(function ($model) {
-            // ... code here
-        });
+        return $body_new;
     }
 }
