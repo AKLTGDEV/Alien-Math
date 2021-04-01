@@ -114,4 +114,47 @@ class SAQController extends Controller
             ]);
         }
     }
+
+    public function edit(Request $request)
+    {
+        $q = SAQ::where("id", $request->id)->first();
+        if ($q != null) {
+            return view('saq.edit', [
+                "topics" => tags::top20(),
+                "question" => $q,
+            ]);
+        } else {
+            return abort(404);
+        }
+    }
+
+    public function edit_submit(Request $request, $id)
+    {
+        $q = SAQ::where("id", $request->id)->first();
+        if ($q != null) {
+            $validator = Validator::make($request->all(), [
+                'body' => ['required', 'string'],
+                'explanation' => ['required', 'string'],
+                'correct' => ['required', 'string'],
+                'topics'  => ['required'],
+
+                'grade' => ['required', 'string'],
+                'difficulty' => ['required', 'integer'],
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+
+            $data = $validator->validated();
+
+            $q->data_update($data);
+
+            return redirect()->route("namedprofile", [Auth::user()->username]);
+        } else {
+            return abort(404);
+        }
+    }
 }

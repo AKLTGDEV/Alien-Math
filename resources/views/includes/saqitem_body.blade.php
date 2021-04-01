@@ -14,6 +14,9 @@
                 <a href="#" id="XYZ" class="dropdown-item" role="presentation">
                     &nbsp;Report
                 </a>
+                <a href="{{ config('app.url') }}/saq/edit/${feeditem.id}" id="XYZ" class="dropdown-item" role="presentation">
+                    &nbsp;Edit
+                </a>
             </div>
         </div>
     </div>
