@@ -210,7 +210,13 @@
 
                         <li>
                             <a class="dropdown-item" href="{{ route('uploadsaq') }}">
-                                Upload SAQ
+                                Upload SAQs
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item" href="{{ route('uploadsqa') }}">
+                                Upload SQAs
                             </a>
                         </li>
 

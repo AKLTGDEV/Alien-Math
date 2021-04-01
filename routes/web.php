@@ -85,6 +85,8 @@ Route::post('/saq/upload', 'SAQController@upload_validate')->name('uploadsaq.val
 
 Route::get('/sqa/new', 'SQAController@new')->name('newsqa');
 Route::post('/sqa/new', 'SQAController@new_submit')->name('newsqasubmit');
+Route::get('/sqa/upload', 'SQAController@upload')->name('uploadsqa');
+Route::post('/sqa/upload', 'SQAController@upload_validate')->name('uploadsqa.validate');
 
 Route::get('/user/{uname}/follow', 'ProfileController@follow')->name('userfollow');
 Route::get('/user/{uname}/unfollow', 'ProfileController@unfollow')->name('userunfollow');

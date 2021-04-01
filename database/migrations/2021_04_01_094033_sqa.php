@@ -29,7 +29,7 @@ class Sqa extends Migration
             $table->string("O4");
 
             $table->string("topics");
-            $table->string("digest")->nullable();
+            $table->longText("digest")->nullable();
             $table->string("uploader"); //username
 
             $table->timestamps();

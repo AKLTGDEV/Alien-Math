@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
+use League\Csv\Reader;
 
 class SQAController extends Controller
 {
@@ -65,5 +66,53 @@ class SQAController extends Controller
             "status" => "success",
             "message" => "SQA Posted",
         ]);
+    }
+
+    public function upload()
+    {
+        return view("sqa.upload", [
+            "searchbar" => false,
+            "tags_suggested" => tags::top20(),
+        ]);
+    }
+
+    public function upload_validate(Request $request)
+    {
+        $author = Auth::user();
+
+        if ($request->file('csv')->isValid()) {
+            $csv_uploaded = $request->file('csv')->path();
+
+            //load the CSV document from a file path
+            $csv = Reader::createFromPath($csv_uploaded, 'r');
+            $csv->setHeaderOffset(0);
+
+            $header = $csv->getHeader(); //returns the CSV header record
+            $records = $csv->getRecords(); //returns all the CSV records as an Iterator object
+
+            $count = 0;
+            foreach ($records as $record) {
+
+                //Each row is a seperate Question.
+                SQA::new([
+                    "body" => $record['question'],
+                    "O1" => $record['O1'],
+                    "O2" => $record['O2'],
+                    "O3" => $record['O3'],
+                    "O4" => $record['O4'],
+                    "grade" => $record['grade'],
+                    "difficulty" => $record['difficulty'],
+                    "topics" => $record['tags'],
+                    "explanation" => $record['explanation']
+                ]);
+
+                $count++;
+            }
+
+            return Redirect::to(route('namedprofile', [$author->username]))->with([
+                "status" => "success",
+                "message" => $count . " SQAs Uploaded",
+            ]);
+        }
     }
 }
