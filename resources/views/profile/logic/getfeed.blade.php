@@ -1,6 +1,7 @@
 @include('includes.wsitem_body')
 @include('includes.postitem_body')
 @include('includes.saqitem_body')
+@include('includes.sqaitem_body')
 
 <script>
     jQuery(document).ready(function($) {
@@ -106,7 +107,7 @@
 
                         `);
                         } else if (feeditem.itemT == "ws") {
-                            
+
 
                             $("#feed_holder").append(`
 <div class="feed_item">
@@ -119,6 +120,13 @@
 <div class="feed_item">
     ${feeditem.pretext}
     ${saqitem_body(feeditem)}
+</div>
+                            `);
+                        } else if (feeditem.itemT == "SQA") {
+                            $("#feed_holder").append(`
+<div class="feed_item">
+    ${feeditem.pretext}
+    ${sqaitem_body(feeditem)}
 </div>
                             `);
                         }

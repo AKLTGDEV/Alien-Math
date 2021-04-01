@@ -5,6 +5,7 @@ namespace App\profile;
 use App\activitylog;
 use App\posts;
 use App\SAQ;
+use App\SQA;
 use App\WorksheetModel;
 use App\worksheets;
 use Carbon\Carbon;
@@ -70,6 +71,9 @@ class actilog
             } else if ($type == "7") {
                 //SAQ
                 $item_type = "SAQ";
+            } else if ($type == "8") {
+                //SQA
+                $item_type = "SQA";
             }
             $item_id = $actilog_item['id'];
 
@@ -131,6 +135,17 @@ class actilog
 
                 if ($type == "7") {
                     $current['pretext'] = "$user->name posted this SAQ " . $current['samay'];
+                }
+
+                array_push($FEED, $current);
+            }
+            if ($type == "8") { //SQA
+                $current = SQA::get($actilog_item['id']);
+                $current['type'] = $type;
+                $current['samay'] = Carbon::parse($actilog_item['datetime'])->diffForHumans();
+
+                if ($type == "8") {
+                    $current['pretext'] = "$user->name posted this SQA " . $current['samay'];
                 }
 
                 array_push($FEED, $current);

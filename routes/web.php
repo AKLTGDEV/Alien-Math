@@ -78,6 +78,9 @@ Route::any('/posts/answer', 'PostController@answer')->name('answerpost');
 Route::get('/saq/new', 'SAQController@new')->name('newsaq');
 Route::post('/saq/new', 'SAQController@new_submit')->name('newsaqsubmit');
 
+Route::get('/sqa/new', 'SQAController@new')->name('newsqa');
+Route::post('/sqa/new', 'SQAController@new_submit')->name('newsqasubmit');
+
 Route::get('/user/{uname}/follow', 'ProfileController@follow')->name('userfollow');
 Route::get('/user/{uname}/unfollow', 'ProfileController@unfollow')->name('userunfollow');
 Route::get('/user/{uname}', function ($uname) {

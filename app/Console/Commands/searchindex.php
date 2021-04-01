@@ -122,9 +122,9 @@ class searchindex extends Command
             $saq_indexer->query('SELECT id, digest FROM SAQ;');
             $saq_indexer->run();
 
-            /*$sqa_indexer = $tnt->createIndex('sqa.index');
+            $sqa_indexer = $tnt->createIndex('sqa.index');
             $sqa_indexer->query('SELECT id, digest FROM SQA;');
-            $sqa_indexer->run();*/
+            $sqa_indexer->run();
         }
     }
 }

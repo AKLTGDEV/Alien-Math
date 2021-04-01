@@ -197,6 +197,11 @@
                             </a>
                         </li>
                         <li>
+                            <a class="dropdown-item" href="{{ route('newsqa') }}">
+                                Post SQA
+                            </a>
+                        </li>
+                        <li>
                             <a class="dropdown-item" href="{{ route('createworksheet') }}">
                                 Create Worksheet
                             </a>

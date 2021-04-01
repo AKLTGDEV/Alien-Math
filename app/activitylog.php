@@ -31,6 +31,8 @@ class activitylog
      * 
      * (New addition, Alien Math)
      * Type: 7 = User has posted an SAQ
+     * Type: 8 = User has posted an SQA
+     * 
      */
 
     public static function get($uname)
@@ -144,6 +146,20 @@ class activitylog
         array_push($actilog, [
             "datetime" => $time->toDateTimeString(),
             "type" => 7,
+            "id" => $id
+        ]);
+
+        activitylog::put($uname, $actilog);
+    }
+
+    public static function post_sqa($uname, $id)
+    {
+        // TYPE 8.
+        $time = Carbon\Carbon::now();
+        $actilog = activitylog::get($uname);
+        array_push($actilog, [
+            "datetime" => $time->toDateTimeString(),
+            "type" => 8,
             "id" => $id
         ]);
 
