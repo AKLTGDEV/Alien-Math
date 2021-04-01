@@ -25,7 +25,7 @@ class Saq extends Migration
 
             $table->string("correct");
             $table->string("topics");
-            $table->string("digest")->nullable();
+            $table->longText("digest")->nullable();
             $table->string("uploader"); //username
 
             $table->timestamps();

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
+use League\Csv\Reader;
 
 class SAQController extends Controller
 {
@@ -36,7 +37,6 @@ class SAQController extends Controller
 
     public function new_submit(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'body' => ['required', 'string'],
             'explanation' => ['required', 'string'],
@@ -68,5 +68,50 @@ class SAQController extends Controller
             "status" => "success",
             "message" => "SAQ Posted",
         ]);
+    }
+
+    public function upload()
+    {
+        return view("saq.upload", [
+            "searchbar" => false,
+            "tags_suggested" => tags::top20(),
+        ]);
+    }
+
+    public function upload_validate(Request $request)
+    {
+        $author = Auth::user();
+
+        if ($request->file('csv')->isValid()) {
+            $csv_uploaded = $request->file('csv')->path();
+
+            //load the CSV document from a file path
+            $csv = Reader::createFromPath($csv_uploaded, 'r');
+            $csv->setHeaderOffset(0);
+
+            $header = $csv->getHeader(); //returns the CSV header record
+            $records = $csv->getRecords(); //returns all the CSV records as an Iterator object
+
+            $count = 0;
+            foreach ($records as $record) {
+
+                //Each row is a seperate Question.
+                SAQ::new([
+                    "body" => $record['question'],
+                    "correct" => $record['correct'],
+                    "grade" => $record['grade'],
+                    "difficulty" => $record['difficulty'],
+                    "topics" => $record['tags'],
+                    "explanation" => $record['explanation']
+                ]);
+
+                $count++;
+            }
+
+            return Redirect::to(route('namedprofile', [$author->username]))->with([
+                "status" => "success",
+                "message" => $count . " SAQs Uploaded",
+            ]);
+        }
     }
 }

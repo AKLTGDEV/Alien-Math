@@ -79,6 +79,9 @@ Route::post('/posts/upload', 'PostController@upload_validate')->name('uploadpost
 
 Route::get('/saq/new', 'SAQController@new')->name('newsaq');
 Route::post('/saq/new', 'SAQController@new_submit')->name('newsaqsubmit');
+Route::get('/saq/upload', 'SAQController@upload')->name('uploadsaq');
+Route::post('/saq/upload', 'SAQController@upload_validate')->name('uploadsaq.validate');
+
 
 Route::get('/sqa/new', 'SQAController@new')->name('newsqa');
 Route::post('/sqa/new', 'SQAController@new_submit')->name('newsqasubmit');

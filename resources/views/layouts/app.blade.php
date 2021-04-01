@@ -209,6 +209,12 @@
                         </li>
 
                         <li>
+                            <a class="dropdown-item" href="{{ route('uploadsaq') }}">
+                                Upload SAQ
+                            </a>
+                        </li>
+
+                        <li>
                             <a class="dropdown-item" href="{{ route('createworksheet') }}">
                                 Create Worksheet
                             </a>

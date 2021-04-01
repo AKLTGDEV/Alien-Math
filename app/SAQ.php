@@ -3,6 +3,8 @@
 namespace App;
 
 //use Html2Text\Html2Text;
+
+use Html2Text\Html2Text;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
@@ -49,9 +51,9 @@ class SAQ extends Model
 
     public static function new($data)
     {
-        //$digest = new Html2Text($data['body']);
-        //$digest = $digest->getText();
-        $digest = $data['body'];
+        $digest = new Html2Text($data['body']);
+        $digest = $digest->getText();
+        //$digest = $data['body'];
         $digest = str_replace("_", " ", $digest);
         $digest = strtolower($digest);
 
@@ -75,9 +77,9 @@ class SAQ extends Model
 
     public function data_update($data)
     {
-        //$digest = new Html2Text($data['body']);
-        //$digest = $digest->getText();
-        $digest = $data['body'];
+        $digest = new Html2Text($data['body']);
+        $digest = $digest->getText();
+        //$digest = $data['body'];
         $digest = str_replace("_", " ", $digest);
         $digest = strtolower($digest);
 
