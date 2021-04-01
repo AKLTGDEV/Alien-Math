@@ -5,6 +5,7 @@ namespace App;
 //use Html2Text\Html2Text;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use TeamTNT\TNTSearch\TNTSearch;
 
@@ -67,6 +68,9 @@ class SAQ extends Model
         $q->SaveBody($data['body']);
         $q->SaveExplanation($data['explanation']);
         $q->updateindex();
+
+        //Update Activity Log
+        activitylog::post_saq(Auth::user()->username, $q->id);
     }
 
     public function data_update($data)
@@ -143,5 +147,28 @@ class SAQ extends Model
             'id' => $this->id,
             'digest' => $this->digest,
         ]);
+    }
+
+    public static function get($id)
+    {
+        $app_url = Config::get('app.url');
+        $q = SAQ::where("id", $id)->first();
+        if ($q != null) {
+            $author = UserModel::where("username", $q->uploader)->first();
+
+            return [
+                "id" => $id,
+                "itemT" => "SAQ",
+                "body" => $q->GetBody(),
+                "type" => $q->type,
+                "difficulty" => $q->difficulty,
+                "tags" => json_encode(explode(",", $q->topics)),
+                'name' => $author->name,
+                'username' => $author->username,
+                'profilepic' => "{$app_url}/user/{$author->username}/profilepic",
+            ];
+        }
+
+        return null;
     }
 }

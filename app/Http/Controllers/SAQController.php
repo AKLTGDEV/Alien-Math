@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\activitylog;
+use App\profile\actilog;
 use App\SAQ;
 use App\tags;
 use Illuminate\Http\Request;

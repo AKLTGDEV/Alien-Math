@@ -28,6 +28,9 @@ class activitylog
      * Type: 4 = User has answered a WS
      * Type: 5 = User has followed somebody (not yet)
      * Type: 6 = User has been followed by somebody (not yet)
+     * 
+     * (New addition, Alien Math)
+     * Type: 7 = User has posted an SAQ
      */
 
     public static function get($uname)
@@ -131,5 +134,19 @@ class activitylog
         }
 
         activitylog::put($uname, $actilog_new);
+    }
+
+    public static function post_saq($uname, $id)
+    {
+        // TYPE 7.
+        $time = Carbon\Carbon::now();
+        $actilog = activitylog::get($uname);
+        array_push($actilog, [
+            "datetime" => $time->toDateTimeString(),
+            "type" => 7,
+            "id" => $id
+        ]);
+
+        activitylog::put($uname, $actilog);
     }
 }

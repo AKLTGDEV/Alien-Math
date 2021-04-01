@@ -4,6 +4,7 @@ namespace App\profile;
 
 use App\activitylog;
 use App\posts;
+use App\SAQ;
 use App\WorksheetModel;
 use App\worksheets;
 use Carbon\Carbon;
@@ -66,10 +67,13 @@ class actilog
                 $item_type = "post";
             } else if ($type == "2" || $type == "4") {
                 $item_type = "WS";
+            } else if ($type == "7") {
+                //SAQ
+                $item_type = "SAQ";
             }
             $item_id = $actilog_item['id'];
 
-            if($DISP_SETTINGS == "UNIQUE"){
+            if ($DISP_SETTINGS == "UNIQUE") {
                 if (actilog::item_seen($idx, $item_type, $item_id)) {
                     $i++;
                     continue;
@@ -116,6 +120,17 @@ class actilog
                     $current['mine'] = true;
                 } else {
                     $current['mine'] = false;
+                }
+
+                array_push($FEED, $current);
+            }
+            if ($type == "7") { //SAQ
+                $current = SAQ::get($actilog_item['id']);
+                $current['type'] = $type;
+                $current['samay'] = Carbon::parse($actilog_item['datetime'])->diffForHumans();
+
+                if ($type == "7") {
+                    $current['pretext'] = "$user->name posted this SAQ " . $current['samay'];
                 }
 
                 array_push($FEED, $current);
