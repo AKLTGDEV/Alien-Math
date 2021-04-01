@@ -115,4 +115,51 @@ class SQAController extends Controller
             ]);
         }
     }
+
+    public function edit(Request $request)
+    {
+        $q = SQA::where("id", $request->id)->first();
+        if ($q != null) {
+            return view('sqa.edit', [
+                "topics" => tags::top20(),
+                "question" => $q,
+            ]);
+        } else {
+            return abort(404);
+        }
+    }
+
+    public function edit_submit(Request $request, $id)
+    {
+        $q = SQA::where("id", $request->id)->first();
+        if ($q != null) {
+            $validator = Validator::make($request->all(), [
+                'body' => ['required', 'string'],
+                'explanation' => ['required', 'string'],
+                'O1' => ['required', 'string'],
+                'O2' => ['required', 'string'],
+                'O3' => ['required', 'string'],
+                'O4' => ['required', 'string'],
+
+                'topics'  => ['required'],
+
+                'grade' => ['required', 'string'],
+                'difficulty' => ['required', 'integer'],
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+
+            $data = $validator->validated();
+
+            $q->data_update($data);
+
+            return redirect()->route("namedprofile", [Auth::user()->username]);
+        } else {
+            return abort(404);
+        }
+    }
 }
