@@ -201,6 +201,13 @@
                                 Post SQA
                             </a>
                         </li>
+
+                        <li>
+                            <a class="dropdown-item" href="{{ route('uploadpost') }}">
+                                Upload MCQs
+                            </a>
+                        </li>
+
                         <li>
                             <a class="dropdown-item" href="{{ route('createworksheet') }}">
                                 Create Worksheet

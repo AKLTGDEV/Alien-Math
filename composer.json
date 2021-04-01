@@ -11,7 +11,9 @@
         "laravel/framework": "5.7.*",
         "laravel/socialite": "^3.2.0",
         "laravel/tinker": "~1.0",
-        "teamtnt/tntsearch": "^2.3"
+        "teamtnt/tntsearch": "^2.3",
+        "league/csv": "^9.6",
+        "html2text/html2text": "^4.3"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.3",

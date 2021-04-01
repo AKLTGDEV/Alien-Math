@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Validator;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
+use League\Csv\Reader;
 use TeamTNT\TNTSearch\TNTSearch;
 
 class PostController extends Controller
@@ -213,7 +214,80 @@ class PostController extends Controller
         }
     }
 
-    public function api_getinfo(Request $request, $id){
+    public function api_getinfo(Request $request, $id)
+    {
         return posts::get($id);
+    }
+
+    public function upload()
+    {
+        return view("post.upload", [
+            "searchbar" => false,
+            "tags_suggested" => tags::top20(),
+        ]);
+    }
+
+    public function upload_validate(Request $request)
+    {
+        $author = Auth::user();
+        if ($request->file('csv')->isValid()) {
+            $csv_uploaded = $request->file('csv')->path();
+
+            //load the CSV document from a file path
+            $csv = Reader::createFromPath($csv_uploaded, 'r');
+            $csv->setHeaderOffset(0);
+
+            $header = $csv->getHeader(); //returns the CSV header record
+            $records = $csv->getRecords(); //returns all the CSV records as an Iterator object
+
+            $count = 0;
+            foreach ($records as $record) {
+                //Each row is a seperate Question.
+                $post = posts::newsubmit([
+                    "Qbody" => $record['question'],
+                    "option1" => $record['O1'],
+                    "option2" => $record['O2'],
+                    "option3" => $record['O3'],
+                    "option4" => $record['O4'],
+                    "correct" => $record['correct'],
+                    "grade" => $record['grade'],
+                    "difficulty" => $record['difficulty'],
+                    "question_tags" => $record['tags'],
+                    "opt_nos" => 4,
+                    "title" => "...", //TODO
+                    //"explanation" => $record['explanation']
+                ], $author, false);
+
+                $pretext = "$post->title MCQ by $author->username $post->id";
+                $post->slug = str_slug($pretext);
+                $post->save();
+
+                rating::update($author->username);
+
+                $tnt = new TNTSearch;
+                $tnt->loadConfig([
+                    'driver'    => 'mysql',
+                    'host'      => env('DB_HOST', '127.0.0.1'),
+                    'database'  => env('DB_DATABASE', 'forge'),
+                    'username'  => env('DB_USERNAME', 'forge'),
+                    'password'  => env('DB_PASSWORD', ''),
+                    'storage'   => storage_path('app') . "/indices//",
+                ]);
+                $tnt->selectIndex("posts.index");
+                $index = $tnt->getIndex();
+
+                $index->insert([
+                    'id' => $post->id,
+                    'title' => $post->title
+                ]); // Not Now..
+
+                $count++;
+            }
+
+            return Redirect::to(route('namedprofile', [$author->username]))->with([
+                "status" => "success",
+                "message" => $count . " MCQs Uploaded",
+            ]);
+        }
     }
 }

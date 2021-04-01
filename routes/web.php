@@ -74,6 +74,8 @@ Route::get('/posts/view/{id}/image', 'PostController@viewimage')->name('viewpost
 Route::get('/posts/new', 'PostController@new')->name('newpost');
 Route::post('/posts/new', 'PostController@new_validate')->name('newpostsubmit');
 Route::any('/posts/answer', 'PostController@answer')->name('answerpost');
+Route::get('/posts/upload', 'PostController@upload')->name('uploadpost');
+Route::post('/posts/upload', 'PostController@upload_validate')->name('uploadpost.validate');
 
 Route::get('/saq/new', 'SAQController@new')->name('newsaq');
 Route::post('/saq/new', 'SAQController@new_submit')->name('newsaqsubmit');
