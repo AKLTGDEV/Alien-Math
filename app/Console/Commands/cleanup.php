@@ -60,5 +60,7 @@ class cleanup extends Command
         Storage::deleteDirectory("TS");
         Storage::deleteDirectory("QB_questions");
         Storage::deleteDirectory("QB_tests");
+        Storage::deleteDirectory("saq");
+        Storage::deleteDirectory("sqa");
     }
 }
