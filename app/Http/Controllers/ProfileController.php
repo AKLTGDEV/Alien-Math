@@ -11,6 +11,7 @@ use App\profile\actilog;
 use App\profile\classic;
 use App\rating;
 use App\relations;
+use App\tags;
 use App\TSModel;
 use App\worksheets;
 use App\UserModel;
@@ -116,6 +117,8 @@ class ProfileController extends Controller
             "following_flag" => $following_flag,
             "newuser" => $first_time,
             "TS" => $TS_list,
+
+            "tags_suggested" => tags::top20(),
 
             "searchbar" => true
         ]);

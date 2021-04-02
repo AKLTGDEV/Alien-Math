@@ -190,59 +190,44 @@ class SearchController extends Controller
          * Check if the gathered results have the filters applicable
          * 
          */
-        /*$final = [];
+        $final = [];
 
         foreach ($results as $r) {
-            $grade_flag = false;
-            $difficulty_flag = false;
-            $topics_flag = false;
-            //Only when all 3 flags are set, would the element show up
-
             if ($request->grade != "X") {
                 if ($r->type == $request->grade) {
-                    $grade_flag = true;
+                    //good. proceed
                 } else {
+                    //This result is specifically what the user DID NOT want
                     continue;
                 }
-            } else {
-                $grade_flag = true;
             }
 
             if ($request->difficulty != "X") {
                 if ($r->difficulty == $request->difficulty) {
-                    $difficulty_flag = true;
+                    //good. proceed
                 } else {
+                    //This result is specifically what the user DID NOT want
                     continue;
                 }
-            } else {
-                $difficulty_flag = true;
             }
 
-            if ($request->topics != null) {
+            /*if ($request->topics != null) {
                 foreach (explode(",", $request->topics) as $t) {
                     if ($r->hasTopic($t)) {
                         $topics_flag = true;
                     }
                 }
-            } else {
-                $topics_flag = true;
-            }
+            }*/
+            // TODO FIXME
 
-            if ($grade_flag && $difficulty_flag && $topics_flag) {
-                $final[] = $r;
-            }
-        }*/
+            $final[] = $r;
+        }
+
 
         return view("qsearchresults", [
-            "results" => $results,
-            "exec_time" => round($exec_time, 3),
-            "hits" => count($results),
-        ]);
-
-        /*return view("search", [
             "results" => $final,
             "exec_time" => round($exec_time, 3),
             "hits" => count($final),
-        ]);*/
+        ]);
     }
 }
