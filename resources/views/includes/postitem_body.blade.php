@@ -41,7 +41,7 @@
         }
 
         header_string = `
-        <a href="#" id="XYZ" class="dropdown-item" role="presentation">
+        <a href="{{ config('app.url') }}/report/mcq/${pid}" id="XYZ" class="dropdown-item" role="presentation">
             &nbsp;Report
         </a>
         `;

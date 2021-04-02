@@ -100,6 +100,11 @@ Route::get('/question/mcq/{id}', 'QuestionController@view_mcq')->name('question.
 Route::get('/question/saq/{id}', 'QuestionController@view_saq')->name('question.SAQ');
 Route::get('/question/sqa/{id}', 'QuestionController@view_sqa')->name('question.SQA');
 
+Route::get("/report/mcq/{id}", 'QuestionController@report_mcq')->name('question.report.mcq');
+Route::get("/report/saq/{id}", 'QuestionController@report_saq')->name('question.report.saq');
+Route::get("/report/sqa/{id}", 'QuestionController@report_sqa')->name('question.report.sqa');
+Route::get("/report/submit", 'QuestionController@report_submit')->name('question.report.submit');
+
 
 Route::get('/user/{uname}/follow', 'ProfileController@follow')->name('userfollow');
 Route::get('/user/{uname}/unfollow', 'ProfileController@unfollow')->name('userunfollow');

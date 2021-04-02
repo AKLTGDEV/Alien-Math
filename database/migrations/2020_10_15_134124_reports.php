@@ -15,15 +15,13 @@ class Reports extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->increments('id');
+            $table->enum("type", [
+                "MCQ", "SAQ", "SQA"
+            ]);
             $table->bigInteger('item_id');
             $table->string('from');
-            
-            $table->boolean('wrong_ans')->default(false);
-            $table->boolean('ab_lang')->default(false);
-            $table->boolean('wrong_topic')->default(false);
-            $table->boolean('unc_cont')->default(false);
-            
-            $table->string('data')->nullable();
+
+            $table->string('data')->nullable(); // ?
             $table->timestamps();
         });
     }
