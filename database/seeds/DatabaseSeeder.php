@@ -19,6 +19,10 @@ class DatabaseSeeder extends Seeder
             WSSeeder::class,
         );
 
+        $this->call(
+            SAQSeeder::class,
+        );
+
         echo "---- DONE SEEDING ----\n";
     }
 }
