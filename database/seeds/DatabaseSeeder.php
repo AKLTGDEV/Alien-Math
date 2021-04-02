@@ -23,6 +23,10 @@ class DatabaseSeeder extends Seeder
             SAQSeeder::class,
         );
 
+        $this->call(
+            SQASeeder::class,
+        );
+
         echo "---- DONE SEEDING ----\n";
     }
 }
