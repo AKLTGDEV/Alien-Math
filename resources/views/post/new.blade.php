@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Input; ?>
 <script>
     $(document).ready(function() {
         $("#body").summernote();
+        $("#explanation").summernote();
         inputNumber($('.input-number'));
         $('#tags').tagsInput();
 
@@ -198,6 +199,16 @@ use Illuminate\Support\Facades\Input; ?>
                                                     <!-- EXTRA OPTIONS SPACE -->
 
                                                     <div class="row" id="new-opt-space">
+                                                    </div>
+
+                                                    <div class="form-group pt-3">
+                                                        <h4 class="text-muted">
+                                                            Detailed Explanation:
+                                                        </h4>
+
+                                                        <textarea id="explanation" name="explanation" style="width: 100%">
+                                                            <p>{{ Input::old('explanation') }}</p>
+                                                        </textarea>
                                                     </div>
 
                                                 </div>

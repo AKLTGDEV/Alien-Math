@@ -284,6 +284,8 @@ class PostController extends Controller
 
             $post->save(); //Hopefully.
 
+            $post->saveExplanation($request->explanation);
+
             return redirect()->route("viewpost", [$post->id]);
         } else {
             return abort(404);

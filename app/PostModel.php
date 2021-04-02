@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class PostModel extends Model
 {
@@ -30,7 +31,14 @@ class PostModel extends Model
     }
 
     public function getExplanation(){
-        return "SAMPLE EXPLANATION";
+        return Storage::disk('local')->get("posts/explanation/$this->id");
+    }
+
+    public function SaveExplanation($explanation)
+    {
+        // Save Explanation to local storage
+        $id = $this->id;
+        Storage::disk('local')->put("posts/explanation/$id", $explanation);
     }
 
     public function getTopics()

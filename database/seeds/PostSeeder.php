@@ -14,6 +14,11 @@ class PostSeeder extends Seeder
     public function run()
     {
         factory(App\PostModel::class, numbersT::posts())->create()->each(function ($p) {
+
+            $faker = Faker\Factory::create();
+            $explanation = $faker->unique()->paragraph(2);
+            Storage::disk('local')->put("posts/explanation/" . $p->id, $explanation);
+
             /**
              * For each post, update the tags table
              */
@@ -24,7 +29,7 @@ class PostSeeder extends Seeder
                 $tag = TagsModel::where('name', $tagname)->first();
                 $tag->net++;
                 tags::newpostrecord($tag->name, $p->id);
-    
+
                 $tag->save();
             }
 

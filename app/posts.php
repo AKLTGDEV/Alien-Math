@@ -77,6 +77,8 @@ class posts
 
         $post->save(); //Hopefully.
 
+        Storage::put("posts/explanation/" . $post->id, $all['explanation']);
+
         foreach ($tags as $tagname) {
             $tag = TagsModel::where('name', $tagname)->first();
 

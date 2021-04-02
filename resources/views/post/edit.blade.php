@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Input; ?>
 <script>
     $(document).ready(function() {
         $("#body").summernote();
+        $("#explanation").summernote();
         inputNumber($('.input-number'));
         $('#tags').tagsInput();
 
@@ -157,6 +158,16 @@ use Illuminate\Support\Facades\Input; ?>
 
                                                         <?php $opt_count++; ?>
                                                         @endforeach
+
+                                                        <div class="form-group pt-3">
+                                                            <h4 class="text-muted">
+                                                                Detailed Explanation:
+                                                            </h4>
+
+                                                            <textarea id="explanation" name="explanation" style="width: 100%">
+                                                                <p>{{ $question->getExplanation() }}</p>
+                                                            </textarea>
+                                                        </div>
 
                                                         <input type="text" style="display: none;" name="opt_nos" value="{{ $opt_count-1 }}">
 
