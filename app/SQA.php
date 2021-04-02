@@ -180,4 +180,9 @@ class SQA extends Model
 
         return null;
     }
+
+    public function uploader()
+    {
+        return $this->uplader;
+    }
 }

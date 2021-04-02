@@ -68,10 +68,10 @@ $feeditem_ajax_url = route('getfeed_profile', [$username]);
                 <div class="col-lg-6">
                     <div class="card" id="upcomingTests">
                         <div class="card-header">
-                            Test Series <a class="action" href="#"><i class="fas fa-bars"></i></a>
+                            Search Posted Questions
                         </div>
                         <div class="card-body">
-                            <ul class="list-group">
+                            <!--<ul class="list-group">
                                 @if (count($TS) > 0)
                                 <?php foreach ($TS as $test) { ?>
                                     <li class="list-group-item">
@@ -92,6 +92,19 @@ $feeditem_ajax_url = route('getfeed_profile', [$username]);
                                     None
                                 </li>
                                 @endif
+                            </ul>-->
+
+                            <ul class="list-group">
+                                <form action="{{ route('q.search') }}">
+                                    <div class="input-group">
+                                        <input name="q" type="text" class="form-control" placeholder="Search Uploaded Questions">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-secondary" type="submit">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
                             </ul>
                         </div>
                     </div>

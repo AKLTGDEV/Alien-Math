@@ -95,6 +95,12 @@ Route::get('/sqa/edit/{id}', 'SQAController@edit')->name('editsqa');
 Route::post('/sqa/edit/{id}', 'SQAController@edit_submit')->name('editsqa.submit');
 
 
+Route::get('/question/search', 'SearchController@question_search')->name('q.search');
+Route::get('/question/mcq/{id}', 'QuestionController@view_mcq')->name('question.MCQ');
+Route::get('/question/saq/{id}', 'QuestionController@view_saq')->name('question.SAQ');
+Route::get('/question/sqa/{id}', 'QuestionController@view_sqa')->name('question.SQA');
+
+
 Route::get('/user/{uname}/follow', 'ProfileController@follow')->name('userfollow');
 Route::get('/user/{uname}/unfollow', 'ProfileController@unfollow')->name('userunfollow');
 Route::get('/user/{uname}', function ($uname) {

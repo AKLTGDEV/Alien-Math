@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\PostModel;
 use App\posts;
+use App\SAQ;
+use App\SQA;
 use App\TagsModel;
 use App\UserModel;
 use App\WorksheetModel;
@@ -136,5 +138,111 @@ class SearchController extends Controller
             "query" => $query,
             "results" => $final_array
         ]);
+    }
+
+    public function question_search(Request $request)
+    {
+        $search = $request->q;
+
+        $hits = 0;
+        $exec_time = 0;
+        $results = [];
+
+        $tnt = new TNTSearch;
+
+        $tnt->loadConfig([
+            'driver'    => 'mysql',
+            'host'      => env('DB_HOST', 'localhost'),
+            'database'  => env('DB_DATABASE', ''),
+            'username'  => env('DB_USERNAME', ''),
+            'password'  => env('DB_PASSWORD', ''),
+            'storage'   => storage_path('app') . "/indices//",
+        ]);
+
+        $tnt->selectIndex("posts.index");
+        $res = $tnt->search($search);
+        $exec_time += explode(" ", $res['execution_time'])[0];
+        $hits += $res['hits'];
+        foreach ($res['ids'] as $id) {
+            //$results[] = MCQ::where("id", $id)->first();
+            $results[] = PostModel::where("id", $id)->first();
+        }
+
+        $tnt->selectIndex("saq.index");
+        $res = $tnt->search($search);
+        $exec_time += explode(" ", $res['execution_time'])[0];
+        $hits += $res['hits'];
+        foreach ($res['ids'] as $id) {
+            $results[] = SAQ::where("id", $id)->first();
+        }
+
+        $tnt->selectIndex("sqa.index");
+        $res = $tnt->search($search);
+        $exec_time += explode(" ", $res['execution_time'])[0];
+        $hits += $res['hits'];
+        foreach ($res['ids'] as $id) {
+            $results[] = SQA::where("id", $id)->first();
+        }
+
+
+        /**
+         * 
+         * Check if the gathered results have the filters applicable
+         * 
+         */
+        /*$final = [];
+
+        foreach ($results as $r) {
+            $grade_flag = false;
+            $difficulty_flag = false;
+            $topics_flag = false;
+            //Only when all 3 flags are set, would the element show up
+
+            if ($request->grade != "X") {
+                if ($r->type == $request->grade) {
+                    $grade_flag = true;
+                } else {
+                    continue;
+                }
+            } else {
+                $grade_flag = true;
+            }
+
+            if ($request->difficulty != "X") {
+                if ($r->difficulty == $request->difficulty) {
+                    $difficulty_flag = true;
+                } else {
+                    continue;
+                }
+            } else {
+                $difficulty_flag = true;
+            }
+
+            if ($request->topics != null) {
+                foreach (explode(",", $request->topics) as $t) {
+                    if ($r->hasTopic($t)) {
+                        $topics_flag = true;
+                    }
+                }
+            } else {
+                $topics_flag = true;
+            }
+
+            if ($grade_flag && $difficulty_flag && $topics_flag) {
+                $final[] = $r;
+            }
+        }*/
+
+        return view("qsearchresults", [
+            "results" => $results,
+            "exec_time" => round($exec_time, 3),
+            "hits" => count($results),
+        ]);
+
+        /*return view("search", [
+            "results" => $final,
+            "exec_time" => round($exec_time, 3),
+            "hits" => count($final),
+        ]);*/
     }
 }

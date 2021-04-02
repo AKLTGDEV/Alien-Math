@@ -173,4 +173,9 @@ class SAQ extends Model
 
         return null;
     }
+
+    public function uploader()
+    {
+        return $this->uplader;
+    }
 }
