@@ -248,7 +248,7 @@ class worksheets
         }
     }
 
-    public static function submit($all, $poster_id)
+    public static function submit($all, $poster_id, $quiz_flag = false)
     {
         $nos = $all['nos'];
         $title = $all['title'];
@@ -407,6 +407,10 @@ class worksheets
         activitylog::post_ws($poster_uname, $worksheet->id);
         rating::update($poster_uname);
 
-        return redirect()->route('home');
+        if ($quiz_flag) {
+            return $worksheet->slug;
+        } else {
+            return redirect()->route('home');
+        }
     }
 }

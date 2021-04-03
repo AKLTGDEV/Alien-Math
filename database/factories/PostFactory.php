@@ -14,7 +14,7 @@ $factory->define(App\PostModel::class, function (Faker $faker) {
         $tag3 = TagsModel::where('id', rand(1, numbersT::tags()))->first();
     }
     $taglist = json_encode([$tag1->name, $tag2->name, $tag3->name]);
-    $opts = "[\"A\",\"B\"]";
+    $opts = "[\"A\",\"B\",\"C\",\"D\"]";
 
     $text_body = $faker->unique()->paragraph(3);
     $body_md = md5($text_body);
