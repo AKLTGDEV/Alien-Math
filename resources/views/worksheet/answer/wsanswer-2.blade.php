@@ -126,9 +126,6 @@ $wsid = $ws->id;
                             <button id="sub" class="btn btn-info" type="submit">
                                 Submit
                             </button>
-                            <button id="ans-clear" class="btn btn-info">
-                                Clear Answer
-                            </button>
                             <div class="btn btn-outline-success" id="refresh-cont-btn">
                                 Re-load Questions
                             </div>

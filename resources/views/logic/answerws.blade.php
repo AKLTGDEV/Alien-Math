@@ -139,9 +139,75 @@ use Illuminate\Support\Facades\Auth;
 
                                 `);
                             } else if(question.type == "SAQ"){
-                                $("#answer-holder-"+i).html(`--SAQ--`);
+                                $("#answer-holder-"+i).html(`
+                                
+                                <input placeholder="Answer Here" class="form-control form-input" type="text" id="saq-answer-${i}">
+                                
+                                `);
                             } else if(question.type == "SQA"){
-                                $("#answer-holder-"+i).html(`--SQA--`);
+                                $("#answer-holder-"+i).html(`
+
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="sqa-select-${i}-1">
+                                            ${question.opts[0]}
+                                        </label>
+                                    </div>
+                                    <select class="custom-select" id="sqa-select-${i}-1">
+                                        <option selected>Select</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                        <option value="4">Four</option>
+                                    </select>
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="sqa-select-${i}-2">
+                                            ${question.opts[1]}
+                                        </label>
+                                    </div>
+                                    <select class="custom-select" id="sqa-select-${i}-2">
+                                        <option selected>Select</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                        <option value="4">Four</option>
+                                    </select>
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="sqa-select-${i}-3">
+                                            ${question.opts[2]}
+                                        </label>
+                                    </div>
+                                    <select class="custom-select" id="sqa-select-${i}-3">
+                                        <option selected>Select</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                        <option value="4">Four</option>
+                                    </select>
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="sqa-select-${i}-4">
+                                            ${question.opts[3]}
+                                        </label>
+                                    </div>
+                                    <select class="custom-select" id="sqa-select-${i}-4">
+                                        <option selected>Select</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                        <option value="4">Four</option>
+                                    </select>
+                                </div>
+
+                                `);
                             }
 
                             i++;
@@ -205,15 +271,6 @@ use Illuminate\Support\Facades\Auth;
                 alert("Clicking 'Submit' again will submit the Worksheet. If you meant to change the question, Please chick on the Question numbers on top of the page.")
                 GLOB_SUB_WARNING_SHOWN = true;
             }
-        })*/
-
-        /*$("#ans-clear").click(function(e) {
-            activeid = $("div .active")[1].id
-            pid = activeid.split("body-q-")[1]
-
-            answers[pid - 1] = "N"
-            $("[pid=" + pid + "]").removeClass("opt-selected")
-            console.log(JSON.stringify(answers));
         })*/
 
         var time_in_minutes = {{ $ws->mins }};
