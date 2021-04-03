@@ -23,6 +23,7 @@ class UserSeeder extends Seeder
         $admin->name = "Syed Nasim";
         $admin->username = "admin";
         $admin->email = "admin@crowdoubt.net";
+        $admin->type = "admin";
         $admin->password = bcrypt("13141314");
         $admin->remember_token = str_random(10);
         users::storebio("admin", "Regular boi");

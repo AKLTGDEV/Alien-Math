@@ -39,7 +39,8 @@
 
 
     .login-form {
-        width: 330px;
+        /*width: 330px; */
+        width: 500px;
         margin: 20px;
     }
 
@@ -127,8 +128,59 @@
                         @endif
                     </div>
 
+                    <div class="form-group">
+                        <label for="gender" class="col-md-4 col-form-label text-md-right">Gender</label>
+
+                        <select class="form-control col-md-6" id="gender" name="gender">
+                            <option value="m">Male</option>
+                            <option value="f">Female</option>
+                            <option value="x">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="grade" class="text-muted">Select Grade</label>
+                        <select class="form-control" id="grade" name="grade">
+                            <option value="P1">Primary 1</option>
+                            <option value="P2">Primary 2</option>
+                            <option value="P3">Primary 3</option>
+                            <option value="P4">Primary 4</option>
+                            <option value="P5">Primary 5</option>
+                            <option value="P6">Primary 6</option>
+
+                            <option value="S1">Secondary 1</option>
+                            <option value="S2">Secondary 2</option>
+                            <option value="S3">Secondary 3</option>
+                            <option value="S4">Secondary 4</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="level" class="col-md-4 col-form-label text-md-right">Level</label>
+
+                        <select class="form-control col-md-6" id="level" name="level">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+
+                    <h3 class="text-muted text-center mt-2">
+                        Parent/Guardian
+                    </h3>
+
+                    <div class="form-group">
+                        <input placeholder="Parent's Name" id="pname" type="text" class="form-control" name="pname" value="{{ old('pname') }}" required>
+
+                        @if ($errors->has('pname'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('pname') }}</strong>
+                        </span>
+                        @endif
+                    </div>
+
                     <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                        <input placeholder="E-mail" id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
+                        <input placeholder="Parent's Email" id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
 
                         @if ($errors->has('email'))
                         <span class="help-block">
@@ -159,6 +211,17 @@
                     <div class="form-group">
                         <input placeholder="Confirm Password" id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
                     </div>
+
+                    <div class="form-group">
+                        <input placeholder="Contact" id="contact" type="text" class="form-control" name="contact" value="{{ old('contact') }}" required>
+
+                        @if ($errors->has('contact'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('contact') }}</strong>
+                        </span>
+                        @endif
+                    </div>
+
 
                     <button type="submit" class="btn btn-primary btn-block">Sign up</button>
 

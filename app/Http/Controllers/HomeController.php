@@ -58,6 +58,14 @@ class HomeController extends Controller
             return redirect()->route('usersetup');
         }
 
+        /**
+         * Check user's type. If the user is a "student", redirect to the Student Homepage.
+         * 
+         */
+        if ($user->type == "student") {
+            return redirect()->route('student.home');
+        }
+
         $people_data = people::get($user);
         $people_flag = $people_data['flag'];
         $people_list = $people_data['list'];

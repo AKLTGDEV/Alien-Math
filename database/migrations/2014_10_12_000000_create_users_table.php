@@ -20,8 +20,16 @@ class CreateUsersTable extends Migration
             Schema::dropIfExists('users');
 
             $table->increments('id');
+
+            $table->enum("type", [
+                "student",
+                "creator",
+                "admin"
+            ])->default("student");
+
             $table->string('provider_name')->nullable();
             $table->string('provider_id')->nullable();
+
             $table->string('api_token', 80)->unique()->nullable()->default(null);
             $table->string('avatar')->nullable();
             $table->string('name');
@@ -30,10 +38,6 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->dateTime('email_verified_at')->nullable(true);
             $table->integer('rating')->default(0);
-            /*$table->integer('image')->nullable(true);
-            $table->string('bio')->nullable(true);
-            $table->string('tags')->default("[]");
-            $table->string('answers')->default("{}");*/
             $table->integer('answers_t')->default(0);
             $table->integer('answers_f')->default(0);
             $table->integer('nos_Q')->default(0);
@@ -47,6 +51,27 @@ class CreateUsersTable extends Migration
             $table->string('classrooms')->default("[]");
             $table->string('ts_created')->default("[]");
             $table->string('ts_bought')->default("[]");
+
+            //BEGIN Data for Student Entries
+            $table->enum("gender", [
+                "m",
+                "f",
+                "x"
+            ])->nullable(true);
+            $table->enum("grade", [
+                "P1", "P2", "P3", "P4", "P5", "P6",
+                "S1", "S2", "S3", "S4",
+            ])->nullable(true);
+            $table->enum("level", [
+                "1",
+                "2",
+                "3"
+            ])->nullable(true);
+            
+            $table->string('parent_name')->nullable(true);
+            $table->text("contact")->nullable(true);
+            //END Data for Student Entries
+            
             $table->rememberToken();
             $table->timestamps();
         });

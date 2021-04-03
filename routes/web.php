@@ -48,6 +48,8 @@ Route::post('/getfeed', 'HomeController@req_feed')->name('reqfeed');
 Route::get('/explore', 'HomeController@explore')->name('explore');
 Route::get('/premium-account', 'HomeController@premium_index')->name('premium_index');
 
+Route::get('/student', 'StudentController@home')->name('student.home');
+
 Route::get('/qb', 'QBController@index')->name('qbank_index');
 Route::post('/qb/list', 'QBController@questions')->name('qbank_listq');
 Route::get('/qb/list-subtopics', 'QBController@list_subtopics')->name('qbank_list_subtopics');
@@ -104,6 +106,8 @@ Route::get("/report/mcq/{id}", 'QuestionController@report_mcq')->name('question.
 Route::get("/report/saq/{id}", 'QuestionController@report_saq')->name('question.report.saq');
 Route::get("/report/sqa/{id}", 'QuestionController@report_sqa')->name('question.report.sqa');
 Route::get("/report/submit", 'QuestionController@report_submit')->name('question.report.submit');
+
+Route::get('/quiz', 'QuizController@generate')->name('quiz.generate');
 
 
 Route::get('/user/{uname}/follow', 'ProfileController@follow')->name('userfollow');

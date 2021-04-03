@@ -61,6 +61,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => 'required|string|max:255',
+            'pname' => 'required|string|max:255',
             //'username' => 'required|string|max:25|unique:users',
             'username' => ['required', 'string', 'max:255', 'unique:users', 'alpha_dash'],
             'email' => 'required|string|email|max:255|unique:users',
@@ -78,11 +79,24 @@ class RegisterController extends Controller
     {
         Storage::put("answers/" . $data['username'], "[]");
 
+        /**
+         * 
+         * Data is not getting saved for some reason. Come back later
+         * FIXME TODO
+         * 
+         */
+
         $user = User::create([
             'name' => $data['name'],
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'type' => "student",
+            'gender' => $data['gender'],
+            'grade' => $data['grade'],
+            'level' => $data['level'],
+            'parent_name' => $data['pname'],
+            'contact' => $data['contact'],
         ]);
 
         $tnt = new TNTSearch;

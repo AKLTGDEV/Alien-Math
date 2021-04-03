@@ -56,4 +56,22 @@ class UserModel extends Model
             Storage::put("answers/" . $model->username, "[]");
         });
     }
+
+    public function isAdmin()
+    {
+        if ($this->type == "admin") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function isStudent()
+    {
+        if ($this->type == "student") {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

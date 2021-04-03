@@ -28,7 +28,7 @@ class SQASeeder extends Seeder
             Storage::disk('local')->put("sqa/body/$q->id", $text);
             Storage::disk('local')->put("sqa/explanation/$q->id", $faker->unique()->paragraph(2));
 
-            echo "Creating SAQ: " . md5($text) . "..\n";
+            echo "Creating SQA: " . md5($text) . "..\n";
 
             $q->digest = $text;
             $q->save();
