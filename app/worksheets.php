@@ -413,4 +413,50 @@ class worksheets
             return redirect()->route('home');
         }
     }
+
+
+
+    public static function quiz($title, $tags, $nos, $mins, $content, $poster_id)
+    {
+        $taglist = json_encode($tags);
+        $time_mins = $mins;
+        $title = $title;
+        $nos = $nos;
+
+        $ws_name_ident = md5(rand(0, 69) . $poster_id . $title . Carbon::now()->toDateTimeString() . rand(0, 69));
+
+        $pretext = $title . " Worksheet by " . UserModel::where("id", $poster_id)
+            ->first()
+            ->username;
+
+        $wsitem_contents = [
+            "datetime" => Carbon::now()->toDateTimeString(),
+            "title" => $title,
+            "author" => $poster_id, // FIXME
+            "nos" => $nos,
+            "time" => $time_mins,
+            "tags" => $tags,
+        ];
+
+        $wsitem_contents['content'] = $content;
+
+        Storage::put("WS/$ws_name_ident", json_encode($wsitem_contents));
+
+        $worksheet = new WorksheetModel;
+        $worksheet->title = $title;
+        $worksheet->nos = $nos;
+        $worksheet->ws_name = $ws_name_ident;
+        $worksheet->author = $poster_id;
+        $worksheet->tags = json_encode($tags);
+        $worksheet->invited = "[]";
+        $worksheet->mins = $time_mins;
+
+        $worksheet->save();
+
+        $pretext = $title . " Worksheet by " . UserModel::where("id", $poster_id)->first()->username . " $worksheet->id";
+        $worksheet->slug = str_slug($pretext);
+        $worksheet->save();
+
+        return $worksheet->slug;
+    }
 }

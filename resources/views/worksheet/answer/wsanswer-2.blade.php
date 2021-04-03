@@ -123,6 +123,12 @@ $wsid = $ws->id;
                     </div>
                     <div class="row" style="margin-top:1%">
                         <div class="col-md-10 col-md-offset-1">
+                            <button id="sub" class="btn btn-outline-info">
+                                Video
+                            </button>
+                            <button id="sub" class="btn btn-outline-info">
+                                Hint
+                            </button>
                             <button id="sub" class="btn btn-info" type="submit">
                                 Submit
                             </button>

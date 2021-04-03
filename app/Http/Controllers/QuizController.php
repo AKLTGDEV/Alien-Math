@@ -50,31 +50,21 @@ class QuizController extends Controller
          * 
          */
 
-        $data = [
-            'title' => "Sample Quiz",
-            'nos' => count($list),
-            'tags' => "JEE,NEET", // SAMPLE FIXME TODO
-            'time' => 10 // SAMPLE FIXME TODO
-        ];
-
-        $j = 1;
+        $q_list = [];
         foreach ($list as $q) {
-            $opts = json_decode($q->opts);
-            $k = 1;
-            foreach ($opts as $o) {
-                $data["option$k-$j"] = $o;
-                $k++;
-            }
-
-            $data["Qbody-$j"] = $q->getBody();
-
-            $data["correct-$j"] = $q->correctopt;
-
-            $j++;
+            $q_list[] = $q->info();
         }
 
         return redirect()->route('wsanswer-1', [
-            worksheets::submit($data, 1, true)
+            worksheets::quiz(
+                "Sample Quiz",
+                ["JEE", "NEET"],
+                count($list),
+                10,
+
+                $q_list,
+                1
+            )
         ]);
     }
 }

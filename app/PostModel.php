@@ -15,6 +15,16 @@ class PostModel extends Model
         return "MCQ";
     }
 
+    public function info()
+    {
+        return [
+            "type" => "MCQ",
+            "body" => $this->getBody(),
+            "opts" => json_decode($this->opts),
+            "correct" => $this->correctopt,
+        ];
+    }
+
     public function getBody()
     {
         $post_body = posts::getbody($this->text);
@@ -30,7 +40,8 @@ class PostModel extends Model
         return $body_new;
     }
 
-    public function getExplanation(){
+    public function getExplanation()
+    {
         return Storage::disk('local')->get("posts/explanation/$this->id");
     }
 
