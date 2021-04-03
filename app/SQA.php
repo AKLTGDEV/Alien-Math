@@ -20,6 +20,20 @@ class SQA extends Model
         return (new self())->getTable();
     }
 
+    public function info()
+    {
+        return [
+            "type" => "SQA",
+            "body" => $this->GetBody(),
+            "opts" => [
+                $this->O1,
+                $this->O2,
+                $this->O3,
+                $this->O4,
+            ],
+        ];
+    }
+
     public function firstfew($n)
     {
         return implode(' ', array_slice(explode(' ', $this->digest), 0, $n));
@@ -102,7 +116,7 @@ class SQA extends Model
 
         $this->SaveBody($data['body']);
         $this->SaveExplanation($data['explanation']);
-        
+
         $tnt = new TNTSearch;
         $tnt->loadConfig([
             'driver'    => 'mysql',
@@ -160,7 +174,7 @@ class SQA extends Model
 
     public static function get($id)
     {
-        $app_url = Config::get('app.url');        
+        $app_url = Config::get('app.url');
         $q = SQA::where("id", $id)->first();
         if ($q != null) {
             $author = UserModel::where("username", $q->uploader)->first();

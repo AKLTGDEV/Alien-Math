@@ -20,6 +20,14 @@ class SAQ extends Model
         return (new self())->getTable();
     }
 
+    public function info()
+    {
+        return [
+            "type" => "SAQ",
+            "body" => $this->getBody(),            
+        ];
+    }
+
     public function firstfew($n)
     {
         return implode(' ', array_slice(explode(' ', $this->digest), 0, $n));

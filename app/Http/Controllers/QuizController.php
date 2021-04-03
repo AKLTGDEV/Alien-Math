@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\PostModel;
+use App\SAQ;
+use App\SQA;
 use App\worksheets;
 use Illuminate\Http\Request;
 
@@ -27,13 +29,28 @@ class QuizController extends Controller
          */
 
         $nos = $request->nos;
-        //Collect $nos MCQs
-
         $list = [];
+        $interim = [];
 
-        $interim = PostModel::where("type", $request->grade)
+        foreach (PostModel::where("type", $request->grade)
             ->where("difficulty", $request->difficulty)
-            ->get();
+            ->get() as $p) {
+            $interim[] = $p;
+        }
+
+        foreach (SAQ::where("type", $request->grade)
+            ->where("difficulty", $request->difficulty)
+            ->get() as $p) {
+            $interim[] = $p;
+        }
+
+        foreach (SQA::where("type", $request->grade)
+            ->where("difficulty", $request->difficulty)
+            ->get() as $p) {
+            $interim[] = $p;
+        }
+
+        shuffle($interim);
 
         $i = 0;
         while (count($list) < $nos) {

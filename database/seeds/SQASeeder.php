@@ -16,7 +16,7 @@ class SQASeeder extends Seeder
      */
     public function run()
     {
-        factory(App\SQA::class, numbersT::saq())->create()->each(function ($q) {
+        factory(App\SQA::class, numbersT::sqa())->create()->each(function ($q) {
             $author = UserModel::where('username', $q->uploader)->first();
 
             /**
