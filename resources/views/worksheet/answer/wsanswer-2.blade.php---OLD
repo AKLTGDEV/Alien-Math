@@ -104,15 +104,37 @@ $wsid = $ws->id;
                                         <i class='fas fa-2x fa-spinner fa-spin'></i>
                                     </div>
                                     <div class="card-body">
-                                        <!--
-                                            This is the place where answer holders would be placed.
-
-                                            MCQ: 4 Option boxes
-                                            SAQ: One text input
-                                            SQA: 4 Dropdowns
-
-                                        -->
-                                        <div id="answer-holder-{{ $i }}">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="option" id="opt_{{ $i }}_1" pid="{{ $i }}" opt="1">
+                                                    <div id="opt_{{ $i }}_1_body" class="option-text btn btn-outline-secondary shadow  btn-rounded waves-effect">
+                                                        <i class='fas fa-2x fa-spinner fa-spin'></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="option" id="opt_{{ $i }}_2" pid="{{ $i }}" opt="2">
+                                                    <div id="opt_{{ $i }}_2_body" class="option-text btn btn-outline-secondary shadow  btn-rounded waves-effect">
+                                                        <i class='fas fa-2x fa-spinner fa-spin'></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="option" id="opt_{{ $i }}_3" pid="{{ $i }}" opt="3">
+                                                    <div id="opt_{{ $i }}_3_body" class="option-text btn btn-outline-secondary shadow  btn-rounded waves-effect">
+                                                        <i class='fas fa-2x fa-spinner fa-spin'></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="option" id="opt_{{ $i }}_4" pid="{{ $i }}" opt="4">
+                                                    <div id="opt_{{ $i }}_4_body" class="option-text btn btn-outline-secondary shadow  btn-rounded waves-effect">
+                                                        <i class='fas fa-2x fa-spinner fa-spin'></i>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

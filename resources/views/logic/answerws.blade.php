@@ -8,13 +8,6 @@
             load_content();
         })
 
-        var GLOB_SUB_WARNING_SHOWN = false;
-
-        answers = [];
-        for (let i = 0; i < {{$nos}}; i++) {
-            answers[i] = "N";
-            
-        }
 
         clock_hits = [];
         for (let i = 0; i < {{$nos}}; i++) {
@@ -22,21 +15,25 @@
             
         }
 
+        /*answers = [];
+        for (let i = 0; i < {{$nos}}; i++) {
+            answers[i] = "N";
+            
+        }
+
         opt_changes = [];
         for (let i = 0; i < {{$nos}}; i++) {
             opt_changes[i] = 0;
             
-        }
+        }*/
 
-        $(".option").click(function(e) {
+        /*$(".option").click(function(e) {
 
             pid = $(this).attr("pid");
             opt = $(this).attr("opt");
 
-            /**
-             * Check if any of the other options are currently selected 
-             *
-             */
+            //Check if any of the other options are currently selected 
+
             if(answers[pid - 1] != "N"){
                 opt_changes[pid-1]++;
                 // Remove "selected" class from all other options
@@ -53,7 +50,7 @@
                 answers[pid - 1] = opt;
                 $(this).addClass("opt-selected");
             }
-        })
+        })*/
 
         function load_content() {
             /**
@@ -62,8 +59,8 @@
             */
 
             <?php
-            use Illuminate\Support\Facades\Auth;
-            ?>
+use Illuminate\Support\Facades\Auth;
+?>
             var logged_in = "{{ Auth::check() == true ? '1' : '0' }}";
 
             var pull_url = "{{ route('wsanswer-pc', [$ws->slug]) }} ";
@@ -95,28 +92,66 @@
 
                         window.location.href = "{{ route('stats') }}";
                     } else {
-                        //STEP 1: Fill in the bodies
-                        bodies = result.data.bodies;
-                        for (let i = 1; i <= {{ $ws->nos }}; i++) {
-                            $("#question_content_"+i).html(bodies[i-1]);
-                        }
+                        // NEW CODE
 
-                        //STEP 2: Fill in the options
-                        opts = result.data.opts;
-                        for (let i = 1; i <= {{ $ws->nos }}; i++) {
-                            var current_opt = opts[i-1];
+                        var i = 1;
+                        result.data.content.forEach(question => {
 
-                            $("#opt_"+i+"_1_body").html(current_opt[0]);
-                            $("#opt_"+i+"_2_body").html(current_opt[1]);
-                            $("#opt_"+i+"_3_body").html(current_opt[2]);
-                            $("#opt_"+i+"_4_body").html(current_opt[3]);
-                        }
+                            //STEP 1: Fill in the bodies
+                            $("#question_content_"+i).html(question.body);
+
+                            //STEP 2: Fill answer section
+                            if(question.type == "MCQ"){
+                                $("#answer-holder-"+i).html(`
+
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="option" id="opt_${i}_1" pid="${i}" opt="1">
+                                                        <div id="opt_${i}_1_body" class="option-text btn btn-outline-secondary shadow  btn-rounded waves-effect">
+                                                            ${question.opts[0]}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="option" id="opt_${i}_2" pid="${i}" opt="2">
+                                                        <div id="opt_${i}_2_body" class="option-text btn btn-outline-secondary shadow  btn-rounded waves-effect">
+                                                        ${question.opts[1]}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="option" id="opt_${i}_3" pid="${i}" opt="3">
+                                                        <div id="opt_${i}_3_body" class="option-text btn btn-outline-secondary shadow  btn-rounded waves-effect">
+                                                        ${question.opts[2]}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="option" id="opt_${i}_4" pid="${i}" opt="4">
+                                                        <div id="opt_${i}_4_body" class="option-text btn btn-outline-secondary shadow  btn-rounded waves-effect">
+                                                        ${question.opts[3]}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                `);
+                            } else if(question.type == "SAQ"){
+                                $("#answer-holder-"+i).html(`--SAQ--`);
+                            } else if(question.type == "SQA"){
+                                $("#answer-holder-"+i).html(`--SQA--`);
+                            }
+
+                            i++;
+                        });
                     }
                 }
             });
         }
 
-        function submit_A() {
+        /*function submit_A() {
             $("#sub").prop("disabled", true);
             //alert("Submitting the paper. Please wait");
             // Not needed
@@ -158,12 +193,11 @@
                     }
                 }
             });
-        }
+        }*/
 
-        $("#sub").click(function(e) {
-            /**
-             * Make sure the user didn't actually mean to change the question.
-             */
+        /*$("#sub").click(function(e) {
+            //Make sure the user didn't actually mean to change the question.
+
             if(GLOB_SUB_WARNING_SHOWN){
                 console.log("KNOB");
                submit_A();
@@ -171,16 +205,16 @@
                 alert("Clicking 'Submit' again will submit the Worksheet. If you meant to change the question, Please chick on the Question numbers on top of the page.")
                 GLOB_SUB_WARNING_SHOWN = true;
             }
-        })
+        })*/
 
-        $("#ans-clear").click(function(e) {
+        /*$("#ans-clear").click(function(e) {
             activeid = $("div .active")[1].id
             pid = activeid.split("body-q-")[1]
 
             answers[pid - 1] = "N"
             $("[pid=" + pid + "]").removeClass("opt-selected")
             console.log(JSON.stringify(answers));
-        })
+        })*/
 
         var time_in_minutes = {{ $ws->mins }};
         var current_time = Date.parse(new Date());
@@ -225,6 +259,8 @@
                 if (t.total <= 0) {
                     clearInterval(timeinterval);
                 }
+
+                //console.log(clock_hits);
             }
             update_clock(); // run function once at first to avoid delay
             var timeinterval = setInterval(update_clock, 1000);

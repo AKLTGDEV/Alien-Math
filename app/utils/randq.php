@@ -34,4 +34,50 @@ class randq
             "correct" => $correct
         ];
     }
+
+    public static function saq()
+    {
+        /**
+         * 
+         * Return JSON of a random SAQ
+         * 
+         */
+
+
+        $faker = Factory::create();
+        $body = $faker->unique()->paragraph(1);
+        $correct = $faker->unique()->paragraph(1);
+
+        return [
+            "type" => "SAQ",
+            "body" => $body,
+            "correct" => $correct
+        ];
+    }
+
+    public static function sqa()
+    {
+        /**
+         * 
+         * Return JSON of a random SQA
+         * 
+         */
+
+
+        $faker = Factory::create();
+        $body = $faker->unique()->paragraph(1);
+
+        $opt1 = $faker->unique()->sentence(5);
+        $opt2 = $faker->unique()->sentence(5);
+        $opt3 = $faker->unique()->sentence(5);
+        $opt4 = $faker->unique()->sentence(5);
+
+        return [
+            "type" => "SQA",
+            "body" => $body,
+            "opts" => [
+                $opt1, $opt2, $opt3, $opt4
+            ],
+        ];
+    }
 }

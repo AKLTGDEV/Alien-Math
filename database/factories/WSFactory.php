@@ -98,7 +98,7 @@ $factory->define(App\WorksheetModel::class, function (Faker $faker) {
     $title = $faker->sentence(5, true);
 
     //No. of questions
-    $nos = random_int(20, 40);
+    $nos = random_int(3, 7);
 
     $ws_name_ident = md5(rand(0, 69) . $author_id . $title . Carbon::now()->toDateTimeString() . rand(0, 69));
 
@@ -121,9 +121,13 @@ $factory->define(App\WorksheetModel::class, function (Faker $faker) {
 
     for ($i = 1; $i <= $nos; $i++) {
         $contents[] = randq::mcq();
+        $contents[] = randq::saq();
+        $contents[] = randq::sqa();
     }
 
     $wsitem_contents['content'] = $contents;
+
+    $nos = count($contents);
 
     Storage::put("WS/$ws_name_ident", json_encode($wsitem_contents));
 

@@ -169,12 +169,13 @@ class WorksheetController extends Controller
             return abort(404);
         }
 
-        //$ws_info = json_decode(Storage::get("WS/$worksheet->ws_name"));
-        //return $ws_info;
-
         $self = Auth::user();
 
-        if (wsAttemptsModel::where('wsid', $id)->where('attemptee', $self->id)->first() == null) {
+        if (
+            wsAttemptsModel::where('wsid', $id)
+            ->where('attemptee', $self->id)
+            ->first() == null
+        ) {
             $prev = url()->previous();
             $curr = url()->current();
             if ($prev != str_replace("answer", "preanswer", $curr)) {
@@ -188,10 +189,9 @@ class WorksheetController extends Controller
                 $attempt = new wsAttemptsModel;
                 $attempt->wsid = $id;
                 $attempt->attemptee = $self->id;
-                //$attempt->created_at = date('Y-m-d H:i:s');
-                $attempt->save();
+                //$attempt->save();
 
-                activitylog::ans_ws($self->username, $worksheet->id);
+                //activitylog::ans_ws($self->username, $worksheet->id);
 
                 return view("worksheet.answer.wsanswer-2", [
                     "ws" => $worksheet,
@@ -214,18 +214,24 @@ class WorksheetController extends Controller
         }
 
         $ws_info = json_decode(Storage::get("WS/$worksheet->ws_name"));
-
         $self = Auth::user();
 
         // Normalize the images
-        $bodies_new = [];
-
+        /*$bodies_new = [];
         foreach ($ws_info->bodies as $b) {
             $b_new = str_replace('<img style=', '<img class="img-fluid" style=', $b);
             array_push($bodies_new, $b_new);
         }
 
-        $bodies = $bodies_new;
+        $bodies = $bodies_new;*/
+
+
+
+        return [
+            "status" => "ok",
+            "data" => $ws_info,
+        ];
+
 
         /**
          * FIXME: ENSURE THAT THE TEST IS ALREADY IN PROGRESS
@@ -242,12 +248,15 @@ class WorksheetController extends Controller
             ];
         }
         if ($pending_att->secs == 0) {
+            /**
+             * 
+             * All OK. Emit the WS information
+             * 
+             */
+
             return [
                 "status" => "ok",
-                "data" => [
-                    "bodies" => $bodies,
-                    "opts" => $ws_info->opts,
-                ]
+                "data" => $ws_info,
             ];
         } else {
             return [
