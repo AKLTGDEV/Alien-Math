@@ -38,7 +38,7 @@ $wsid = $ws->id;
         margin-top: 5px;
     }
 
-    .answer-holder {
+    .exp-holder {
         background: rgba(0, 140, 163, 0.17);
     }
 </style>
@@ -74,7 +74,7 @@ $wsid = $ws->id;
                             </div>
                         </div>
                         <div class="card-footer" id="answer">
-                            <div class="answer-holder">
+                            <div class="exp-holder">
                             </div>
                         </div>
                     </div>

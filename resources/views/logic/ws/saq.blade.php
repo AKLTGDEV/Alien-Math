@@ -8,7 +8,7 @@ function ans_submit_saq(j, ans) {
             answer: ans,
         },
         success: function(result) {
-            $(".answer-holder").html(`
+            $(".exp-holder").html(`
 
             Correct: <b>${result.correct}</b> <br>
 

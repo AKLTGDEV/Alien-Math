@@ -5,6 +5,16 @@
 
         load_content(1); // Load content the first time
 
+
+        var mcq_answers = [];
+        $('#answer-holder').on('click', '.option', function() {
+            //console.log($(this).attr("opt"));
+            mcq_answers.push($(this).attr("opt"));
+            $(".option").removeClass("opt-selected");
+            $(this).addClass("opt-selected");
+        })
+
+
         $("#subq").click(function (e) {
             /**
             STEP 1: Submit Anser
@@ -16,7 +26,7 @@
 
             switch(current_type) {
                 case "MCQ":
-                    console.log("MCQ")
+                    ans_submit_mcq(current, mcq_answers);
                     break;
                 case "SAQ":
                     ans_submit_saq(current, $("#saq-answer").val());
@@ -50,13 +60,15 @@
         }
 
         @include('logic.ws.saq')
+        @include('logic.ws.mcq')
+        @include('logic.ws.sqa')
 
         function load_content(j) {
             /**
              * Clear the exploanation area first
              * 
              */
-            $(".answer-holder").empty();
+            $(".exp-holder").empty();
 
             /**
              * Now disable the "Next question" button

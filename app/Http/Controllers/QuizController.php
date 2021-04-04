@@ -129,9 +129,24 @@ class QuizController extends Controller
         $ws_info = json_decode(Storage::get("WS/$worksheet->ws_name"), true);
         $data = $ws_info['content'][$index - 1];
 
-        return [
-            "correct" => $data['correct'],
-            "explanation" => $data['explanation'],
-        ];
+        if ($request->type == "SAQ") {
+            return [
+                "correct" => $data['correct'],
+                "explanation" => $data['explanation'],
+            ];
+        } else if ($request->type == "MCQ") {
+            /**
+             * We get a "ans" input, which contains all the 
+             * option changes of the user. The last one is the final answer.
+             * 
+             */
+
+            $correct = $data['opts'][$data['correct'] + 1];
+
+            return [
+                "correct" => $correct,
+                "explanation" => $data['explanation'],
+            ];
+        }
     }
 }
