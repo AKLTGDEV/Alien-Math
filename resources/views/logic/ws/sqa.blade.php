@@ -1,4 +1,4 @@
-function ans_submit_sqa(j, ans) {
+function ans_submit_sqa(j, ans, clock_hits) {
     $.ajax({
         url:   `{{ config('app.url') }}/quiz/singleanswer/{{ $ws->slug }}/${j}`,
         method: 'post',
@@ -6,6 +6,7 @@ function ans_submit_sqa(j, ans) {
             _token: CSRF_TOKEN,
             type: "SQA",
             answer: ans,
+            hits: clock_hits
         },
         success: function(result) {
             $(".exp-holder").html(`

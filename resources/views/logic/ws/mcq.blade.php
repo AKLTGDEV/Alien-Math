@@ -1,4 +1,4 @@
-function ans_submit_mcq(j, ans) {
+function ans_submit_mcq(j, ans, clock_hits) {
     $.ajax({
         url: `{{ config('app.url') }}/quiz/singleanswer/{{ $ws->slug }}/${j}`,
         method: 'post',
@@ -6,6 +6,7 @@ function ans_submit_mcq(j, ans) {
             _token: CSRF_TOKEN,
             type: "MCQ",
             answer: ans,
+            hits: clock_hits,
         },
         success: function (result) {            
             $(".exp-holder").html(`

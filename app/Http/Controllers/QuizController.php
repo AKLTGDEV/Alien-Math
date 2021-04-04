@@ -7,6 +7,7 @@ use App\SAQ;
 use App\SQA;
 use App\WorksheetModel;
 use App\worksheets;
+use App\wsAttemptsModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -114,12 +115,6 @@ class QuizController extends Controller
 
     public function singleanswer(Request $request, $slug, $index)
     {
-        /*return [
-            $request->all(),
-            $slug,
-            $index,
-        ];*/
-
         $worksheet = WorksheetModel::where('slug', $slug)->first();
 
         if ($worksheet == null) {
@@ -129,12 +124,23 @@ class QuizController extends Controller
         $ws_info = json_decode(Storage::get("WS/$worksheet->ws_name"), true);
         $data = $ws_info['content'][$index - 1];
 
+        $pending_att = wsAttemptsModel::where('wsid', $worksheet->id)
+            ->where('attemptee', Auth::user()->id)
+            ->first();
+
+        $pending_att->clock_hit($request->hits);
+
         if ($request->type == "SAQ") {
+            $pending_att->answer($request->answer);
+
             return [
                 "correct" => $data['correct'],
                 "explanation" => $data['explanation'],
             ];
         } else if ($request->type == "MCQ") {
+            $answers = $request->answer;
+            $actual_answer = $answers[count($answers) - 1];
+            $pending_att->answer($actual_answer);
             /**
              * We get a "ans" input, which contains all the 
              * option changes of the user. The last one is the final answer.
@@ -148,6 +154,7 @@ class QuizController extends Controller
                 "explanation" => $data['explanation'],
             ];
         } else if ($request->type == "SQA") {
+            $pending_att->answer($request->answer);
             /**
              * We get "ans", which is the given order.
              */

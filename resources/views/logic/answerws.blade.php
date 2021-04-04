@@ -2,6 +2,11 @@
     jQuery(document).ready(function($) {
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
         $("#current").val(1)
+        var clock_hits = 0;
+
+        var _clock_ = window.setInterval(function(){
+            clock_hits++;
+        }, 1000);
 
         load_content(1); // Load content the first time
 
@@ -26,10 +31,10 @@
 
             switch(current_type) {
                 case "MCQ":
-                    ans_submit_mcq(current, mcq_answers);
+                    ans_submit_mcq(current, mcq_answers, clock_hits);
                     break;
                 case "SAQ":
-                    ans_submit_saq(current, $("#saq-answer").val());
+                    ans_submit_saq(current, $("#saq-answer").val(), clock_hits);
                     break;
                 case "SQA":
                     var a1 = $('#sqa-select-1').find(":selected").attr("value");
@@ -39,7 +44,7 @@
 
                     ans_submit_sqa(current, [
                         a1, a2, a3, a4
-                    ]);
+                    ], clock_hits);
                     break;
                 default:
                     // report this incident
@@ -49,6 +54,7 @@
         });
 
         $("#nextq").click(function (e) {
+            clock_hits = 0;
             current = parseInt($("#current").val());
             if(current >= parseInt("{{ $ws->nos }}")){
                 console.log("DONE");
@@ -58,13 +64,6 @@
                 $("#current").val(current+1);
             }
         })
-
-
-        clock_hits = [];
-        for (let i = 0; i < {{$nos}}; i++) {
-            clock_hits[i] = 0;
-            
-        }
 
         @include('logic.ws.saq')
         @include('logic.ws.mcq')
@@ -227,54 +226,5 @@
                 }
             });
         }
-
-        /*var time_in_minutes = {{ $ws->mins }};
-        var current_time = Date.parse(new Date());
-        var deadline = new Date(current_time + time_in_minutes * 60 * 1000);
-
-
-        function time_remaining(endtime) {
-            var t = Date.parse(endtime) - Date.parse(new Date());
-            var seconds = Math.floor((t / 1000) % 60);
-            var minutes = Math.floor((t / 1000 / 60) % 60);
-            var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
-            var days = Math.floor(t / (1000 * 60 * 60 * 24));
-            return {
-                'total': t,
-                'days': days,
-                'hours': hours,
-                'minutes': minutes,
-                'seconds': seconds
-            };
-        }*/
-
-        /*function run_clock(id, endtime) {
-            var clock = document.getElementById(id);
-
-            function update_clock() {
-                //This runs every second. Capture the currently active Q.
-
-                current = $(".active");
-                if(current[0] != null){
-                    current_pid = $(current[0]).attr("qid");
-                    clock_hits[current_pid - 1]++;
-                }
-
-                var t = time_remaining(endtime);
-                if(t.hours == 0 && t.minutes == 0 && t.seconds == 1){
-                    //submit_A();
-                }
-                //clock.innerHTML = 'minutes: '+t.minutes+'<br>seconds: '+t.seconds;
-                //clock.innerHTML = t.hours + ":" + t.minutes + ":" + t.seconds;
-                //if (t.total <= 0) {
-                //    clearInterval(timeinterval);
-                //}
-
-                console.log(clock_hits);
-            }
-            update_clock(); // run function once at first to avoid delay
-            var timeinterval = setInterval(update_clock, 1000);
-        }
-        run_clock('clockdiv', deadline);*/
     })
 </script>

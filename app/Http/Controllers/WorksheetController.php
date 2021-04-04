@@ -189,9 +189,10 @@ class WorksheetController extends Controller
                 $attempt = new wsAttemptsModel;
                 $attempt->wsid = $id;
                 $attempt->attemptee = $self->id;
-                //$attempt->save();
-
-                //activitylog::ans_ws($self->username, $worksheet->id);
+                
+                $attempt->save();
+                Storage::put("wsa_metrics/$attempt->id/clock_hits", "[]");
+                activitylog::ans_ws($self->username, $worksheet->id);
 
                 return view("worksheet.answer.wsanswer-2", [
                     "ws" => $worksheet,
