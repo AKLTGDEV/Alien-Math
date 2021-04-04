@@ -11,11 +11,10 @@ class wsAttemptsModel extends Model
 
     public function answer($a)
     {
-        $answers = json_decode($this->answers);
+        $answers = json_decode(Storage::get("wsa_metrics/$this->id/answers"));
         $answers[] = $a;
 
-        $this->answers = json_encode($answers);
-        $this->save();
+        Storage::put("wsa_metrics/$this->id/answers", json_encode($answers));
     }
 
     public function clock_hit($hits)

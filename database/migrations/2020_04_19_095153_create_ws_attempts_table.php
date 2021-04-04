@@ -20,8 +20,13 @@ class CreateWsAttemptsTable extends Migration
             $table->bigInteger('attemptee');
             $table->boolean('public')->default(false);
             $table->string('public_id')->nullable(true);
-            $table->string('answers')->default("[]");
-            $table->bigInteger('secs')->default(0);
+            //$table->string('answers', 4096)->default("[]");
+            
+            $table->bigInteger('right')->default(0);
+            $table->bigInteger('wrong')->default(0);
+            $table->bigInteger('left')->default(0);
+            
+            //$table->bigInteger('secs')->default(0);
             //$table->string('metrics')->default("[]");
             $table->timestamps();
         });

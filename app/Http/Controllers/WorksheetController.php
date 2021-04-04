@@ -192,6 +192,7 @@ class WorksheetController extends Controller
                 
                 $attempt->save();
                 Storage::put("wsa_metrics/$attempt->id/clock_hits", "[]");
+                Storage::put("wsa_metrics/$attempt->id/answers", "[]");
                 activitylog::ans_ws($self->username, $worksheet->id);
 
                 return view("worksheet.answer.wsanswer-2", [
@@ -364,7 +365,7 @@ class WorksheetController extends Controller
 
                     $mins = ($attempt->secs) / 60;
 
-                    $stats = StatsController::stats_ws_user($id, $self->username);
+                    /*$stats = StatsController::stats_ws_user($id, $self->username);
                     $total = $stats['general']['right'] + $stats['general']['wrong'] + $stats['general']['left'];
                     $right = $stats['general']['right'];
                     return view("worksheet.answer.wsanswer-3", [
@@ -377,7 +378,9 @@ class WorksheetController extends Controller
                         "mins" => round($mins, 3),
                         "shareid" => $shareid,
                         "searchbar" => false
-                    ]);
+                    ]);*/
+
+                    
                 }
             } else {
                 return redirect()->route('wsanswer-1', [$worksheet->slug]);

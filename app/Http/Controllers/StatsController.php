@@ -167,7 +167,9 @@ class StatsController extends Controller
             $ws = WorksheetModel::where('id', $wsid)->first();
 
             if (worksheets::attempted($U, $ws)) {
-                $attempt = wsAttemptsModel::where('wsid', $wsid)->where('attemptee', $uid)->first();
+                $attempt = wsAttemptsModel::where('wsid', $wsid)
+                    ->where('attemptee', $uid)
+                    ->first();
                 // The user has attempted the WS. Get correct and wrong answers.
 
                 $worksheet = WorksheetModel::where('id', $wsid)->first();
@@ -175,7 +177,20 @@ class StatsController extends Controller
                     return abort(404);
                 }
 
-                $ws_info = json_decode(Storage::get("WS/$worksheet->ws_name"));
+                return [
+                    "status" => "success",
+                    "general" => [
+                        "wsid"  => $ws->id,
+                        "right" => $right,
+                        "wrong" => $wrong,
+                        "left" => $left
+                    ],
+                    /*"metrics" => json_decode($metrics, true),
+                    "answers" => json_decode($attempt->answers, true),
+                    "results" => $results*/
+                ];
+
+                /*$ws_info = json_decode(Storage::get("WS/$worksheet->ws_name"));
 
                 $att_answers = json_decode($attempt->answers);
                 //$cor_answers = json_decode($ws->correctopts);
@@ -201,9 +216,7 @@ class StatsController extends Controller
                 }
 
                 if ($right + $wrong + $left == count($cor_answers)) {
-                    /**
-                     * Grab the metrics data from the Filesystem.
-                     */
+                     //Grab the metrics data from the Filesystem.
                     $att_id = $attempt->wsid . "." . $attempt->attemptee;
                     $metrics = Storage::get('wsa_metrics/' . $att_id);
                     return [
@@ -228,7 +241,7 @@ class StatsController extends Controller
                 return [
                     "status" => "success",
                     "msg" => "attempted"
-                ];
+                ];*/
             } else {
                 return [
                     "status" => "success",

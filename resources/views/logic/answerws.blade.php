@@ -42,9 +42,19 @@
                     var a3 = $('#sqa-select-3').find(":selected").attr("value");
                     var a4 = $('#sqa-select-4').find(":selected").attr("value");
 
-                    ans_submit_sqa(current, [
-                        a1, a2, a3, a4
-                    ], clock_hits);
+                    a1_text = $('#sqa-select-1-text').text().trim();
+                    a2_text = $('#sqa-select-2-text').text().trim();
+                    a3_text = $('#sqa-select-3-text').text().trim();
+                    a4_text = $('#sqa-select-4-text').text().trim();
+
+                    
+                    var sqa_answers = {};
+                    sqa_answers[a1_text] = a1;
+                    sqa_answers[a2_text] = a2;
+                    sqa_answers[a3_text] = a3;
+                    sqa_answers[a4_text] = a4;
+
+                    ans_submit_sqa(current, sqa_answers, clock_hits);
                     break;
                 default:
                     // report this incident
@@ -58,7 +68,7 @@
             current = parseInt($("#current").val());
             if(current >= parseInt("{{ $ws->nos }}")){
                 console.log("DONE");
-                //redirect to Stats Page
+                window.location = `{{ config('app.url') }}/worksheets/done/{{ $ws->slug }}`;
             } else {
                 load_content(current+1);
                 $("#current").val(current+1);
@@ -125,12 +135,12 @@
 
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
-                                        <label class="input-group-text" for="sqa-select-1">
+                                        <label class="input-group-text" for="sqa-select-1" id="sqa-select-1-text">
                                             ${question.opts[0]}
                                         </label>
                                     </div>
                                     <select class="custom-select" id="sqa-select-1">
-                                        <option selected>Select</option>
+                                        <option value="0" selected>Select</option>
                                         <option value="1">One</option>
                                         <option value="2">Two</option>
                                         <option value="3">Three</option>
@@ -140,12 +150,12 @@
 
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
-                                        <label class="input-group-text" for="sqa-select-2">
+                                        <label class="input-group-text" for="sqa-select-2" id="sqa-select-2-text">
                                             ${question.opts[1]}
                                         </label>
                                     </div>
                                     <select class="custom-select" id="sqa-select-2">
-                                        <option selected>Select</option>
+                                        <option value="0" selected>Select</option>
                                         <option value="1">One</option>
                                         <option value="2">Two</option>
                                         <option value="3">Three</option>
@@ -155,12 +165,12 @@
 
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
-                                        <label class="input-group-text" for="sqa-select-3">
+                                        <label class="input-group-text" for="sqa-select-3" id="sqa-select-3-text">
                                             ${question.opts[2]}
                                         </label>
                                     </div>
                                     <select class="custom-select" id="sqa-select-3">
-                                        <option selected>Select</option>
+                                        <option value="0" selected>Select</option>
                                         <option value="1">One</option>
                                         <option value="2">Two</option>
                                         <option value="3">Three</option>
@@ -170,12 +180,12 @@
 
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
-                                        <label class="input-group-text" for="sqa-select-4">
+                                        <label class="input-group-text" for="sqa-select-4" id="sqa-select-4-text">
                                             ${question.opts[3]}
                                         </label>
                                     </div>
                                     <select class="custom-select" id="sqa-select-4">
-                                        <option selected>Select</option>
+                                        <option value="0" selected>Select</option>
                                         <option value="1">One</option>
                                         <option value="2">Two</option>
                                         <option value="3">Three</option>

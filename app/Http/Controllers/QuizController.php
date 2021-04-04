@@ -133,14 +133,41 @@ class QuizController extends Controller
         if ($request->type == "SAQ") {
             $pending_att->answer($request->answer);
 
+            if ($request->answer != null) {
+                if ($request->answer == $data['correct']) {
+                    $pending_att->right++;
+                } else {
+                    $pending_att->wrong++;
+                }
+            } else {
+                $pending_att->left++;
+            }
+
+            $pending_att->save();
+
             return [
                 "correct" => $data['correct'],
                 "explanation" => $data['explanation'],
             ];
         } else if ($request->type == "MCQ") {
-            $answers = $request->answer;
-            $actual_answer = $answers[count($answers) - 1];
-            $pending_att->answer($actual_answer);
+            if ($request->answer != null) {
+                $pending_att->answer($request->answer);
+                if ($request->answer == $data['correct']) {
+                    $pending_att->right++;
+                } else {
+                    $pending_att->wrong++;
+                }
+
+                $answers = $request->answer;
+                $actual_answer = $answers[count($answers) - 1];
+                $pending_att->answer($actual_answer);
+            } else {
+                $pending_att->left++;
+                $pending_att->answer(null); //OR 0??
+            }
+
+            $pending_att->save();
+
             /**
              * We get a "ans" input, which contains all the 
              * option changes of the user. The last one is the final answer.
@@ -154,10 +181,32 @@ class QuizController extends Controller
                 "explanation" => $data['explanation'],
             ];
         } else if ($request->type == "SQA") {
-            $pending_att->answer($request->answer);
-            /**
-             * We get "ans", which is the given order.
-             */
+
+            //return $request->all();
+
+            if ($request->answer != null) {
+                $pending_att->answer($request->answer);
+
+                // Some other conditions here
+
+                $pending_att->right++;
+                for ($i = 1; $i <= count($data['opts']); $i++) {
+                    $current_key = $data['opts'][$i - 1];
+
+                    if ($request->answer[$current_key] == $i) {
+                        // Do nothing
+                    } else {
+                        $pending_att->wrong++;
+                        $pending_att->right--;
+                        break;
+                    }
+                }
+            } else {
+                $pending_att->left++;
+                $pending_att->answer($request->answer);
+            }
+
+            $pending_att->save();
 
             return [
                 "correct" => $data['opts'],
