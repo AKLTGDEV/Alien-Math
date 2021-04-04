@@ -32,7 +32,14 @@
                     ans_submit_saq(current, $("#saq-answer").val());
                     break;
                 case "SQA":
-                    console.log("SQA")
+                    var a1 = $('#sqa-select-1').find(":selected").attr("value");
+                    var a2 = $('#sqa-select-2').find(":selected").attr("value");
+                    var a3 = $('#sqa-select-3').find(":selected").attr("value");
+                    var a4 = $('#sqa-select-4').find(":selected").attr("value");
+
+                    ans_submit_sqa(current, [
+                        a1, a2, a3, a4
+                    ]);
                     break;
                 default:
                     // report this incident

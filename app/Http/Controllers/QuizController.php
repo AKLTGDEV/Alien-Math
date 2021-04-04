@@ -147,6 +147,15 @@ class QuizController extends Controller
                 "correct" => $correct,
                 "explanation" => $data['explanation'],
             ];
+        } else if ($request->type == "SQA") {
+            /**
+             * We get "ans", which is the given order.
+             */
+
+            return [
+                "correct" => $data['opts'],
+                "explanation" => $data['explanation'],
+            ];
         }
     }
 }
