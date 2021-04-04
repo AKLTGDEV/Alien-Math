@@ -189,7 +189,7 @@ class WorksheetController extends Controller
                 $attempt = new wsAttemptsModel;
                 $attempt->wsid = $id;
                 $attempt->attemptee = $self->id;
-                
+
                 $attempt->save();
                 Storage::put("wsa_metrics/$attempt->id/clock_hits", "[]");
                 Storage::put("wsa_metrics/$attempt->id/answers", "[]");
@@ -363,7 +363,21 @@ class WorksheetController extends Controller
                     }
                     $shareid = $attempt->random_id;
 
-                    $mins = ($attempt->secs) / 60;
+                    $stats = StatsController::stats_ws_user($id, $self->username);
+
+                    $wsa_metrics = $stats['metrics'];
+
+                    return view("worksheet.answer.wsanswer-3", [
+                        "ws" => $worksheet,
+                        "fucked" => false,
+                        "self" => $self,
+                        "attempt" => $attempt,
+                        "total" => $attempt->right + $attempt->wrong + $attempt->left,
+                        "right" => $attempt->right,
+                        "mins" => round($wsa_metrics['clock_hits']/60, 3),
+                        "shareid" => $shareid,
+                        "searchbar" => false
+                    ]);
 
                     /*$stats = StatsController::stats_ws_user($id, $self->username);
                     $total = $stats['general']['right'] + $stats['general']['wrong'] + $stats['general']['left'];
@@ -379,8 +393,6 @@ class WorksheetController extends Controller
                         "shareid" => $shareid,
                         "searchbar" => false
                     ]);*/
-
-                    
                 }
             } else {
                 return redirect()->route('wsanswer-1', [$worksheet->slug]);

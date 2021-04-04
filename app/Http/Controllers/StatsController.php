@@ -177,17 +177,26 @@ class StatsController extends Controller
                     return abort(404);
                 }
 
+                $wsa_metrics = [];
+                
+                $secs = 0;
+                foreach (json_decode(Storage::get("wsa_metrics/$attempt->id/clock_hits")) as $hit) {
+                    $secs += $hit;
+                }
+
+                $wsa_metrics['clock_hits'] = $secs;
+
                 return [
                     "status" => "success",
                     "general" => [
                         "wsid"  => $ws->id,
-                        "right" => $right,
-                        "wrong" => $wrong,
-                        "left" => $left
+                        "right" => $attempt->right,
+                        "wrong" => $attempt->wrong,
+                        "left" => $attempt->left
                     ],
-                    /*"metrics" => json_decode($metrics, true),
-                    "answers" => json_decode($attempt->answers, true),
-                    "results" => $results*/
+                    "metrics" => $wsa_metrics,
+                    "answers" => $attempt->getanswers(),
+                    "results" => $attempt->results
                 ];
 
                 /*$ws_info = json_decode(Storage::get("WS/$worksheet->ws_name"));

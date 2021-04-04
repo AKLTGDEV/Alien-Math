@@ -17,6 +17,20 @@ class wsAttemptsModel extends Model
         Storage::put("wsa_metrics/$this->id/answers", json_encode($answers));
     }
 
+    public function getanswers()
+    {
+        return json_decode(Storage::get("wsa_metrics/$this->id/answers"));
+    }
+
+    public function result($flag)
+    {
+        $results = json_decode($this->results);
+        $results[] = $flag;
+
+        $this->results = json_encode($results);
+        $this->save();
+    }
+
     public function clock_hit($hits)
     {
         $hits_list = json_decode(Storage::get("wsa_metrics/$this->id/clock_hits"));

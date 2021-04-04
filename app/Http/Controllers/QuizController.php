@@ -136,11 +136,14 @@ class QuizController extends Controller
             if ($request->answer != null) {
                 if ($request->answer == $data['correct']) {
                     $pending_att->right++;
+                    $pending_att->result("T");
                 } else {
                     $pending_att->wrong++;
+                    $pending_att->result("F");
                 }
             } else {
                 $pending_att->left++;
+                $pending_att->result("L");
             }
 
             $pending_att->save();
@@ -154,8 +157,10 @@ class QuizController extends Controller
                 $pending_att->answer($request->answer);
                 if ($request->answer == $data['correct']) {
                     $pending_att->right++;
+                    $pending_att->result("T");
                 } else {
                     $pending_att->wrong++;
+                    $pending_att->result("F");
                 }
 
                 $answers = $request->answer;
@@ -163,6 +168,7 @@ class QuizController extends Controller
                 $pending_att->answer($actual_answer);
             } else {
                 $pending_att->left++;
+                $pending_att->result("L");
                 $pending_att->answer(null); //OR 0??
             }
 
@@ -190,19 +196,28 @@ class QuizController extends Controller
                 // Some other conditions here
 
                 $pending_att->right++;
+                $flag = true;
                 for ($i = 1; $i <= count($data['opts']); $i++) {
                     $current_key = $data['opts'][$i - 1];
 
                     if ($request->answer[$current_key] == $i) {
                         // Do nothing
                     } else {
-                        $pending_att->wrong++;
-                        $pending_att->right--;
+                        $flag = false;
                         break;
                     }
                 }
+
+                if($flag){
+                    $pending_att->right++;
+                    $pending_att->result("T");
+                } else {
+                    $pending_att->wrong++;
+                    $pending_att->result("F");
+                }
             } else {
                 $pending_att->left++;
+                $pending_att->result("L");
                 $pending_att->answer($request->answer);
             }
 
