@@ -108,6 +108,8 @@ Route::get("/report/sqa/{id}", 'QuestionController@report_sqa')->name('question.
 Route::get("/report/submit", 'QuestionController@report_submit')->name('question.report.submit');
 
 Route::get('/quiz', 'QuizController@generate')->name('quiz.generate');
+Route::get('/quiz/pullcontent/{slug}/{index}', 'QuizController@pullcontent_byindex')->name('quiz-pc');
+Route::post('/quiz/singleanswer/{slug}/{index}', 'QuizController@singleanswer')->name('quiz-singleanswer');
 
 
 Route::get('/user/{uname}/follow', 'ProfileController@follow')->name('userfollow');

@@ -31,6 +31,7 @@ class SQA extends Model
                 $this->O3,
                 $this->O4,
             ],
+            "explanation" => $this->GetExplanation(),
         ];
     }
 

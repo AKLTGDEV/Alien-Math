@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\PostModel;
 use App\SAQ;
 use App\SQA;
+use App\WorksheetModel;
 use App\worksheets;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class QuizController extends Controller
 {
@@ -83,5 +86,52 @@ class QuizController extends Controller
                 1
             )
         ]);
+    }
+
+    public function pullcontent_byindex($slug, $index)
+    {
+        $worksheet = WorksheetModel::where('slug', $slug)->first();
+
+        if ($worksheet == null) {
+            return abort(404);
+        }
+
+        $ws_info = json_decode(Storage::get("WS/$worksheet->ws_name"), true);
+        $self = Auth::user();
+
+        return [
+            "status" => "ok",
+            "data" => $ws_info['content'][$index - 1],
+        ];
+
+
+        /**
+         * FIXME: ENSURE THAT THE TEST IS ALREADY IN PROGRESS
+         * 
+         */
+        //TODO FIXME
+    }
+
+    public function singleanswer(Request $request, $slug, $index)
+    {
+        /*return [
+            $request->all(),
+            $slug,
+            $index,
+        ];*/
+
+        $worksheet = WorksheetModel::where('slug', $slug)->first();
+
+        if ($worksheet == null) {
+            return abort(404);
+        }
+
+        $ws_info = json_decode(Storage::get("WS/$worksheet->ws_name"), true);
+        $data = $ws_info['content'][$index - 1];
+
+        return [
+            "correct" => $data['correct'],
+            "explanation" => $data['explanation'],
+        ];
     }
 }

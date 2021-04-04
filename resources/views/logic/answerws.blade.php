@@ -1,11 +1,45 @@
-<script>
+<script>            
     jQuery(document).ready(function($) {
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-        load_content(); // Load content the first time
-        
+        $("#current").val(1)
 
-        $("#refresh-cont-btn").click(function (e) {
-            load_content();
+        load_content(1); // Load content the first time
+
+        $("#subq").click(function (e) {
+            /**
+            STEP 1: Submit Anser
+            STEP 2: Display Correct answer and Hint
+            STEP 3: display next answer
+             */
+            current = parseInt($("#current").val());
+            current_type = $("#current-type").val();
+
+            switch(current_type) {
+                case "MCQ":
+                    console.log("MCQ")
+                    break;
+                case "SAQ":
+                    ans_submit_saq(current, $("#saq-answer").val());
+                    break;
+                case "SQA":
+                    console.log("SQA")
+                    break;
+                default:
+                    // report this incident
+            }
+
+            $("#nextq").prop("disabled", false);
+        });
+
+        $("#nextq").click(function (e) {
+            current = parseInt($("#current").val());
+            if(current >= parseInt("{{ $ws->nos }}")){
+                console.log("DONE");
+                //redirect to Stats Page
+            } else {
+                load_content(current+1);
+                $("#current").val(current+1);
+            }
         })
 
 
@@ -15,61 +49,23 @@
             
         }
 
-        /*answers = [];
-        for (let i = 0; i < {{$nos}}; i++) {
-            answers[i] = "N";
-            
-        }
+        @include('logic.ws.saq')
 
-        opt_changes = [];
-        for (let i = 0; i < {{$nos}}; i++) {
-            opt_changes[i] = 0;
-            
-        }*/
-
-        /*$(".option").click(function(e) {
-
-            pid = $(this).attr("pid");
-            opt = $(this).attr("opt");
-
-            //Check if any of the other options are currently selected 
-
-            if(answers[pid - 1] != "N"){
-                opt_changes[pid-1]++;
-                // Remove "selected" class from all other options
-                for (let c = 1; c <= 4; c++) {
-                    if(c == opt){
-                        continue;
-                    } else {
-                        $("#opt_"+pid+"_"+c).removeClass("opt-selected");
-                    }        
-                }
-                answers[pid - 1] = opt;
-                $(this).addClass("opt-selected");
-            } else {
-                answers[pid - 1] = opt;
-                $(this).addClass("opt-selected");
-            }
-        })*/
-
-        function load_content() {
+        function load_content(j) {
             /**
-                PULL ALL THE DATA FROM THE SERVER AND PLACE THEM
-                IN THE PLACES (BODIES AND OPTS)
-            */
+             * Clear the exploanation area first
+             * 
+             */
+            $(".answer-holder").empty();
 
-            <?php
-use Illuminate\Support\Facades\Auth;
-?>
-            var logged_in = "{{ Auth::check() == true ? '1' : '0' }}";
-
-            var pull_url = "{{ route('wsanswer-pc', [$ws->slug]) }} ";
-            if (logged_in == 0) {
-                pull_url = "{{ route('public-wsanswer-pc', [$ws->slug, $public_id]) }} ";
-            }
-        
+            /**
+             * Now disable the "Next question" button
+             * 
+             */
+            $("#nextq").prop("disabled", true);
+            
             $.ajax({
-                url: pull_url,
+                url:   `{{ config('app.url') }}/quiz/pullcontent/{{ $ws->slug }}/${j}`,
                 method: 'get',
                 data: {
                     _token: CSRF_TOKEN,
@@ -94,27 +90,96 @@ use Illuminate\Support\Facades\Auth;
                     } else {
                         // NEW CODE
 
-                        var i = 1;
-                        result.data.content.forEach(question => {
+                        //console.log(result.data);
+                        question = result.data;
+                        $("#current-type").val(question.type);
 
-                            //STEP 1: Fill in the bodies
-                            $("#question_content_"+i).html(question.body);
+                        $("#question_content").html(question.body);
 
-                            //STEP 2: Fill answer section
-                            if(question.type == "MCQ"){
-                                $("#answer-holder-"+i).html(`
+                        if(question.type == "SAQ"){
+                                $("#answer-holder").html(`
+                                
+                                <input placeholder="Answer Here" class="form-control form-input" type="text" id="saq-answer">
+                                
+                                `);
+                        } else if(question.type == "SQA"){
+                                $("#answer-holder").html(`
+
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="sqa-select-1">
+                                            ${question.opts[0]}
+                                        </label>
+                                    </div>
+                                    <select class="custom-select" id="sqa-select-1">
+                                        <option selected>Select</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                        <option value="4">Four</option>
+                                    </select>
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="sqa-select-2">
+                                            ${question.opts[1]}
+                                        </label>
+                                    </div>
+                                    <select class="custom-select" id="sqa-select-2">
+                                        <option selected>Select</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                        <option value="4">Four</option>
+                                    </select>
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="sqa-select-3">
+                                            ${question.opts[2]}
+                                        </label>
+                                    </div>
+                                    <select class="custom-select" id="sqa-select-3">
+                                        <option selected>Select</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                        <option value="4">Four</option>
+                                    </select>
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="sqa-select-4">
+                                            ${question.opts[3]}
+                                        </label>
+                                    </div>
+                                    <select class="custom-select" id="sqa-select-4">
+                                        <option selected>Select</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                        <option value="4">Four</option>
+                                    </select>
+                                </div>
+
+                                `);
+                            } else if(question.type == "MCQ"){
+                                $("#answer-holder").html(`
 
                                             <div class="row">
                                                 <div class="col-6">
-                                                    <div class="option" id="opt_${i}_1" pid="${i}" opt="1">
-                                                        <div id="opt_${i}_1_body" class="option-text btn btn-outline-secondary shadow  btn-rounded waves-effect">
+                                                    <div class="option" id="opt_1" pid="${j}" opt="1">
+                                                        <div id="opt_1_body" class="option-text btn btn-outline-secondary shadow  btn-rounded waves-effect">
                                                             ${question.opts[0]}
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
-                                                    <div class="option" id="opt_${i}_2" pid="${i}" opt="2">
-                                                        <div id="opt_${i}_2_body" class="option-text btn btn-outline-secondary shadow  btn-rounded waves-effect">
+                                                    <div class="option" id="opt_2" pid="${j}" opt="2">
+                                                        <div id="opt_2_body" class="option-text btn btn-outline-secondary shadow  btn-rounded waves-effect">
                                                         ${question.opts[1]}
                                                         </div>
                                                     </div>
@@ -122,15 +187,15 @@ use Illuminate\Support\Facades\Auth;
                                             </div>
                                             <div class="row">
                                                 <div class="col-6">
-                                                    <div class="option" id="opt_${i}_3" pid="${i}" opt="3">
-                                                        <div id="opt_${i}_3_body" class="option-text btn btn-outline-secondary shadow  btn-rounded waves-effect">
+                                                    <div class="option" id="opt_3" pid="${j}" opt="3">
+                                                        <div id="opt_3_body" class="option-text btn btn-outline-secondary shadow  btn-rounded waves-effect">
                                                         ${question.opts[2]}
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
-                                                    <div class="option" id="opt_${i}_4" pid="${i}" opt="4">
-                                                        <div id="opt_${i}_4_body" class="option-text btn btn-outline-secondary shadow  btn-rounded waves-effect">
+                                                    <div class="option" id="opt_4" pid="${j}" opt="4">
+                                                        <div id="opt_4_body" class="option-text btn btn-outline-secondary shadow  btn-rounded waves-effect">
                                                         ${question.opts[3]}
                                                         </div>
                                                     </div>
@@ -138,142 +203,13 @@ use Illuminate\Support\Facades\Auth;
                                             </div>
 
                                 `);
-                            } else if(question.type == "SAQ"){
-                                $("#answer-holder-"+i).html(`
-                                
-                                <input placeholder="Answer Here" class="form-control form-input" type="text" id="saq-answer-${i}">
-                                
-                                `);
-                            } else if(question.type == "SQA"){
-                                $("#answer-holder-"+i).html(`
-
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <label class="input-group-text" for="sqa-select-${i}-1">
-                                            ${question.opts[0]}
-                                        </label>
-                                    </div>
-                                    <select class="custom-select" id="sqa-select-${i}-1">
-                                        <option selected>Select</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
-                                        <option value="4">Four</option>
-                                    </select>
-                                </div>
-
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <label class="input-group-text" for="sqa-select-${i}-2">
-                                            ${question.opts[1]}
-                                        </label>
-                                    </div>
-                                    <select class="custom-select" id="sqa-select-${i}-2">
-                                        <option selected>Select</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
-                                        <option value="4">Four</option>
-                                    </select>
-                                </div>
-
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <label class="input-group-text" for="sqa-select-${i}-3">
-                                            ${question.opts[2]}
-                                        </label>
-                                    </div>
-                                    <select class="custom-select" id="sqa-select-${i}-3">
-                                        <option selected>Select</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
-                                        <option value="4">Four</option>
-                                    </select>
-                                </div>
-
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <label class="input-group-text" for="sqa-select-${i}-4">
-                                            ${question.opts[3]}
-                                        </label>
-                                    </div>
-                                    <select class="custom-select" id="sqa-select-${i}-4">
-                                        <option selected>Select</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
-                                        <option value="4">Four</option>
-                                    </select>
-                                </div>
-
-                                `);
                             }
-
-                            i++;
-                        });
                     }
                 }
             });
         }
 
-        /*function submit_A() {
-            $("#sub").prop("disabled", true);
-            //alert("Submitting the paper. Please wait");
-            // Not needed
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                }
-            });
-
-            var logged_in = "{{ Auth::check() == true ? '1' : '0' }}";
-
-            var sub_url = "{{ route('answerws') }} ";
-            if (logged_in == 0) {
-                sub_url = "{{ route('public-answerws', [$public_id]) }} ";
-            }
-
-            $.ajax({
-                url: sub_url,
-                method: 'post',
-                data: {
-                    _token: CSRF_TOKEN,
-                    wsid: {{ $wsid }},
-                    ans: JSON.stringify(answers),
-                    clock_hits: JSON.stringify(clock_hits),
-                    opt_changes: JSON.stringify(opt_changes)
-                },
-                success: function(result) {
-                    console.log("RECIEVED: " + result);
-                    if (result == "Y") {
-                        var next_url = "{{ route('wsanswer-3', [$ws->slug]) }}";
-                        if (logged_in == 0) {
-                            next_url = "{{ route('public-wsanswer-3', [$ws->slug, $public_id]) }}";
-                        }
-
-                        window.location = next_url;
-                    } else {
-                        alert("Failed to Submit");
-                    }
-                }
-            });
-        }*/
-
-        /*$("#sub").click(function(e) {
-            //Make sure the user didn't actually mean to change the question.
-
-            if(GLOB_SUB_WARNING_SHOWN){
-                console.log("KNOB");
-               submit_A();
-            } else {
-                alert("Clicking 'Submit' again will submit the Worksheet. If you meant to change the question, Please chick on the Question numbers on top of the page.")
-                GLOB_SUB_WARNING_SHOWN = true;
-            }
-        })*/
-
-        var time_in_minutes = {{ $ws->mins }};
+        /*var time_in_minutes = {{ $ws->mins }};
         var current_time = Date.parse(new Date());
         var deadline = new Date(current_time + time_in_minutes * 60 * 1000);
 
@@ -291,15 +227,13 @@ use Illuminate\Support\Facades\Auth;
                 'minutes': minutes,
                 'seconds': seconds
             };
-        }
+        }*/
 
-        function run_clock(id, endtime) {
+        /*function run_clock(id, endtime) {
             var clock = document.getElementById(id);
 
             function update_clock() {
-                /**
-                * This runs every second. Capture the currently active Q.
-                */
+                //This runs every second. Capture the currently active Q.
 
                 current = $(".active");
                 if(current[0] != null){
@@ -309,19 +243,19 @@ use Illuminate\Support\Facades\Auth;
 
                 var t = time_remaining(endtime);
                 if(t.hours == 0 && t.minutes == 0 && t.seconds == 1){
-                    submit_A();
+                    //submit_A();
                 }
                 //clock.innerHTML = 'minutes: '+t.minutes+'<br>seconds: '+t.seconds;
-                clock.innerHTML = t.hours + ":" + t.minutes + ":" + t.seconds;
-                if (t.total <= 0) {
-                    clearInterval(timeinterval);
-                }
+                //clock.innerHTML = t.hours + ":" + t.minutes + ":" + t.seconds;
+                //if (t.total <= 0) {
+                //    clearInterval(timeinterval);
+                //}
 
-                //console.log(clock_hits);
+                console.log(clock_hits);
             }
             update_clock(); // run function once at first to avoid delay
             var timeinterval = setInterval(update_clock, 1000);
         }
-        run_clock('clockdiv', deadline);
+        run_clock('clockdiv', deadline);*/
     })
 </script>

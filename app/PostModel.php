@@ -22,6 +22,7 @@ class PostModel extends Model
             "body" => $this->getBody(),
             "opts" => json_decode($this->opts),
             "correct" => $this->correctopt,
+            "explanation" => $this->GetExplanation(),
         ];
     }
 

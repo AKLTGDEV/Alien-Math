@@ -2,9 +2,6 @@
 
 @section('content')
 
-<link rel="stylesheet" href="{{ asset('css/answs.css') }}">
-<script src="{{ asset('js/answs.js') }}"></script>
-
 <?php
 
 use App\UserModel;
@@ -14,7 +11,6 @@ $wsid = $ws->id;
 
 ?>
 
-@include('logic.answerws')
 
 <style>
     .option {
@@ -41,7 +37,13 @@ $wsid = $ws->id;
     .holder-col {
         margin-top: 5px;
     }
+
+    .answer-holder {
+        background: rgba(0, 140, 163, 0.17);
+    }
 </style>
+
+@include('logic.answerws')
 
 <div class="container">
     <div class="row">
@@ -56,85 +58,38 @@ $wsid = $ws->id;
                             ?>
                             <h6>By {{ $authorname }}</h6>
                         </div>
-                        <div class="col-md-2" id="clockdiv-holder">
-                            <div id="clockdiv" class="btn btn-primary btn-md shadow" role="button">
-                            </div>
-                        </div>
                     </div>
                 </div>
 
                 <div class="card-body container-fluid" id="content-body">
-                    <nav aria-label="Page navigation example">
-                        <ul class="nav nav-tabs q-holder">
-                            <li class="nav-item">
-                                <a class="nav-link" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                    <span class="sr-only">Next</span>
-                                </a>
-                            </li>
 
-                            <?php
-                            for ($i = 1; $i <= $ws->nos; $i++) {
-                                ?>
-                                <li class="nav-item" pid="{{ $i }}">
-                                    <a class="nav-link" id="q-{{ $i }}-tab" data-toggle="tab" href="#body-q-{{ $i }}" role="tab" aria-controls="body-q-{{ $i }}" aria-selected="true" qid="{{$i}}">
-                                        Q{{ $i }}
-                                    </a>
-                                </li>
+                    <input type="text" style="display: none;" id="current" value="1">
+                    <input type="text" style="display: none;" id="current-type" value="">
 
-                            <?php } ?>
-
-                            <li class="nav-item">
-                                <a class="nav-link" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                    <span class="sr-only">Next</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                    <div class="tab-content clearfix" id="TabContent">
-
-                        <?php
-                        for ($i = 1; $i <= $ws->nos; $i++) {
-                            ?>
-
-                            <div class="tab-pane fade show" id="body-q-{{ $i }}" role="tabpanel" aria-labelledby="q-{{ $i }}-tab" pid="{{ $i }}">
-                                <div class="card">
-                                    <div class="card-header" id="question_content_{{ $i }}">
-                                        <i class='fas fa-2x fa-spinner fa-spin'></i>
-                                    </div>
-                                    <div class="card-body">
-                                        <!--
-                                            This is the place where answer holders would be placed.
-
-                                            MCQ: 4 Option boxes
-                                            SAQ: One text input
-                                            SQA: 4 Dropdowns
-
-                                        -->
-                                        <div id="answer-holder-{{ $i }}">
-                                        </div>
-                                    </div>
-                                </div>
+                    <div class="card">
+                        <div class="card-header" id="question_content">
+                        </div>
+                        <div class="card-body">
+                            <div id="answer-holder">
                             </div>
-
-                        <?php } ?>
-
+                        </div>
+                        <div class="card-footer" id="answer">
+                            <div class="answer-holder">
+                            </div>
+                        </div>
                     </div>
+
                     <div class="row" style="margin-top:1%">
                         <div class="col-md-10 col-md-offset-1">
-                            <button id="sub" class="btn btn-outline-info">
-                                Video
-                            </button>
-                            <button id="sub" class="btn btn-outline-info">
+                            <button id="hint" class="btn btn-outline-info">
                                 Hint
                             </button>
-                            <button id="sub" class="btn btn-info" type="submit">
+                            <button id="subq" class="btn btn-info">
                                 Submit
                             </button>
-                            <div class="btn btn-outline-success" id="refresh-cont-btn">
-                                Re-load Questions
-                            </div>
+                            <button id="nextq" class="btn btn-info" disabled>
+                                Next Question
+                            </button>
                         </div>
                     </div>
                 </div>
