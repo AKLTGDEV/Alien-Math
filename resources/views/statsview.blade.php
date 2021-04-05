@@ -226,7 +226,9 @@
 
          var labels = [];
          var rightwrong = [];
-         var netq = result.general.right + result.general.wrong + result.general.left;
+         var netq = parseInt(result.general.nos);
+
+         console.log(netq);
 
          for (let k = 1; k <= netq; k++) {
             labels.push("Q" + k);
@@ -256,7 +258,7 @@
 
          var labels = [];
          var rightwrong = [];
-         var netq = result.general.right + result.general.wrong + result.general.left;
+         var netq = parseInt(result.general.nos);
 
          for (let k = 1; k <= netq; k++) {
             labels.push("Q" + k);

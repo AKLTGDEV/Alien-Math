@@ -186,21 +186,43 @@ class StatsController extends Controller
 
                 //CLOCK HITS
                 $wsa_metrics_hits = [];
+                $secs = 0;
                 foreach (json_decode(Storage::get("wsa_metrics/$attempt->id/clock_hits")) as $hit) {
                     $wsa_metrics_hits[] = $hit;
+                    $secs += $hit;
                 }
                 $wsa_metrics['clock_hits'] = $wsa_metrics_hits;
+
+                $results__ = array_count_values(json_decode($attempt->results));
+
+                $right = 0;
+                $wrong = 0;
+                $left = 0;
+
+                if (array_key_exists("T", $results__)) {
+                    $right = $results__['T'];
+                }
+
+                if (array_key_exists("F", $results__)) {
+                    $wrong = $results__['F'];
+                }
+
+                if (array_key_exists("L", $results__)) {
+                    $left = $results__['L'];
+                }
 
                 return [
                     "status" => "success",
                     "general" => [
                         "wsid"  => $ws->id,
-                        "right" => $attempt->right,
-                        "wrong" => $attempt->wrong,
-                        "left" => $attempt->left
+                        "right" => $right,
+                        "wrong" => $wrong,
+                        "left" => $left,
+                        "nos" => $ws->nos,
                     ],
                     "metrics" => $wsa_metrics,
                     "answers" => $attempt->getanswers(),
+                    "secs" => $secs,
                     "results" => json_decode($attempt->results),
                 ];
 

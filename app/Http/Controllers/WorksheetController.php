@@ -367,14 +367,26 @@ class WorksheetController extends Controller
 
                     $wsa_metrics = $stats['metrics'];
 
+                    $secs = $stats['secs'];
+
+                    $results__ = array_count_values(json_decode($attempt->results));
+
+                    $right = 0;
+                    if (array_key_exists("T", $results__)) {
+                        $right = $results__['T'];
+                    }
+
                     return view("worksheet.answer.wsanswer-3", [
                         "ws" => $worksheet,
                         "fucked" => false,
                         "self" => $self,
                         "attempt" => $attempt,
-                        "total" => $attempt->right + $attempt->wrong + $attempt->left,
-                        "right" => $attempt->right,
-                        "mins" => round($wsa_metrics['clock_hits']/60, 3),
+                        //"total" => $attempt->right + $attempt->wrong + $attempt->left,
+                        "total" => $worksheet->nos,
+                        //"right" => $results__['T'],
+                        "right" => $right,
+                        //"mins" => round($wsa_metrics['clock_hits']/60, 3),
+                        "mins" => round($secs / 60, 3),
                         "shareid" => $shareid,
                         "searchbar" => false
                     ]);
