@@ -165,7 +165,8 @@
                     </form>
                 </li>
                 @endif
-                @if(adminlist::isadmin(Auth::user()->username) || groups::isoperator(Auth::user()->username))
+
+                @if(Auth::user()->isAdmin())
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" href="{{ route('admin') }}">
                         <span>
@@ -177,6 +178,7 @@
                 </li>
                 @endif
 
+                @if(Auth::user()->isAdmin() || Auth::user()->isTeacher())
                 <li class="nav-item dropdown" role="presentation">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                         <span>
@@ -242,6 +244,8 @@
                         </li> ON HOLD, COME BACK LATER -->
                     </ul>
                 </li>
+                @endif
+
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" href="{{ route('notifs') }}">
                         <span>
@@ -282,11 +286,13 @@
                                 </span>
                             </a>
                         </li>
+                        @if(Auth::user()->isAdmin() || Auth::user()->isTeacher())
                         <div class="nav-item">
                             <a class="dropdown-item" href="{{ route('qbank_index') }}">
                                 Question Bank
                             </a>
                         </div>
+                        @endif
                         <li class="nav-item">
                             <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

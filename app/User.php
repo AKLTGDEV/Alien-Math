@@ -87,6 +87,15 @@ class User extends Authenticatable implements MustVerifyEmail
         }
     }
 
+    public function isTeacher()
+    {
+        if($this->type == "creator"){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function isStudent()
     {
         if($this->type == "student"){

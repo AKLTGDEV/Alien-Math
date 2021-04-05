@@ -69,15 +69,15 @@ class ProfileController extends Controller
         }
 
 
-        $SITE_PROFILE_TYPE = "ajax"; // Change it here
+        //$SITE_PROFILE_TYPE = "ajax"; // Change it here
 
         $items = null;
-        $profile_view_file = "profile-new";
+        /*$profile_view_file = "profile-new";
 
         if($SITE_PROFILE_TYPE == "classic"){
             $profile_view_file = "profile";
             $items = classic::get($user);
-        }
+        }*/
 
         /**
          * Check if the user has any classrooms to his name
@@ -94,7 +94,7 @@ class ProfileController extends Controller
          * Get all the test series created by the user/bought by the user.
          */
         $TS_list = [];
-        
+
         $TS_own = TSModel::where("author", Auth::user()->id)->get();
         foreach ($TS_own as $T) {
             array_push($TS_list, $T);
@@ -106,8 +106,60 @@ class ProfileController extends Controller
             array_push($TS_list, $T);
         }
 
+        if ($currentuser->username == $user->username) {
+            //own account
+            if ($currentuser->isStudent()) {
+                return view("profile.usertype.student", [
+                    "user" => $user,
+                    "self" => $self,
+                    "items" => $items,
+                    "notifs" => false, //FIXME
+                    "classes_goals" => true,
+                    "classrooms_list" => $classes,
+                    "following_flag" => $following_flag,
+                    "newuser" => $first_time,
+                    "TS" => $TS_list,
 
-        return view("profile.$profile_view_file", [
+                    "tags_suggested" => tags::top20(),
+
+                    "searchbar" => true
+                ]);
+            } else if ($currentuser->isAdmin()){
+                return view("profile.usertype.admin", [
+                    "user" => $user,
+                    "self" => $self,
+                    "items" => $items,
+                    "notifs" => false, //FIXME
+                    "classes_goals" => true,
+                    "classrooms_list" => $classes,
+                    "following_flag" => $following_flag,
+                    "newuser" => $first_time,
+                    "TS" => $TS_list,
+        
+                    "tags_suggested" => tags::top20(),
+        
+                    "searchbar" => true
+                ]);
+            } else if($currentuser->isTeacher()){
+                return view("profile.usertype.teacher", [
+                    "user" => $user,
+                    "self" => $self,
+                    "items" => $items,
+                    "notifs" => false, //FIXME
+                    "classes_goals" => true,
+                    "classrooms_list" => $classes,
+                    "following_flag" => $following_flag,
+                    "newuser" => $first_time,
+                    "TS" => $TS_list,
+        
+                    "tags_suggested" => tags::top20(),
+        
+                    "searchbar" => true
+                ]);
+            }
+        }
+
+        /*return view("profile.$profile_view_file", [
             "user" => $user,
             "self" => $self,
             "items" => $items,
@@ -121,10 +173,11 @@ class ProfileController extends Controller
             "tags_suggested" => tags::top20(),
 
             "searchbar" => true
-        ]);
+        ]);*/
     }
 
-    public function getfeed(Request $request, $uname){
+    public function getfeed(Request $request, $uname)
+    {
         app('debugbar')->disable();
 
         $user = UserModel::where("username", $uname)->first();
