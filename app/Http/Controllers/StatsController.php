@@ -178,13 +178,18 @@ class StatsController extends Controller
                 }
 
                 $wsa_metrics = [];
-                
-                $secs = 0;
-                foreach (json_decode(Storage::get("wsa_metrics/$attempt->id/clock_hits")) as $hit) {
-                    $secs += $hit;
-                }
 
-                $wsa_metrics['clock_hits'] = $secs;
+
+                //OPT CHANGES
+                $wsa_metrics['opt_changes'] = [];
+
+
+                //CLOCK HITS
+                $wsa_metrics_hits = [];
+                foreach (json_decode(Storage::get("wsa_metrics/$attempt->id/clock_hits")) as $hit) {
+                    $wsa_metrics_hits[] = $hit;
+                }
+                $wsa_metrics['clock_hits'] = $wsa_metrics_hits;
 
                 return [
                     "status" => "success",
@@ -196,7 +201,7 @@ class StatsController extends Controller
                     ],
                     "metrics" => $wsa_metrics,
                     "answers" => $attempt->getanswers(),
-                    "results" => $attempt->results
+                    "results" => json_decode($attempt->results),
                 ];
 
                 /*$ws_info = json_decode(Storage::get("WS/$worksheet->ws_name"));

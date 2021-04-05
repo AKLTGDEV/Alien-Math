@@ -35,7 +35,6 @@
       var dr = JSON.parse('<?php
                            echo json_encode($daily_record);
                            ?>');
-      console.log(dr);
       var dr_ctx = document.getElementById('dr_chart').getContext('2d');
       var dr_chart = new Chart(dr_ctx, {
          "type": "line",
@@ -108,7 +107,6 @@
             },
             success: function(result) {
                result.forEach(att => {
-                  console.log(att);
                   username = att[0];
                   name = att[1];
                   $("#attemptees-list").append('<a wsid="' + wsid + '" uname="' + username + '" class="useritem dropdown-item">' + name + '</a>');
@@ -247,7 +245,7 @@
             "datasets": [{
                "label": "",
                "backgroundColor": rightwrong,
-               "data": result.metrics[0]
+               "data": result.metrics.clock_hits
             }]
          };
          ws_user_chart.update();
@@ -280,6 +278,9 @@
                "data": result.metrics[1]
             }]
          };
+
+         console.log(result.metrics[1])
+
          ws_user_chart.update();
       }
    })
