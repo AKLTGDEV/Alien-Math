@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\PostModel;
+use App\Report;
 use App\SAQ;
 use App\SQA;
 use App\WorksheetModel;
@@ -228,5 +229,30 @@ class QuizController extends Controller
                 "explanation" => $data['explanation'],
             ];
         }
+    }
+
+    public function report(Request $request, $slug)
+    {
+        $worksheet = WorksheetModel::where('slug', $slug)->first();
+
+        if ($worksheet == null) {
+            return abort(404);
+        }
+
+        $ws_info = json_decode(Storage::get("WS/$worksheet->ws_name"), true);
+        $data = $ws_info['content'][$request->id - 1];
+
+        $rep = new Report;
+        $rep->type = $data['type'];
+        $rep->item_id = $worksheet->id;
+        $rep->ws_qid = $request->id;
+        $rep->from = Auth::user()->username;
+        $rep->data = $request->body;
+        $rep->save();
+
+
+        return [
+            "status" => true,
+        ];
     }
 }

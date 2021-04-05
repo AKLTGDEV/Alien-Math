@@ -19,6 +19,7 @@ class PostModel extends Model
     {
         return [
             "type" => "MCQ",
+            "id" => $this->id,
             "body" => $this->getBody(),
             "opts" => json_decode($this->opts),
             "correct" => $this->correctopt,

@@ -24,6 +24,7 @@ class SAQ extends Model
     {
         return [
             "type" => "SAQ",
+            "id" => $this->id,
             "body" => $this->getBody(),            
             "correct" => $this->correct,
             "explanation" => $this->GetExplanation(),

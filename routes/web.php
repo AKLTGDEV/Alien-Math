@@ -106,6 +106,7 @@ Route::get("/report/mcq/{id}", 'QuestionController@report_mcq')->name('question.
 Route::get("/report/saq/{id}", 'QuestionController@report_saq')->name('question.report.saq');
 Route::get("/report/sqa/{id}", 'QuestionController@report_sqa')->name('question.report.sqa');
 Route::get("/report/submit", 'QuestionController@report_submit')->name('question.report.submit');
+Route::get("/report/ws/{slug}/submit", 'QuizController@report')->name('ws.report.submit');
 
 Route::get('/quiz', 'QuizController@generate')->name('quiz.generate');
 Route::get('/quiz/pullcontent/{slug}/{index}', 'QuizController@pullcontent_byindex')->name('quiz-pc');

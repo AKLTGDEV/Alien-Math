@@ -19,9 +19,10 @@ class Reports extends Migration
                 "MCQ", "SAQ", "SQA"
             ]);
             $table->bigInteger('item_id');
+            $table->integer('ws_qid')->nullable(); //For WS
             $table->string('from');
 
-            $table->string('data')->nullable(); // ?
+            $table->string('data')->nullable();
             $table->timestamps();
         });
     }

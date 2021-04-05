@@ -24,6 +24,7 @@ class SQA extends Model
     {
         return [
             "type" => "SQA",
+            "id" => $this->id,
             "body" => $this->GetBody(),
             "opts" => [
                 $this->O1,

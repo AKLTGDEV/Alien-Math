@@ -11,6 +11,8 @@ $wsid = $ws->id;
 
 ?>
 
+<link href="https://cdn.jsdelivr.net/npm/suneditor@latest/dist/css/suneditor.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/suneditor@latest/dist/suneditor.min.js"></script>
 
 <style>
     .option {
@@ -65,6 +67,7 @@ $wsid = $ws->id;
 
                     <input type="text" style="display: none;" id="current" value="1">
                     <input type="text" style="display: none;" id="current-type" value="">
+                    <input type="text" style="display: none;" id="current-id" value="0">
 
                     <div class="card">
                         <div class="card-header" id="question_content">
@@ -90,6 +93,10 @@ $wsid = $ws->id;
                             <button id="nextq" class="btn btn-info" disabled>
                                 Next Question
                             </button>
+
+                            <button class="btn btn-warning" data-toggle="modal" data-target="#report-modal">
+                                Report
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -97,4 +104,42 @@ $wsid = $ws->id;
         </div>
     </div>
 </div>
+
+<div class="modal" id="report-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Report Question <span id="report-qn"></span></h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form method="get">
+                    @csrf
+
+                    <div class="container-fluid">
+                        <div class="form-group">
+                            <textarea name="body" id="report-body">
+                                    Describe the problem
+                            </textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button class="btn btn-warning" id="report-submit">
+                    Report
+                </button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 @endsection

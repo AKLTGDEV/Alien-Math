@@ -1,14 +1,46 @@
-<script>            
+<script>
     jQuery(document).ready(function($) {
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
         $("#current").val(1)
         var clock_hits = 0;
 
-        var _clock_ = window.setInterval(function(){
+        var _clock_ = window.setInterval(function() {
             clock_hits++;
         }, 1000);
 
         load_content(1); // Load content the first time
+
+        $('#report-modal').on('show.bs.modal', function() {
+            $("#report-qn").text($("#current").val());
+        })
+
+        $("#report-submit").click(function(e) {
+            var rep_data = {};
+
+            rep_data['_token'] = CSRF_TOKEN;
+            rep_data['id'] = $("#current").val();
+            rep_data['type'] = $("#current-type").val();
+            rep_data['body'] = $("#report-body").val().trim();
+
+            $.ajax({
+                url: `{{ config('app.url') }}//report/ws/{{ $ws->slug }}/submit`,
+                method: 'get',
+                data: rep_data,
+                success: function(result) {
+                    if(result.status){
+                        $("#report-modal").modal('hide');
+                    }
+                }
+            })
+
+        })
+
+        const body_editor = SUNEDITOR.create((document.getElementById('report-body') || 'report-body'), {
+            minWidth: "100%",
+        });
+        body_editor.onChange = (contents, core) => {
+            body_editor.save();
+        }
 
 
         var mcq_answers = [];
@@ -20,7 +52,7 @@
         })
 
 
-        $("#subq").click(function (e) {
+        $("#subq").click(function(e) {
             /**
             STEP 1: Submit Anser
             STEP 2: Display Correct answer and Hint
@@ -29,7 +61,7 @@
             current = parseInt($("#current").val());
             current_type = $("#current-type").val();
 
-            switch(current_type) {
+            switch (current_type) {
                 case "MCQ":
                     ans_submit_mcq(current, mcq_answers, clock_hits);
                     break;
@@ -47,7 +79,7 @@
                     a3_text = $('#sqa-select-3-text').text().trim();
                     a4_text = $('#sqa-select-4-text').text().trim();
 
-                    
+
                     var sqa_answers = {};
                     sqa_answers[a1_text] = a1;
                     sqa_answers[a2_text] = a2;
@@ -63,21 +95,19 @@
             $("#nextq").prop("disabled", false);
         });
 
-        $("#nextq").click(function (e) {
+        $("#nextq").click(function(e) {
             clock_hits = 0;
             current = parseInt($("#current").val());
-            if(current >= parseInt("{{ $ws->nos }}")){
+            if (current >= parseInt("{{ $ws->nos }}")) {
                 console.log("DONE");
                 window.location = `{{ config('app.url') }}/worksheets/done/{{ $ws->slug }}`;
             } else {
-                load_content(current+1);
-                $("#current").val(current+1);
+                load_content(current + 1);
+                $("#current").val(current + 1);
             }
         })
 
-        @include('logic.ws.saq')
-        @include('logic.ws.mcq')
-        @include('logic.ws.sqa')
+        @include('logic.ws.saq') @include('logic.ws.mcq') @include('logic.ws.sqa')
 
         function load_content(j) {
             /**
@@ -91,15 +121,15 @@
              * 
              */
             $("#nextq").prop("disabled", true);
-            
+
             $.ajax({
-                url:   `{{ config('app.url') }}/quiz/pullcontent/{{ $ws->slug }}/${j}`,
+                url: `{{ config('app.url') }}/quiz/pullcontent/{{ $ws->slug }}/${j}`,
                 method: 'get',
                 data: {
                     _token: CSRF_TOKEN,
                 },
                 success: function(result) {
-                    if(result.status == "error"){
+                    if (result.status == "error") {
                         $("#content-body").html(`
 
                         <div class="row mt-2 mb-2">
@@ -118,20 +148,20 @@
                     } else {
                         // NEW CODE
 
-                        //console.log(result.data);
                         question = result.data;
                         $("#current-type").val(question.type);
+                        $("#current-id").val(question.id);
 
                         $("#question_content").html(question.body);
 
-                        if(question.type == "SAQ"){
-                                $("#answer-holder").html(`
+                        if (question.type == "SAQ") {
+                            $("#answer-holder").html(`
                                 
                                 <input placeholder="Answer Here" class="form-control form-input" type="text" id="saq-answer">
                                 
                                 `);
-                        } else if(question.type == "SQA"){
-                                $("#answer-holder").html(`
+                        } else if (question.type == "SQA") {
+                            $("#answer-holder").html(`
 
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
@@ -194,8 +224,8 @@
                                 </div>
 
                                 `);
-                            } else if(question.type == "MCQ"){
-                                $("#answer-holder").html(`
+                        } else if (question.type == "MCQ") {
+                            $("#answer-holder").html(`
 
                                             <div class="row">
                                                 <div class="col-6">
@@ -231,7 +261,7 @@
                                             </div>
 
                                 `);
-                            }
+                        }
                     }
                 }
             });
