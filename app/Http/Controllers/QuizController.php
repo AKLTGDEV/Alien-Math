@@ -181,7 +181,7 @@ class QuizController extends Controller
              * 
              */
 
-            $correct = $data['opts'][$data['correct'] + 1];
+            $correct = $data['opts'][$data['correct'] - 1];
 
             return [
                 "correct" => $correct,

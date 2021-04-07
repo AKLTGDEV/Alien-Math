@@ -20,7 +20,8 @@ class StatsController extends Controller
     {
         $this->middleware('auth');
     }
-    public function view()
+
+    /*public function view()
     {
         $__posts = PostModel::where('author', Auth::user()->id)->get();
         //$answerlist = json_decode(Auth::user()->answers, true);
@@ -36,9 +37,9 @@ class StatsController extends Controller
             $tot++;
         }
 
-        /**
-         * Get the stats for most used topics
-         */
+        
+        // Get the stats for most used topics
+        
         $user_posts = posts::list(Auth::user()->username);
         $tags_used = array();
         foreach ($user_posts as $p) {
@@ -52,9 +53,7 @@ class StatsController extends Controller
         $tags_used = array_reverse($tags_used);
 
 
-        /**
-         * Same as above, but for answered questions
-         */
+        //Same as above, but for answered questions
         $tags_ans = array();
         foreach (posts::list_answered(Auth::user()) as $qno) {
             $post = PostModel::where('id', $qno)->first();
@@ -67,9 +66,7 @@ class StatsController extends Controller
         asort($tags_ans);
         $tags_ans = array_reverse($tags_ans);
 
-        /**
-         * Get all the worksheets posted/attempted by the user with its ids.
-         */
+        //Get all the worksheets posted/attempted by the user with its ids.
         $__worksheets = StatsController::get_all_ws();
         //dd($__worksheets);
         $worksheets = array();
@@ -77,11 +74,7 @@ class StatsController extends Controller
             array_push($worksheets, [$ws->id, $ws->title]);
         }
 
-        /**
-         * 
-         * get only the worksheets posted by the user
-         * 
-         */
+        //get only the worksheets posted by the user
         $self_posted = WorksheetModel::where("author", Auth::user()->id)->get();
         // FIXME Change this method of retrieving the posted WS
 
@@ -98,6 +91,50 @@ class StatsController extends Controller
 
             "searchbar" => true
         ]);
+    }*/
+
+    public function view()
+    {
+        $__posts = PostModel::where('author', Auth::user()->id)->get();
+
+        // Get the stats for most used topics
+
+        $user_posts = posts::list(Auth::user()->username);
+        $tags_used = array();
+        foreach ($user_posts as $p) {
+            $p_tags = json_decode($p["tags"], true);
+            foreach ($p_tags as $tagname) {
+                array_push($tags_used, $tagname);
+            }
+        }
+        $tags_used = array_count_values($tags_used);
+        asort($tags_used);
+        $tags_used = array_reverse($tags_used);
+
+
+        $self_posted = WorksheetModel::where("author", Auth::user()->id)->get();
+
+
+        if (Auth::user()->isTeacher()) {
+            return view('stats.teacher', [
+                "posts" => sizeof($__posts),
+                //"answers" => sizeof($answerlist),
+                //"aggregate" => $tot == 0 ? 0 : round(($right / $tot) * 100, 2),
+                //"rating" => Auth::user()->rating,
+                "tags_posted" => $tags_used,
+                //"tags_answered" => $tags_ans,
+                //"worksheets" => $worksheets,
+                "worksheets" => $self_posted,
+                //"self_worksheets" => $self_posted,
+                "daily_record" => rating::get_dr(Auth::user()),
+
+                "searchbar" => true
+            ]);
+        } else if (Auth::user()->isStudent()) {
+            return "STUDENT";
+        } else if (Auth::user()->isAdmin()) {
+            return "ADMIN";
+        }
     }
 
     public function get_ws_attemptees($wsid)
@@ -124,14 +161,28 @@ class StatsController extends Controller
                     return $ret;
                 }
             } else {
-                $attemptees_ids = json_decode($ws->attemptees, true);
+
+                $ret = [];
+                $attempts = wsAttemptsModel::where("wsid", $ws->id)->get();
+
+                foreach ($attempts as $a) {
+                    $U = UserModel::where('id', $a->attemptee)->first();
+                    $ret[] = [
+                        $U->username,
+                        $U->name,
+                    ];
+                }
+
+                return $ret;
+
+                /*$attemptees_ids = json_decode($ws->attemptees, true);
                 $ret = [];
                 foreach ($attemptees_ids as $uid) {
                     $U = UserModel::where('id', $uid)->first();
                     array_push($ret, [$U->username, $U->name]);
                 }
 
-                return $ret;
+                return $ret;*/
             }
         } else {
             return ["status" => "error"];
@@ -415,5 +466,60 @@ class StatsController extends Controller
                 ];
             }
         }
+    }
+
+    public function ws_q_details($wsid, $q)
+    {
+        $ws = WorksheetModel::where('id', $wsid)->first();
+        $ws_info = json_decode(Storage::get("WS/$ws->ws_name"), true);
+        $data = $ws_info['content'][$q - 1];
+
+        /**
+         * 
+         * General data to be returned for each question:
+         * 
+         * 1. % of attemptees who got it right
+         * 2. %of users who left it
+         * 3. Average attempt time
+         */
+
+        $all_attempts = wsAttemptsModel::where("wsid", $ws->id)
+            ->get();
+
+        $left = 0;
+        $correct = 0;
+
+        $hits = 0;
+
+        foreach ($all_attempts as $att) {
+            // PART 1: RESULTS
+            $results = json_decode($att->results);
+            if ($q > count($results)) {
+                $left++;
+            } else {
+                $r = $results[$q - 1];
+                if ($r == "L") {
+                    $left++;
+                } else if ($r == "T") {
+                    $correct++;
+                }
+            }
+
+
+            //PART 2: CLOCK HITS
+            if ($q > count($results)) {
+                // Nothing
+            } else {
+                $clock_hits = json_decode(Storage::get("wsa_metrics/$att->id/clock_hits"), true);
+                $hits += $clock_hits[$q - 1];
+            }
+        }
+
+        return [
+            "correct" => round($correct / count($all_attempts) * 100, 3),
+            "left" => round($left / count($all_attempts) * 100, 3),
+
+            "hits" => round($hits / count($all_attempts), 3),
+        ];
     }
 }

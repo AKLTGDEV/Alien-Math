@@ -17,6 +17,7 @@ class randq
 
         $faker = Factory::create();
         $body = $faker->unique()->paragraph(1);
+        $explanation = $faker->unique()->paragraph(1);
 
         $opt1 = $faker->unique()->sentence(5);
         $opt2 = $faker->unique()->sentence(5);
@@ -31,7 +32,8 @@ class randq
             "opts" => [
                 $opt1, $opt2, $opt3, $opt4
             ],
-            "correct" => $correct
+            "correct" => $correct,
+            "explanation" => $explanation,
         ];
     }
 
@@ -47,11 +49,13 @@ class randq
         $faker = Factory::create();
         $body = $faker->unique()->paragraph(1);
         $correct = $faker->unique()->paragraph(1);
+        $explanation = $faker->unique()->paragraph(1);
 
         return [
             "type" => "SAQ",
             "body" => $body,
-            "correct" => $correct
+            "correct" => $correct,
+            "explanation" => $explanation,
         ];
     }
 
@@ -71,6 +75,7 @@ class randq
         $opt2 = $faker->unique()->sentence(5);
         $opt3 = $faker->unique()->sentence(5);
         $opt4 = $faker->unique()->sentence(5);
+        $explanation = $faker->unique()->paragraph(1);
 
         return [
             "type" => "SQA",
@@ -78,6 +83,7 @@ class randq
             "opts" => [
                 $opt1, $opt2, $opt3, $opt4
             ],
+            "explanation" => $explanation,
         ];
     }
 }
