@@ -138,6 +138,13 @@
                 },
                 success: function(result) {
                     $("#ws-q-card-holder").empty();
+
+                    var topics_text = "";
+
+                    (result.topics).forEach(topic => {
+                        topics_text += `<span class="mx-1 badge badge-pill badge-success">${topic.name}</span>`;
+                    });
+
                     $("#ws-q-card-holder").html(`
                         <div class="card">
                             <div class="card-header">
@@ -149,6 +156,10 @@
                                     <h4>${result.left}% of attemptees left it</h4>
                                     <h4>Average Attempt time is ${result.hits} seconds</h4>
                                 </p>
+
+                                <div class="row">
+                                    ${topics_text}
+                                </div>
                             </div>
                         </div>
 

@@ -17,6 +17,13 @@ class PostModel extends Model
 
     public function info()
     {
+        $topics__ = explode(",", $this->topics);
+        $topics = [];
+
+        foreach ($topics__ as $t) {
+            $topics[] = TagsModel::where("name", $t)->first()->id;
+        }
+
         return [
             "type" => "MCQ",
             "id" => $this->id,
@@ -24,6 +31,7 @@ class PostModel extends Model
             "opts" => json_decode($this->opts),
             "correct" => $this->correctopt,
             "explanation" => $this->GetExplanation(),
+            "topics" => $topics,
         ];
     }
 

@@ -22,6 +22,13 @@ class SQA extends Model
 
     public function info()
     {
+        $topics__ = explode(",", $this->topics);
+        $topics = [];
+
+        foreach ($topics__ as $t) {
+            $topics[] = TagsModel::where("name", $t)->first()->id;
+        }
+
         return [
             "type" => "SQA",
             "id" => $this->id,
@@ -33,6 +40,7 @@ class SQA extends Model
                 $this->O4,
             ],
             "explanation" => $this->GetExplanation(),
+            "topics" => $topics,
         ];
     }
 

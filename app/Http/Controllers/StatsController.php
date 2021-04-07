@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\PostModel;
 use App\posts;
 use App\rating;
+use App\TagsModel;
 use Illuminate\Support\Facades\Auth;
 use App\WorksheetModel;
 use App\UserModel;
@@ -515,11 +516,21 @@ class StatsController extends Controller
             }
         }
 
+        $topics = [];
+        foreach ($data['topics'] as $t_id) {
+            $topic = TagsModel::where("id", $t_id)->first();
+
+            $topics[] = [
+                "id" => $topic->id,
+                "name" => $topic->name,
+            ];
+        };
+
         return [
             "correct" => round($correct / count($all_attempts) * 100, 3),
             "left" => round($left / count($all_attempts) * 100, 3),
-
             "hits" => round($hits / count($all_attempts), 3),
+            "topics" => $topics,
         ];
     }
 }

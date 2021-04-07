@@ -22,12 +22,20 @@ class SAQ extends Model
 
     public function info()
     {
+        $topics__ = explode(",", $this->topics);
+        $topics = [];
+
+        foreach ($topics__ as $t) {
+            $topics[] = TagsModel::where("name", $t)->first()->id;
+        }
+
         return [
             "type" => "SAQ",
             "id" => $this->id,
             "body" => $this->getBody(),            
             "correct" => $this->correct,
             "explanation" => $this->GetExplanation(),
+            "topics" => $topics,
         ];
     }
 
