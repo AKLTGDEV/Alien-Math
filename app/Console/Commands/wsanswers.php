@@ -7,7 +7,10 @@ use App\numbersT;
 use App\UserModel;
 use App\WorksheetModel;
 use App\worksheets;
+use App\wsAttemptsModel;
+use Faker\Factory;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Storage;
 
 class wsanswers extends Command
 {
@@ -35,7 +38,7 @@ class wsanswers extends Command
          */
 
         foreach ($allusers as $user) {
-            $this->info("user: " . $user->name . "\n");
+            $this->info("user: " . $user->name);
             $ws_id_pool = [];
             while (count($ws_id_pool) < $nos_answers) {
                 $x = rand(1, $nos_ws_total);
@@ -47,53 +50,115 @@ class wsanswers extends Command
             foreach ($ws_id_pool as $wsid) {
                 $worksheet = WorksheetModel::where('id', $wsid)->first();
 
-                $ans = [];
+                $attempt = new wsAttemptsModel;
+                $attempt->wsid = $worksheet->id;
+                $attempt->attemptee = $user->id;
+
+                $results_pool = ["T", "F", "L"];
+                $results = [];
                 for ($i = 1; $i <= $worksheet->nos; $i++) {
-                    array_push($ans, random_int(1, 4));
+                    $current_result = $results_pool[rand(0, 2)];
+
+                    switch ($current_result) {
+                        case 'T':
+                            $attempt->right++;
+                            break;
+
+                        case 'F':
+                            $attempt->wrong++;
+                            break;
+
+                        case 'L':
+                            $attempt->left++;
+                            break;
+
+                        default:
+                            // This is not right
+                            break;
+                    }
+
+                    $results[] = $current_result;
                 }
+                $attempt->results = json_encode($results);
+                $attempt->save();
 
-                $opt_changes = [];
-                for ($j = 1; $j <= $worksheet->nos; $j++) {
-                    array_push($opt_changes, random_int(5, 20));
-                }
+                $ws_info = json_decode(Storage::get("WS/$worksheet->ws_name"), true);
 
-                $Ttaken = 50;
-
+                /** 
+                 * Now save the info in local storage
+                 * 
+                 */
                 $clock_hits = [];
-                // Generate $nos random numbers, which all sums up to $ws->mins*60 -10
-                $ch_sum_last = (($worksheet->mins) * 60) - 10;
-                $sum = 0;
+                for ($j = 1; $j <= $worksheet->nos; $j++) {
+                    $clock_hits[] = rand(1, 120);
+                }
+                Storage::put("wsa_metrics/$attempt->id/clock_hits", json_encode($clock_hits));
+
+
+                $answers = [];
                 for ($k = 1; $k <= $worksheet->nos; $k++) {
-                    $current = random_int(1, 10);
-                    array_push($clock_hits, $current);
-                    $sum += $current;
+                    $status = $results[$k - 1];
+
+                    if ($status == "L") {
+                        $answers[] = null;
+                    } else {
+                        // See what type of question it is
+                        $data = $ws_info['content'][$k - 1];
+                        if ($data['type'] == "MCQ") {
+                            if ($status == "T") {
+                                $answers[] = $data['correct'];
+                            } else {
+                                $list_corrects = [1, 2, 3, 4];
+                                $correct = 0;
+                                foreach ($list_corrects as $c) {
+                                    if ($c != $data['correct']) {
+                                        $correct = $c;
+                                        break;
+                                    }
+                                }
+
+                                $answers[] = $correct;
+                            }
+                        } else if ($data['type'] == "SAQ") {
+                            if ($status == "T") {
+                                $answers[] = $data['correct'];
+                            } else {
+                                $faker = Factory::create();
+                                $correct = $faker
+                                    ->unique()
+                                    ->sentence(10);
+                                //Hope that it won't magically be the same as the correct answer
+
+                                $answers[] = $correct;
+                            }
+                        } else if ($data['type'] == "SQA") {
+                            $opts = $data['opts'];
+                            $current_answer = [];
+
+                            if ($status == "T") {
+                                $current_answer[$opts[0]] = 1;
+                                $current_answer[$opts[1]] = 2;
+                                $current_answer[$opts[2]] = 3;
+                                $current_answer[$opts[3]] = 4;
+                            } else {
+                                $order = [1, 2, 3, 4];
+                                shuffle($order);
+
+                                $current_answer[$opts[0]] = $order[0];
+                                $current_answer[$opts[1]] = $order[1];
+                                $current_answer[$opts[2]] = $order[2];
+                                $current_answer[$opts[3]] = $order[3];
+                            }
+
+                            $answers[] = $current_answer;
+                        }
+                    }
                 }
-
-                for ($l = 1; $l <= count($clock_hits); $l++) {
-                    $clock_hits[$l - 1] /= $sum;
-                }
-
-                for ($p = 1; $p <= count($clock_hits); $p++) {
-                    $clock_hits[$p - 1] *= $ch_sum_last;
-                }
-
-                for ($q = 1; $q <= count($clock_hits); $q++) {
-                    $clock_hits[$q - 1] = round($clock_hits[$q - 1], 2);
-                }
-
-
-                $all = [
-                    'wsid' => $wsid,
-                    'ans' => json_encode($ans),
-                    'clock_hits' => json_encode($clock_hits),
-                    //'clock_hits' => '[]',
-                    'opt_changes' => json_encode($opt_changes),
-                    'Ttaken' => $Ttaken,
-                ];
-
-                echo worksheets::answer_submit_seed($all, $user) . "\n";
+                Storage::put("wsa_metrics/$attempt->id/answers", "[]");
 
                 activitylog::ans_ws($user->username, $worksheet->id);
+
+                echo "WS ID " . $worksheet->id . "\n";
             }
         }
     }
