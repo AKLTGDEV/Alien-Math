@@ -29,6 +29,49 @@
 
         show_time_taken();
 
+        $(".ws-q-item").click(function(e) {
+
+            var wsid = "{{ $ws->id }}";
+            var q = $(this).attr("q");
+
+            $.ajax({
+                url: `{{ config('APP_URL') }}/stats/${wsid}/q/${q}`,
+                method: 'get',
+                data: {
+                    _token: $('meta[name="_token"]').attr('content')
+                },
+                success: function(result) {
+                    $("#ws-q-card-holder").empty();
+
+                    var topics_text = "";
+
+                    (result.topics).forEach(topic => {
+                        topics_text += `<span class="mx-1 badge badge-pill badge-success">${topic.name}</span>`;
+                    });
+
+                    $("#ws-q-card-holder").html(`
+            <div class="card">
+                <div class="card-header">
+                    Question ${q}
+                </div>
+                <div class="card-body">
+                    <p>
+                        <h4>${result.correct}% of attemptees got it right</h4>
+                        <h4>${result.left}% of attemptees left it</h4>
+                        <h4>Average Attempt time is ${result.hits} seconds</h4>
+                    </p>
+
+                    <div class="row">
+                        ${topics_text}
+                    </div>
+                </div>
+            </div>
+
+        `);
+                }
+            });
+        });
+
 
         function show_time_taken() {
 
@@ -111,6 +154,26 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row m-1">
+                            <div class="dropdown m-1">
+                                <button class="btn btn-primary dropdown-toggle" type="button" id="wsq" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Question
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="wsq" id="wsq_list">
+                                    @for($i = 1; $i <= $ws->nos; $i++)
+                                        <a wsid="{{ $ws->id }}" q="{{ $i }}" class="ws-q-item dropdown-item">
+                                            Question {{ $i }}
+                                        </a>
+                                        @endfor
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row m-1">
+                            <div class="col-md-6" id="ws-q-card-holder"></div>
+                        </div>
+
 
                         <h5 class="text-secondary">Share Your Result:</h5>
 
