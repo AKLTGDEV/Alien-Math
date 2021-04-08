@@ -533,4 +533,73 @@ class StatsController extends Controller
             "topics" => $topics,
         ];
     }
+
+    public function ws_q_user_details($wsid, $qno, $username)
+    {
+        /**
+         * Get details of the particular user's attempt at the particular Question.
+         * 
+         * To Return:
+         * 1. If the user got it right/wrong/left it
+         * 2. % of users the user answered faster than
+         * 3. (LATER) data compared to other questions of the same topic
+         * 
+         */
+
+        $ret = [];
+
+        $attemptee = UserModel::where("username", $username)->first();
+
+        $ws = WorksheetModel::where('id', $wsid)->first();
+        $ws_info = json_decode(Storage::get("WS/$ws->ws_name"), true);
+        $q = $ws_info['content'][$qno - 1];
+
+        $attempt = wsAttemptsModel::where("wsid", $ws->id)
+            ->where("attemptee", $attemptee->id)
+            ->first();
+
+        $results = json_decode($attempt->results);
+
+        switch ($results[$qno - 1]) {
+            case 'T':
+                $ret['qstatus'] = "@$username got the question right";
+                break;
+
+            case 'F':
+                $ret['qstatus'] = "@$username got the question wrong";
+                break;
+
+            case 'L':
+                $ret['qstatus'] = "@$username left the question";
+                break;
+
+            default:
+                # code...
+                break;
+        }
+
+        $self_clock_hits = json_decode(Storage::get("wsa_metrics/$attempt->id/clock_hits"), true)[$qno - 1];
+        $ws_all_attempts = wsAttemptsModel::where("wsid", $ws->id)->get();
+
+        $hits_lower = 0;
+        foreach ($ws_all_attempts as $att) {
+            $clock_hits = json_decode(Storage::get("wsa_metrics/$att->id/clock_hits"), true);
+
+            if ($att->attemptee == $attemptee->id) {
+                // Do nothing
+            } else {
+                // Not the current user
+                $current_hit = $clock_hits[$qno - 1];
+
+                if ($current_hit < $self_clock_hits) {
+                    $hits_lower++;
+                }
+            }
+        }
+
+        $ret['hits_lower'] = round(($hits_lower / count($ws_all_attempts)) * 100, 3);
+
+
+        return $ret;
+    }
 }

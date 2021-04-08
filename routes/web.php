@@ -166,6 +166,7 @@ Route::get('/stats/{wsid}/att', 'StatsController@get_ws_attemptees')->name('stat
 Route::get('/stats/{wsid}', 'StatsController@stats_ws')->name('stats_ws');
 Route::get('/stats/{wsid}/{uname}', 'StatsController@stats_ws_user')->name('stats_ws_user');
 Route::get('/stats/{wsid}/q/{q}', 'StatsController@ws_q_details')->name('stats_details_ws_q');
+Route::get('/stats/{wsid}/q/{q}/u/{username}', 'StatsController@ws_q_user_details')->name('stats_details_ws_q_user');
 
 Route::get('/notifs', 'NotificationsController@index')->name('notifs');
 Route::get('/notif_view/{id}', 'NotificationsController@view')->name('notif_visit');
