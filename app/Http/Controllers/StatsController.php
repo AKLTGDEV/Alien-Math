@@ -132,7 +132,23 @@ class StatsController extends Controller
                 "searchbar" => true
             ]);
         } else if (Auth::user()->isStudent()) {
-            return "STUDENT";
+            /**
+             * Get a list of worksheets the user has attempted
+             * 
+             */
+            $wslist = [];
+            $attempts = wsAttemptsModel::where("attemptee", Auth::user()->id)->get();
+            foreach ($attempts as $att) {
+                $wslist[] = WorksheetModel::where("id", $att->wsid)->first();
+            }
+
+            return view('stats.student', [
+                "worksheets" => $wslist,
+                "daily_record" => rating::get_dr(Auth::user()),
+                "user" => Auth::user(),
+
+                "searchbar" => true
+            ]);
         } else if (Auth::user()->isAdmin()) {
             return "ADMIN";
         }
