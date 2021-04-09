@@ -185,6 +185,56 @@
                     } else {
                         ws_flicked(result);
                     }
+                    var topics = result.topics;
+
+                    var tabs = ``;
+                    var bodies = ``;
+
+                    count = 1;
+                    for (key in topics) {
+                        if (topics.hasOwnProperty(key)) {
+                            topic_data = topics[key];
+
+                            //console.log(topic_data.right)
+
+                            tabs += `
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#body-${count}">${key}</a>
+                            </li>
+                            `;
+
+                            bodies += `
+                            <div class="tab-pane container" id="body-${count}">
+                                <h4 class="mt-1">${topic_data.right}% of questions attempted correctly</h4>
+                                <h4>${topic_data.left}% of questions left</h4>
+                            </div>
+                            `;
+
+                            count++;
+                        }
+                    }
+
+                    $("#topicwise-stats-holder").empty();
+                    $("#topicwise-stats-holder").html(`
+
+                            <div class="card">
+                                <div class="card-header">
+                                    Topic-wise breakdown: @${GLOBAL_UNAME}
+                                </div>
+
+                                <div class="card-body">
+                                    <ul class="nav nav-tabs">
+                                        ${tabs}
+                                    </ul>
+
+                                    <!-- Tab panes -->
+                                    <div class="tab-content">
+                                        ${bodies}
+                                    </div>
+                                </div>
+                            </div>
+
+                    `);
                 }
             });
         }

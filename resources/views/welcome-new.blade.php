@@ -159,7 +159,8 @@
                             }
                         </style>
                         <?php foreach ($wslist as $ws) {
-                            $tags = json_decode($ws['tags'], true);
+                            //$tags = json_decode($ws['tags'], true);
+                            $tags = $ws['tags'];
                             $ws['mine'] = false;
 
                             $ws['attempts'] += 150; // This is cheating tho

@@ -22,12 +22,12 @@ class WorksheetsTable extends Migration
             $table->bigInteger('nos')->default(0);
             $table->string('images')->nullable(true);
             $table->string('ws_name')->unique();
-            $table->string('tags');
+            //$table->string('tags');
             /*$table->string('opts');
             $table->string('correctopts');*/
             $table->bigInteger('author');
             $table->bigInteger('attempts')->default(0);
-            $table->string('attemptees')->default("[]");
+            //$table->string('attemptees')->default("[]");
             $table->bigInteger('mins')->default(0);
             $table->string('invited')->default("[]");
             $table->timestamps();

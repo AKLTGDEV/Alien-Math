@@ -9,6 +9,19 @@ class wsAttemptsModel extends Model
 {
     protected $table = 'ws_attempts';
 
+    public function results()
+    {
+        return json_decode(Storage::get("wsa_metrics/$this->id/results"));
+    }
+
+    public function result($stat)
+    {
+        $answers = json_decode(Storage::get("wsa_metrics/$this->id/results"));
+        $answers[] = $stat;
+
+        Storage::put("wsa_metrics/$this->id/results", json_encode($answers));
+    }
+
     public function answer($a)
     {
         $answers = json_decode(Storage::get("wsa_metrics/$this->id/answers"));
@@ -22,14 +35,14 @@ class wsAttemptsModel extends Model
         return json_decode(Storage::get("wsa_metrics/$this->id/answers"));
     }
 
-    public function result($flag)
+    /*public function result($flag)
     {
         $results = json_decode($this->results);
         $results[] = $flag;
 
         $this->results = json_encode($results);
         $this->save();
-    }
+    }*/
 
     public function clock_hit($hits)
     {

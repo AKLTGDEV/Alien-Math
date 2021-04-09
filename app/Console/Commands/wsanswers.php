@@ -79,8 +79,10 @@ class wsanswers extends Command
 
                     $results[] = $current_result;
                 }
-                $attempt->results = json_encode($results);
+
                 $attempt->save();
+                //Save results in local storage, not DB
+                Storage::put("wsa_metrics/$attempt->id/results", json_encode($results));
 
                 $ws_info = json_decode(Storage::get("WS/$worksheet->ws_name"), true);
 
@@ -154,7 +156,12 @@ class wsanswers extends Command
                         }
                     }
                 }
-                Storage::put("wsa_metrics/$attempt->id/answers", "[]");
+
+                $worksheet->attempts++;
+                $worksheet->save();
+                
+                //Storage::put("wsa_metrics/$attempt->id/answers", "[]");
+                Storage::put("wsa_metrics/$attempt->id/answers", json_encode($answers));
 
                 activitylog::ans_ws($user->username, $worksheet->id);
 

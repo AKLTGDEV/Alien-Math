@@ -137,6 +137,11 @@
                         </div>
                     </div>
 
+                    <div class="row mt-1">
+                        <div class="col-md-12" id="topicwise-stats-holder">
+                        </div>
+                    </div>
+
                     <!-- Worksheet-specific data -->
 
                     <div class="row m-1">

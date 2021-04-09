@@ -113,20 +113,16 @@ class StatsController extends Controller
         $tags_used = array_reverse($tags_used);
 
 
-        $self_posted = WorksheetModel::where("author", Auth::user()->id)->get();
+        $self_posted = WorksheetModel::where("author", Auth::user()->id)
+            ->where("attempts", ">", 0)
+            ->get();
 
 
         if (Auth::user()->isTeacher()) {
             return view('stats.teacher', [
                 "posts" => sizeof($__posts),
-                //"answers" => sizeof($answerlist),
-                //"aggregate" => $tot == 0 ? 0 : round(($right / $tot) * 100, 2),
-                //"rating" => Auth::user()->rating,
                 "tags_posted" => $tags_used,
-                //"tags_answered" => $tags_ans,
-                //"worksheets" => $worksheets,
                 "worksheets" => $self_posted,
-                //"self_worksheets" => $self_posted,
                 "daily_record" => rating::get_dr(Auth::user()),
 
                 "searchbar" => true
@@ -166,7 +162,7 @@ class StatsController extends Controller
              */
 
             $ws = WorksheetModel::where('id', $wsid)->first();
-            if ($ws->author != Auth::user()->id) {
+            /*if ($ws->author != Auth::user()->id) {
                 // User is not the author. If he's an attemptee, return his name.
                 $att_self = wsAttemptsModel::where("attemptee", Auth::user()->id)->first();
                 if ($att_self == null) {
@@ -191,16 +187,20 @@ class StatsController extends Controller
                 }
 
                 return $ret;
+        }*/
 
-                /*$attemptees_ids = json_decode($ws->attemptees, true);
-                $ret = [];
-                foreach ($attemptees_ids as $uid) {
-                    $U = UserModel::where('id', $uid)->first();
-                    array_push($ret, [$U->username, $U->name]);
-                }
+            $ret = [];
+            $attempts = wsAttemptsModel::where("wsid", $ws->id)->get();
 
-                return $ret;*/
+            foreach ($attempts as $a) {
+                $U = UserModel::where('id', $a->attemptee)->first();
+                $ret[] = [
+                    $U->username,
+                    $U->name,
+                ];
             }
+
+            return $ret;
         } else {
             return ["status" => "error"];
         }
@@ -261,7 +261,7 @@ class StatsController extends Controller
                 }
                 $wsa_metrics['clock_hits'] = $wsa_metrics_hits;
 
-                $results__ = array_count_values(json_decode($attempt->results));
+                $results__ = array_count_values($attempt->results());
 
                 $right = 0;
                 $wrong = 0;
@@ -279,6 +279,63 @@ class StatsController extends Controller
                     $left = $results__['L'];
                 }
 
+                $topics = [];
+
+                //$results = json_decode($attempt->results);
+                $results = $attempt->results();
+                $ws_info = json_decode(Storage::get("WS/$ws->ws_name"), true);
+                $questions = $ws_info['content'];
+                foreach ($ws->topics() as $t) {
+                    $topic = TagsModel::where("name", $t)->first();
+
+                    /**
+                     * Stats Under each topic:
+                     * 
+                     * 1. % of questions attempted successfully
+                     * 2. % of questions left
+                     * 3. Average time spent
+                     * 4. Other info (TODO)
+                     * 
+                     */
+
+                    $right = 0;
+                    $wrong = 0;
+                    $left = 0;
+
+                    $i = 0;
+
+                    $net_q = 0;
+                    foreach ($questions as $q) {
+                        if (in_array($topic->id, $q['topics'])) {
+                            // Current topic IS atatched with this question
+                            $net_q++;
+
+                            switch ($results[$i]) {
+                                case 'T':
+                                    $right++;
+                                    break;
+                                case 'F':
+                                    $wrong++;
+                                    break;
+                                case 'L':
+                                    $left++;
+                                    break;
+
+                                default:
+                                    // This should not be happening
+                                    break;
+                            }
+                        }
+
+                        $i++;
+                    }
+
+                    $topics[$topic->name] = [
+                        "right" => round(($right / $net_q) * 100, 3),
+                        "left" => round(($left / $net_q) * 100, 3),
+                    ];
+                }
+
                 return [
                     "status" => "success",
                     "general" => [
@@ -291,61 +348,10 @@ class StatsController extends Controller
                     "metrics" => $wsa_metrics,
                     "answers" => $attempt->getanswers(),
                     "secs" => $secs,
-                    "results" => json_decode($attempt->results),
+                    //"results" => json_decode($attempt->results),
+                    "results" => $attempt->results(),
+                    "topics" => $topics,
                 ];
-
-                /*$ws_info = json_decode(Storage::get("WS/$worksheet->ws_name"));
-
-                $att_answers = json_decode($attempt->answers);
-                //$cor_answers = json_decode($ws->correctopts);
-                $cor_answers = $ws_info->correct;
-
-                $right = 0;
-                $wrong = 0;
-                $left = 0;
-
-                $results = array();
-
-                for ($i = 0; $i <= count($cor_answers) - 1; $i++) {
-                    if ($att_answers[$i] == "N") {
-                        $left++;
-                        $results[$i] = "L"; //LEFT
-                    } else if ($att_answers[$i] == $cor_answers[$i]) {
-                        $right++;
-                        $results[$i] = "T"; //Correct
-                    } else {
-                        $wrong++;
-                        $results[$i] = "F"; //Wrong
-                    }
-                }
-
-                if ($right + $wrong + $left == count($cor_answers)) {
-                     //Grab the metrics data from the Filesystem.
-                    $att_id = $attempt->wsid . "." . $attempt->attemptee;
-                    $metrics = Storage::get('wsa_metrics/' . $att_id);
-                    return [
-                        "status" => "success",
-                        "general" => [
-                            "wsid"  => $ws->id,
-                            "right" => $right,
-                            "wrong" => $wrong,
-                            "left" => $left
-                        ],
-                        "metrics" => json_decode($metrics, true),
-                        "answers" => json_decode($attempt->answers, true),
-                        "results" => $results
-                    ];
-                } else {
-                    return [
-                        "status" => "error",
-                        "msg" => "..."
-                    ];
-                }
-
-                return [
-                    "status" => "success",
-                    "msg" => "attempted"
-                ];*/
             } else {
                 return [
                     "status" => "success",
@@ -510,7 +516,7 @@ class StatsController extends Controller
 
         foreach ($all_attempts as $att) {
             // PART 1: RESULTS
-            $results = json_decode($att->results);
+            $results = $att->results();
             if ($q > count($results)) {
                 $left++;
             } else {
@@ -574,7 +580,8 @@ class StatsController extends Controller
             ->where("attemptee", $attemptee->id)
             ->first();
 
-        $results = json_decode($attempt->results);
+        //$results = json_decode($attempt->results);
+        $results = $attempt->results();
 
         switch ($results[$qno - 1]) {
             case 'T':
