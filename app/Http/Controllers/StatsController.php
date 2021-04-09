@@ -629,4 +629,86 @@ class StatsController extends Controller
 
         return $ret;
     }
+
+    public function topic_stats($username)
+    {
+        /**
+         * Get the performance across all worksheets
+         * 
+         */
+        $user = UserModel::where("username", $username)->first();
+        if ($user == null) {
+            return abort(404);
+        }
+
+        $ret = [];
+
+        foreach (TagsModel::all() as $topic) {
+            /**
+             * Traverse across all Attempts
+             * 
+             */
+            $right = 0;
+            $wrong = 0;
+            $left = 0;
+            $time = 0;
+
+            $net = 0;
+
+            foreach (wsAttemptsModel::where("attemptee", $user->id)
+                ->get() as $attempt) {
+
+                //Get the WS information
+                $ws = WorksheetModel::where('id', $attempt->wsid)
+                    ->first();
+                $ws_info = json_decode(Storage::get("WS/$ws->ws_name"), true);
+                $data = $ws_info['content'];
+                $results = $attempt->results();
+                $clock_hits = $attempt->clock_hits();
+
+                //Traverse through all the questions
+                $q_count = 0;
+                foreach ($data as $q) {
+                    //Check if the questions falls under the current tag
+
+                    if (in_array($topic->id, $q['topics'])) {
+                        $net++;
+
+                        switch ($results[$q_count]) {
+                            case 'T':
+                                $right++;
+                                break;
+
+                            case 'F':
+                                $wrong++;
+                                break;
+
+                            case 'L':
+                                $left++;
+                                break;
+
+                            default:
+                                // This should not be happening
+                                break;
+                        }
+
+                        $time += $clock_hits[$q_count];
+                    }
+
+                    $q_count++;
+                }
+            }
+
+            $ret[] = [
+                "name" => $topic->name,
+                "right" => $net == 0 ? 0 : round(($right / $net) * 100, 2),
+                "wrong" => $net == 0 ? 0 : round(($wrong / $net) * 100, 2),
+                "left" => $net == 0 ? 0 : round(($left / $net) * 100, 2),
+                "level" => $user->grade,
+                "time" => $net == 0 ? 0 : round($time / $net, 2), //FIXME
+            ];
+        }
+
+        return $ret;
+    }
 }

@@ -50,4 +50,9 @@ class wsAttemptsModel extends Model
         $hits_list[] = $hits;
         Storage::put("wsa_metrics/$this->id/clock_hits", json_encode($hits_list));
     }
+
+    public function clock_hits()
+    {
+        return json_decode(Storage::get("wsa_metrics/$this->id/clock_hits"));
+    }
 }

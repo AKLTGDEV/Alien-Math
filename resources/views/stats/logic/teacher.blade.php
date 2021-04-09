@@ -68,6 +68,37 @@
             }
         })
 
+        $("#user-stats").click(function(e) {
+            var username = $("#user-stats-username").val();
+
+            $.ajax({
+                url: `{{ config('APP_URL') }}/stats-topics/${username}`,
+                method: 'get',
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {
+                    $("#user-stats-body").empty();
+                    var t_count = 1;
+                    result.forEach(t => {
+                        $("#user-stats-body").append(`
+                        <tr>
+                            <th scope="row">${t_count}</th>
+                            <td>${t.name}</td>
+                            <td>${t.level}</td>
+                            <td>${t.right}%</td>
+                            <td>${t.wrong}%</td>
+                            <td>${t.left}%</td>
+                            <td>${t.time}s</td>
+                        </tr>
+                        `);
+
+                        t_count++;
+                    });
+                }
+            });
+        })
+
         $(".wsitem").click(function(e) {
             wsid = $(this).attr("wsid");
 

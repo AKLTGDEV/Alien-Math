@@ -79,8 +79,54 @@
                             </div>
                         </div>
                     </div>
-                    <!--ROW-->
+
+
                     <div class="row">
+                        <div class="col-12">
+                            <div class="d-sm-flex justify-content-between align-items-center">
+                                <h3 class="text-dark mb-0">All Users</h3>
+                            </div>
+
+                            <div class="row mb-2">
+                                <div class="col-md-6">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">@</span>
+                                        </div>
+                                        <input id="user-stats-username" type="text" class="form-control" placeholder="Recipient's username" aria-label="Username" aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button" id="user-stats">
+                                                See Stats
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Topic</th>
+                                        <th scope="col">Level</th>
+                                        <th scope="col">Right%</th>
+                                        <th scope="col">Wrong%</th>
+                                        <th scope="col">Left%</th>
+                                        <th scope="col">Avg. Time (s)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="user-stats-body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+                    <div class="row mt-4">
                         <div class="col-12">
                             <div class="d-sm-flex justify-content-between align-items-center">
                                 <h3 class="text-dark mb-0">All Worksheets</h3>
