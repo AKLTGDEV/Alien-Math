@@ -193,6 +193,9 @@ class WorksheetController extends Controller
                 $attempt->save();
                 Storage::put("wsa_metrics/$attempt->id/clock_hits", "[]");
                 Storage::put("wsa_metrics/$attempt->id/answers", "[]");
+                Storage::put("wsa_metrics/$attempt->id/results", "[]");
+                $worksheet->attempts++;
+                $worksheet->save();
                 activitylog::ans_ws($self->username, $worksheet->id);
 
                 return view("worksheet.answer.wsanswer-2", [
@@ -365,11 +368,9 @@ class WorksheetController extends Controller
 
                     $stats = StatsController::stats_ws_user($id, $self->username);
 
-                    $wsa_metrics = $stats['metrics'];
-
                     $secs = $stats['secs'];
 
-                    $results__ = array_count_values(json_decode($attempt->results));
+                    $results__ = array_count_values($attempt->results());
 
                     $right = 0;
                     if (array_key_exists("T", $results__)) {

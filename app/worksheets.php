@@ -81,12 +81,15 @@ class worksheets
         $user = UserModel::where('id', $ws->author)->first();
         $app_url = Config::get('app.url');
 
-        $attemptees = json_decode($ws->attemptees, true);
+        /*$attemptees = json_decode($ws->attemptees, true);
         if (in_array($user->id, $attemptees)) {
             $attempted = true;
         } else {
             $attempted = false;
-        }
+        }*/
+        $attempted = wsAttemptsModel::where("wsid", $ws->id)
+            ->where("attemptee", $user->id)
+            ->first() == null ? false : true;
 
         $own = false;
         if (Auth::check()) {

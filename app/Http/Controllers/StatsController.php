@@ -310,20 +310,24 @@ class StatsController extends Controller
                             // Current topic IS atatched with this question
                             $net_q++;
 
-                            switch ($results[$i]) {
-                                case 'T':
-                                    $right++;
-                                    break;
-                                case 'F':
-                                    $wrong++;
-                                    break;
-                                case 'L':
-                                    $left++;
-                                    break;
+                            if (count($results) < $i + 1) {
+                                $left++;
+                            } else {
+                                switch ($results[$i]) {
+                                    case 'T':
+                                        $right++;
+                                        break;
+                                    case 'F':
+                                        $wrong++;
+                                        break;
+                                    case 'L':
+                                        $left++;
+                                        break;
 
-                                default:
-                                    // This should not be happening
-                                    break;
+                                    default:
+                                        // This should not be happening
+                                        break;
+                                }
                             }
                         }
 
