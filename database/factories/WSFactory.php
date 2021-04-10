@@ -3,6 +3,7 @@
 use Faker\Generator as Faker;
 use App\TagsModel;
 use App\numbersT;
+use App\RatingsModel;
 use App\UserModel;
 use App\utils\randq;
 use Carbon\Carbon;
@@ -11,6 +12,8 @@ $factory->define(App\WorksheetModel::class, function (Faker $faker) {
     // NEW FORMAT
 
     $author_id = rand(1, numbersT::users());
+    $author = UserModel::where("id", $author_id)->first();
+
     $time_mins = random_int(1, 30);
     $title = $faker->sentence(5, true);
 
@@ -27,11 +30,6 @@ $factory->define(App\WorksheetModel::class, function (Faker $faker) {
         "author" => $author_id, // FIXME
         "nos" => $nos,
         "time" => $time_mins,
-        /*"tags" => [
-            $tag1->name,
-            $tag2->name,
-            $tag3->name
-        ],*/
     ];
 
     $taglist = [];
@@ -48,9 +46,11 @@ $factory->define(App\WorksheetModel::class, function (Faker $faker) {
             $saq['topics'],
             $sqa['topics']
         ) as $topic) {
-            $taglist[] = $taglist[] = TagsModel::where("id", $topic)
-                ->first()
-                ->name;
+            $curr_topic = TagsModel::where("id", $topic)->first();
+            $taglist[] = $curr_topic->name;
+
+            //For each topic, create a new rating entry (If not already present)
+            RatingsModel::new($author->username, $curr_topic->id, 1000);
         }
 
         $contents[] = $mcq;

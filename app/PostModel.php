@@ -17,7 +17,8 @@ class PostModel extends Model
 
     public function info()
     {
-        $topics__ = explode(",", $this->topics);
+        //$topics__ = explode(",", $this->tags);
+        $topics__ = json_decode($this->tags);
         $topics = [];
 
         foreach ($topics__ as $t) {

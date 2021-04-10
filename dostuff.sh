@@ -4,9 +4,9 @@ php artisan db:seed --class=TagsSeeder
 php artisan db:seed --class=UserSeeder
 php artisan relations
 php artisan db:seed --class=PostSeeder
-php artisan db:seed --class=WSSeeder
 php artisan db:seed --class=SAQSeeder
 php artisan db:seed --class=SQASeeder
+php artisan db:seed --class=WSSeeder
 mkdir storage/app/indices
 php artisan searchindex
 sudo chmod 777 storage/app/indices -R

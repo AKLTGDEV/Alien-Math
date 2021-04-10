@@ -23,6 +23,7 @@ class PostsTable extends Migration
             $table->enum("difficulty", [
                 1, 2, 3
             ]);
+            $table->integer("rating")->default(0);
 
             $table->string('image')->nullable(true);
             $table->string('slug')->nullable(true);

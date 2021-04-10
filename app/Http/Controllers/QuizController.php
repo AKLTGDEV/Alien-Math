@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\PostModel;
+use App\RatingsModel;
 use App\Report;
 use App\SAQ;
 use App\SQA;
@@ -131,6 +132,8 @@ class QuizController extends Controller
 
         $pending_att->clock_hit($request->hits);
 
+        $r_stat = false;
+
         if ($request->type == "SAQ") {
             $pending_att->answer($request->answer);
 
@@ -138,6 +141,8 @@ class QuizController extends Controller
                 if ($request->answer == $data['correct']) {
                     $pending_att->right++;
                     $pending_att->result("T");
+
+                    $r_stat = true;
                 } else {
                     $pending_att->wrong++;
                     $pending_att->result("F");
@@ -149,6 +154,19 @@ class QuizController extends Controller
 
             $pending_att->save();
 
+            /**
+             * Fix the ratings
+             * 
+             */
+            foreach ($data['topics'] as $tid) {
+                RatingsModel::new(Auth::user()->username, $tid, 1000);
+
+                $r = RatingsModel::where("of", Auth::user()->username)
+                    ->where("topic", $tid)
+                    ->first();
+                $r->SAQ($data['id'], $r_stat);
+            }
+
             return [
                 "correct" => $data['correct'],
                 "explanation" => $data['explanation'],
@@ -159,6 +177,8 @@ class QuizController extends Controller
                 if ($request->answer == $data['correct']) {
                     $pending_att->right++;
                     $pending_att->result("T");
+
+                    $r_stat = true;
                 } else {
                     $pending_att->wrong++;
                     $pending_att->result("F");
@@ -182,6 +202,19 @@ class QuizController extends Controller
              */
 
             $correct = $data['opts'][$data['correct'] - 1];
+
+            /**
+             * Fix the ratings
+             * 
+             */
+            foreach ($data['topics'] as $tid) {
+                RatingsModel::new(Auth::user()->username, $tid, 1000);
+
+                $r = RatingsModel::where("of", Auth::user()->username)
+                    ->where("topic", $tid)
+                    ->first();
+                $r->SAQ($data['id'], $r_stat);
+            }
 
             return [
                 "correct" => $correct,
@@ -209,9 +242,11 @@ class QuizController extends Controller
                     }
                 }
 
-                if($flag){
+                if ($flag) {
                     $pending_att->right++;
                     $pending_att->result("T");
+
+                    $r_stat = true;
                 } else {
                     $pending_att->wrong++;
                     $pending_att->result("F");
@@ -223,6 +258,19 @@ class QuizController extends Controller
             }
 
             $pending_att->save();
+
+            /**
+             * Fix the ratings
+             * 
+             */
+            foreach ($data['topics'] as $tid) {
+                RatingsModel::new(Auth::user()->username, $tid, 1000);
+
+                $r = RatingsModel::where("of", Auth::user()->username)
+                    ->where("topic", $tid)
+                    ->first();
+                $r->SAQ($data['id'], $r_stat);
+            }
 
             return [
                 "correct" => $data['opts'],

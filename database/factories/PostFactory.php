@@ -30,6 +30,25 @@ $factory->define(App\PostModel::class, function (Faker $faker) {
     $type = $type_list[array_rand($type_list)];
     $difficulty = rand(1, 3);
 
+    $rating = 0;
+    switch ($difficulty) {
+        case 1:
+            $rating = 800;
+            break;
+
+        case 2:
+            $rating = 1000;
+            break;
+
+        case 3:
+            $rating = 1200;
+            break;
+
+        default:
+            # code...
+            break;
+    }
+
     $author_id = rand(1, numbersT::users());
     $author = UserModel::where('id', $author_id)->first();
     $author->nos_Q++;
@@ -42,6 +61,7 @@ $factory->define(App\PostModel::class, function (Faker $faker) {
     return [
         'type' => $type,
         'difficulty' => $difficulty,
+        'rating' => $rating,
         'text' => $body_md,
         'opts' => $opts,
         'tags' => $taglist,

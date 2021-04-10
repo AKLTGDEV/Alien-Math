@@ -22,6 +22,7 @@ class Saq extends Migration
             $table->enum("difficulty", [
                 1, 2, 3
             ]);
+            $table->integer("rating")->default(0);
 
             $table->string("correct");
             $table->string("topics");

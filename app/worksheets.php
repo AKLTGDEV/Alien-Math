@@ -422,7 +422,6 @@ class worksheets
 
     public static function quiz($title, $tags, $nos, $mins, $content, $poster_id)
     {
-        $taglist = json_encode($tags);
         $time_mins = $mins;
         $title = $title;
         $nos = $nos;
@@ -433,13 +432,28 @@ class worksheets
             ->first()
             ->username;
 
+        $taglist = [];
+
+        foreach ($content as $q) {
+            foreach ($q['topics'] as $t) {
+                $current_topic = TagsModel::where("id", $t)
+                    ->first()
+                    ->name;
+
+                if (!in_array($current_topic, $taglist)) {
+                    $taglist[] = $current_topic;
+                }
+            }
+        }
+
+
         $wsitem_contents = [
             "datetime" => Carbon::now()->toDateTimeString(),
             "title" => $title,
             "author" => $poster_id, // FIXME
             "nos" => $nos,
             "time" => $time_mins,
-            "tags" => $tags,
+            "tags" => $taglist,
         ];
 
         $wsitem_contents['content'] = $content;
@@ -451,7 +465,7 @@ class worksheets
         $worksheet->nos = $nos;
         $worksheet->ws_name = $ws_name_ident;
         $worksheet->author = $poster_id;
-        $worksheet->tags = json_encode($tags);
+        //$worksheet->tags = json_encode($tags);
         $worksheet->invited = "[]";
         $worksheet->mins = $time_mins;
 

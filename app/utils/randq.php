@@ -3,12 +3,93 @@
 namespace App\utils;
 
 use App\numbersT;
+use App\PostModel;
+use App\SAQ;
+use App\SQA;
 use App\TagsModel;
 use Faker\Factory;
 
 class randq
 {
+
+    // NEW METHODS BELOW
+
     public static function mcq()
+    {
+        // Pull a random MCQ from the database, return the data
+
+        $q = PostModel::where("id", rand(1, PostModel::count() ))->first();
+
+        $q_topics = [];
+        foreach (json_decode($q->tags) as $tag) {
+            $q_topics[] = TagsModel::where("name", $tag)
+                ->first()
+                ->id;
+        }
+
+        return [
+            "type" => "MCQ",
+            "id" => $q->id, // ID of the original question
+            "body" => $q->getBody(),
+            "opts" => json_decode($q->opts),
+            "correct" => $q->correctopt,
+            "explanation" => $q->getExplanation(),
+            "topics" => $q_topics,
+        ];
+    }
+
+    public static function saq()
+    {
+        $q = SAQ::where("id", rand(1, SAQ::count()) )->first();
+
+        $q_topics = [];
+        foreach (explode(",", $q->topics) as $tag) {
+            $q_topics[] = TagsModel::where("name", $tag)
+                ->first()
+                ->id;
+        }
+
+        return [
+            "type" => "SAQ",
+            "id" => $q->id, // ID of the original question
+            "body" => $q->getBody(),
+            "correct" => $q->correct,
+            "explanation" => $q->getExplanation(),
+            "topics" => $q_topics,
+        ];
+    }
+
+    public static function sqa()
+    {
+        $q = SQA::where("id", rand(1, SQA::count()) )->first();
+
+        $q_topics = [];
+        foreach (explode(",", $q->topics) as $tag) {
+            $q_topics[] = TagsModel::where("name", $tag)
+                ->first()
+                ->id;
+        }
+
+        return [
+            "type" => "SQA",
+            "id" => $q->id, // ID of the original question
+            "body" => $q->getBody(),
+            "opts" => [
+                $q->O1,
+                $q->O2,
+                $q->O3,
+                $q->O4,
+            ],
+            "explanation" => $q->getExplanation(),
+            "topics" => $q_topics,
+        ];
+    }
+
+
+
+    // OLD METHODS BELOW
+
+    public static function mcq_old()
     {
         /**
          * 
@@ -38,6 +119,7 @@ class randq
 
         return [
             "type" => "MCQ",
+            "id" => 0, // ID of the original question
             "body" => $body,
             "opts" => [
                 $opt1, $opt2, $opt3, $opt4
@@ -52,7 +134,7 @@ class randq
         ];
     }
 
-    public static function saq()
+    public static function saq_old()
     {
         /**
          * 
@@ -76,6 +158,7 @@ class randq
 
         return [
             "type" => "SAQ",
+            "id" => 0, // ID of the original question
             "body" => $body,
             "correct" => $correct,
             "explanation" => $explanation,
@@ -87,7 +170,7 @@ class randq
         ];
     }
 
-    public static function sqa()
+    public static function sqa_old()
     {
         /**
          * 
@@ -115,6 +198,7 @@ class randq
 
         return [
             "type" => "SQA",
+            "id" => 0, // ID of the original question
             "body" => $body,
             "opts" => [
                 $opt1, $opt2, $opt3, $opt4

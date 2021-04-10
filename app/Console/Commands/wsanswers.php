@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\activitylog;
 use App\numbersT;
+use App\RatingsModel;
 use App\UserModel;
 use App\WorksheetModel;
 use App\worksheets;
@@ -85,6 +86,7 @@ class wsanswers extends Command
                 Storage::put("wsa_metrics/$attempt->id/results", json_encode($results));
 
                 $ws_info = json_decode(Storage::get("WS/$worksheet->ws_name"), true);
+                $questions = $ws_info['content'];
 
                 /** 
                  * Now save the info in local storage
@@ -155,11 +157,43 @@ class wsanswers extends Command
                             $answers[] = $current_answer;
                         }
                     }
+
+                    $question = $questions[$k - 1];
+                    foreach ($question['topics'] as $tid) {
+                        RatingsModel::new($user->username, $tid, 1000);
+                        
+                        $r = RatingsModel::where("of", $user->username)
+                            ->where("topic", $tid)
+                            ->first();
+
+                        if ($status == "L" || $status == "F") {
+                            $r_stat = false;
+                        } else {
+                            $r_stat = true;
+                        }
+                        switch ($question['type']) {
+                            case 'MCQ':
+                                $r->MCQ($question['id'], $r_stat);
+                                break;
+
+                            case 'SAQ':
+                                $r->SAQ($question['id'], $r_stat);
+                                break;
+
+                            case 'SQA':
+                                $r->SQA($question['id'], $r_stat);
+                                break;
+
+                            default:
+                                // This is not okay
+                                break;
+                        }
+                    }
                 }
 
                 $worksheet->attempts++;
                 $worksheet->save();
-                
+
                 //Storage::put("wsa_metrics/$attempt->id/answers", "[]");
                 Storage::put("wsa_metrics/$attempt->id/answers", json_encode($answers));
 
