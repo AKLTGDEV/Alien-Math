@@ -114,9 +114,9 @@
                                         <th scope="col">Topic</th>
                                         <th scope="col">Level</th>
                                         <th scope="col">Right%</th>
-                                        <th scope="col">Wrong%</th>
-                                        <th scope="col">Left%</th>
                                         <th scope="col">Avg. Time (s)</th>
+                                        <th scope="col">Rating</th>
+                                        <th scope="col">Stats</th>
                                     </tr>
                                 </thead>
                                 <tbody id="user-stats-body">
@@ -211,4 +211,25 @@
         </div>
     </div>
 </div>
+
+<div class="modal shadow" id="TopicStatsModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" id="topic-stats-modal-header">
+            </div>
+            <div class="modal-body">
+                <div class="chart-area">
+                    <canvas id="topic-stats-chart">
+                    </canvas>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection

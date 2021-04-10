@@ -68,7 +68,7 @@ class UserModel extends Model
 
     public function isTeacher()
     {
-        if($this->type == "creator"){
+        if ($this->type == "creator") {
             return true;
         } else {
             return false;
@@ -81,6 +81,20 @@ class UserModel extends Model
             return true;
         } else {
             return false;
+        }
+    }
+
+    public function rating($topic)
+    {
+        $r = RatingsModel::where("of", $this->username)
+            ->where("topic", $topic)
+            ->first();
+
+        if($r == null){
+            RatingsModel::new($this->username, $topic, 1000);
+            return $this->rating($topic);
+        } else {
+            return $r->rating;
         }
     }
 }

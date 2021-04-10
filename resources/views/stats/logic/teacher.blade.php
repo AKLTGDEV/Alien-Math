@@ -37,8 +37,8 @@
             }
         })
 
-
-
+        var TOPIC_STATS_LABELS = {};
+        var TOPIC_STATS_DATA = {};
 
         var ctx = document.getElementById('topics-chart').getContext('2d');
         var topicschart = new Chart(ctx, {
@@ -68,6 +68,50 @@
             }
         })
 
+        $('#user-stats-body').on('click', '.topic-stats-btn', function() {
+            var username = $(this).attr("username");
+            var topicid = $(this).attr("topicid");
+            var topicname = $(this).attr("topicname");
+
+            $.ajax({
+                url: `{{ config('APP_URL') }}/t/${topicid}/progress/${username}`,
+                method: 'get',
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {
+                    $("#topic-stats-chart").empty();
+                    $("#topic-stats-modal-header").html(`@${username}'s performance under <b>"${topicname}"</b>`);
+                    TOPIC_STATS_LABELS = Object.keys(result);
+                    TOPIC_STATS_DATA = Object.values(result);
+
+                    $("#TopicStatsModal").modal('show');
+
+                    var topic_ctx = document.getElementById('topic-stats-chart').getContext('2d');
+                    var topic_chart = new Chart(topic_ctx, {
+                        "type": "line",
+                        "data": {},
+                        "options": {
+                            "maintainAspectRatio": false,
+                            "legend": {
+                                "display": false
+                            },
+                            "title": {}
+                        }
+                    })
+
+                    topic_chart.data = {
+                        "labels": TOPIC_STATS_LABELS,
+                        "datasets": [{
+                            "label": "Rating",
+                            "data": TOPIC_STATS_DATA
+                        }]
+                    };
+                    topic_chart.update();
+                }
+            });
+        })
+
         $("#user-stats").click(function(e) {
             var username = $("#user-stats-username").val();
 
@@ -87,9 +131,17 @@
                             <td>${t.name}</td>
                             <td>${t.level}</td>
                             <td>${t.right}%</td>
-                            <td>${t.wrong}%</td>
-                            <td>${t.left}%</td>
                             <td>${t.time}s</td>
+                            <td>${t.rating}</td>
+                            <td>
+                                <div class="btn btn-sm btn-primary topic-stats-btn"
+                                topicid="${t.topic_id}"
+                                topicname="${t.name}"
+                                username="${t.username}"
+                                >
+                                    See Stats
+                                </div>
+                            </td>
                         </tr>
                         `);
 

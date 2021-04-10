@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\RatingsModel;
 use App\tags;
 use App\TagsModel;
 use App\TagRequestsModel;
 use App\users;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
@@ -352,5 +354,32 @@ class TagsController extends Controller
             'task' => 'support',
             'message' => "Already supporting Topic '$req_name'!"
         ]);
+    }
+
+    public function progress(Request $request, $tagid, $username)
+    {
+        /**
+         * Return the processed progress report for the topic
+         * 
+         */
+
+        RatingsModel::new($username, $tagid, 1000);
+        //Just checking
+
+        $r = RatingsModel::where("of", $username)
+            ->where("topic", $tagid)
+            ->first();
+
+        $changes = json_decode(Storage::get("rating_changes/$r->id"));
+
+        $ret = [];
+        foreach ($changes as $c) {
+            //$label = "$c->on, Hit #$c->change";
+            $label = "$c->change";
+            //$on = Carbon::createFromTimestamp(strtotime($c->on))->diffForHumans();
+            $ret[$label] = $c->rating;
+        }
+
+        return $ret;
     }
 }

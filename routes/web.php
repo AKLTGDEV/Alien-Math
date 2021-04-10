@@ -136,6 +136,7 @@ Route::get('/t/{tag}', 'TagsController@view')->name('namedtag');
 Route::post('/t/{tag}/gather', 'TagsController@gather')->name('namedtaggather');
 Route::get('/t/{tag}/follow', 'TagsController@follow')->name('namedtagfollow');
 Route::get('/t/{tag}/unfollow', 'TagsController@unfollow')->name('namedtagunfollow');
+Route::get('/t/{tagid}/progress/{username}', 'TagsController@progress')->name('tag.progress');
 Route::get('/t20', 'TagsController@top20')->name('tags_top_20');
 Route::get('/newtopic', 'TagsController@request')->name('reqtopics');
 Route::post('/newtopic', 'TagsController@request_submit')->name('reqtopics_sub');

@@ -701,11 +701,15 @@ class StatsController extends Controller
 
             $ret[] = [
                 "name" => $topic->name,
+                "topic_id" => $topic->id,
+                "username" => $user->username,
+                
                 "right" => $net == 0 ? 0 : round(($right / $net) * 100, 2),
                 "wrong" => $net == 0 ? 0 : round(($wrong / $net) * 100, 2),
                 "left" => $net == 0 ? 0 : round(($left / $net) * 100, 2),
                 "level" => $user->grade,
-                "time" => $net == 0 ? 0 : round($time / $net, 2), //FIXME
+                "time" => $net == 0 ? 0 : round($time / $net, 2),
+                "rating" => $user->rating($topic->id),
             ];
         }
 
