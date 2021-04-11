@@ -259,6 +259,7 @@ Route::get('/admin/posts/purge_slug', 'AdminController@post_purgeslug')->name('a
 Route::get('/admin/ws/purge_slug', 'AdminController@ws_purgeslug')->name('admin_purge_ws_slug');
 Route::get('/admin/jsonedit', 'AdminController@jsonedit')->name('admin_jsonedit');
 Route::post('/admin/explodews', 'AdminController@exlpode_ws_as_user')->name('adminexplodews');
+Route::get('/admin/adjust-difficulty', 'AdminController@adjust_difficulties')->name('admin.adjust-difficulties');
 
 
 /*Route::get('/admin/testsend', 'MailController@testsend');

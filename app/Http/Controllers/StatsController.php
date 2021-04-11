@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\PostModel;
 use App\posts;
 use App\rating;
+use App\SAQ;
+use App\SQA;
 use App\TagsModel;
 use Illuminate\Support\Facades\Auth;
 use App\WorksheetModel;
@@ -21,78 +23,6 @@ class StatsController extends Controller
     {
         $this->middleware('auth');
     }
-
-    /*public function view()
-    {
-        $__posts = PostModel::where('author', Auth::user()->id)->get();
-        //$answerlist = json_decode(Auth::user()->answers, true);
-        $answerlist = json_decode(Storage::get('answers/' . Auth::user()->username), true);
-
-        $right = 0;
-        $tot = 0;
-        foreach ($answerlist as $q => $a) {
-            $qno = explode("q", $q)[1];
-            if (posts::check_rightwrong_pid(Auth::user(), $qno) == true) {
-                $right++;
-            }
-            $tot++;
-        }
-
-        
-        // Get the stats for most used topics
-        
-        $user_posts = posts::list(Auth::user()->username);
-        $tags_used = array();
-        foreach ($user_posts as $p) {
-            $p_tags = json_decode($p["tags"], true);
-            foreach ($p_tags as $tagname) {
-                array_push($tags_used, $tagname);
-            }
-        }
-        $tags_used = array_count_values($tags_used);
-        asort($tags_used);
-        $tags_used = array_reverse($tags_used);
-
-
-        //Same as above, but for answered questions
-        $tags_ans = array();
-        foreach (posts::list_answered(Auth::user()) as $qno) {
-            $post = PostModel::where('id', $qno)->first();
-            $tags = json_decode($post->tags, true);
-            foreach ($tags as $tagname) {
-                array_push($tags_ans, $tagname);
-            }
-        }
-        $tags_ans = array_count_values($tags_ans);
-        asort($tags_ans);
-        $tags_ans = array_reverse($tags_ans);
-
-        //Get all the worksheets posted/attempted by the user with its ids.
-        $__worksheets = StatsController::get_all_ws();
-        //dd($__worksheets);
-        $worksheets = array();
-        foreach ($__worksheets as $ws) {
-            array_push($worksheets, [$ws->id, $ws->title]);
-        }
-
-        //get only the worksheets posted by the user
-        $self_posted = WorksheetModel::where("author", Auth::user()->id)->get();
-        // FIXME Change this method of retrieving the posted WS
-
-        return view('statsview', [
-            "posts" => sizeof($__posts),
-            "answers" => sizeof($answerlist),
-            "aggregate" => $tot == 0 ? 0 : round(($right / $tot) * 100, 2),
-            "rating" => Auth::user()->rating,
-            "tags_posted" => $tags_used,
-            "tags_answered" => $tags_ans,
-            "worksheets" => $worksheets,
-            "self_worksheets" => $self_posted,
-            "daily_record" => rating::get_dr(Auth::user()),
-
-            "searchbar" => true
-        ]);
-    }*/
 
     public function view()
     {
@@ -146,7 +76,77 @@ class StatsController extends Controller
                 "searchbar" => true
             ]);
         } else if (Auth::user()->isAdmin()) {
-            return "ADMIN";
+            $qlist = [];
+
+            foreach (PostModel::all() as $p) {
+                $qlist[] = [
+                    "type" => "MCQ",
+                    "id" => $p->id,
+                    "rating" => $p->rating,
+                    "difficulty" => $p->difficulty,
+                ];
+            }
+
+            foreach (SAQ::all() as $saq) {
+                $qlist[] = [
+                    "type" => "SAQ",
+                    "id" => $saq->id,
+                    "rating" => $saq->rating,
+                    "difficulty" => $saq->difficulty,
+                ];
+            }
+
+            foreach (SQA::all() as $sqa) {
+                $qlist[] = [
+                    "type" => "SQA",
+                    "id" => $sqa->id,
+                    "rating" => $sqa->rating,
+                    "difficulty" => $sqa->difficulty,
+                ];
+            }
+
+            $rating = array_column($qlist, 'rating');
+            array_multisort($rating, SORT_ASC, $qlist);
+
+            $qlist_types = [];
+            $qlist_ids = [];
+            $qlist_ratings = [];
+            $qlist_colors = [];
+
+            foreach ($qlist as $q) {
+                $qlist_types[] = $q['type'];
+
+                switch ($q['difficulty']) {
+                    case 1: //RED
+                        $qlist_colors[] = "#e53935";
+                        break;
+
+                    case 2: // GREEN
+                        $qlist_colors[] = "#76ff03";
+                        break;
+
+                    case 3: // BLUE
+                        $qlist_colors[] = "#00b0ff";
+
+                    default:
+                        // Something's not right
+                        break;
+                }
+
+                $qlist_ids[] = $q['id'];
+                $qlist_ratings[] = $q['rating'];
+            }
+
+            return view('stats.admin', [
+                "user" => Auth::user(),
+
+                "q_types" => $qlist_types,
+                "q_ids" => $qlist_ids,
+                "q_ratings" => $qlist_ratings,
+                "q_colors" => $qlist_colors,
+
+                "searchbar" => true
+            ]);
         }
     }
 
@@ -703,7 +703,7 @@ class StatsController extends Controller
                 "name" => $topic->name,
                 "topic_id" => $topic->id,
                 "username" => $user->username,
-                
+
                 "right" => $net == 0 ? 0 : round(($right / $net) * 100, 2),
                 "wrong" => $net == 0 ? 0 : round(($wrong / $net) * 100, 2),
                 "left" => $net == 0 ? 0 : round(($left / $net) * 100, 2),

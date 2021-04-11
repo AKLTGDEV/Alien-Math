@@ -11,6 +11,8 @@ use App\PostModel;
 use App\posts;
 use App\Rules\tagexists;
 use App\Rules\tags_min_2;
+use App\SAQ;
+use App\SQA;
 use App\tags;
 use App\UserModel;
 use App\users;
@@ -565,6 +567,86 @@ class AdminController extends Controller
     public function jsonedit(Request $request)
     {
         // TODO
+        return redirect()->back();
+    }
+
+    public function adjust_difficulties()
+    {
+        $qlist = [];
+
+        foreach (PostModel::all() as $p) {
+            $qlist[] = [
+                "type" => "MCQ",
+                "id" => $p->id,
+                "rating" => $p->rating,
+                "difficulty" => $p->difficulty,
+            ];
+        }
+
+        foreach (SAQ::all() as $saq) {
+            $qlist[] = [
+                "type" => "SAQ",
+                "id" => $saq->id,
+                "rating" => $saq->rating,
+                "difficulty" => $saq->difficulty,
+            ];
+        }
+
+        foreach (SQA::all() as $sqa) {
+            $qlist[] = [
+                "type" => "SQA",
+                "id" => $sqa->id,
+                "rating" => $sqa->rating,
+                "difficulty" => $sqa->difficulty,
+            ];
+        }
+
+        $rating = array_column($qlist, 'rating');
+        array_multisort($rating, SORT_ASC, $qlist);
+
+        $count = count($qlist);
+        $first_stop = round($count / 3);
+        $second_stop = (2 * round($count / 3));
+
+        for ($i = 1; $i <= $count; $i++) {
+            $question__ = $qlist[$i - 1];
+            $question = null;
+            switch ($question__['type']) {
+                case 'MCQ':
+                    $question = PostModel::where("id", $question__['id'])->first();
+                    break;
+
+                case 'SAQ':
+                    $question = SAQ::where("id", $question__['id'])->first();
+                    break;
+
+                case 'SQA':
+                    $question = SQA::where("id", $question__['id'])->first();
+
+                default:
+                    // Something is wrong
+                    break;
+            }
+
+            if ($i <= $first_stop) {
+                // First Third
+                // Difficulty = 1
+                $question->difficulty = 1;
+            } else {
+                if ($i <= $second_stop) {
+                    // Second Third
+                    // Difficulty = 2
+                    $question->difficulty = 2;
+                } else {
+                    // Third Stop
+                    // Difficulty = 3
+                    $question->difficulty = 3;
+                }
+            }
+
+            $question->save();
+        }
+
         return redirect()->back();
     }
 }
