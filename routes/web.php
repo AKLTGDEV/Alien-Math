@@ -12,8 +12,10 @@
 */
 
 use App\utils\similar_ws;
+use App\utils\VideoStream;
 use App\worksheets;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 Route::get('/', function () {
 
@@ -261,6 +263,8 @@ Route::get('/admin/jsonedit', 'AdminController@jsonedit')->name('admin_jsonedit'
 Route::post('/admin/explodews', 'AdminController@exlpode_ws_as_user')->name('adminexplodews');
 Route::get('/admin/adjust-difficulty', 'AdminController@adjust_difficulties')->name('admin.adjust-difficulties');
 
+Route::post('/video/upload', 'VideoController@upload')->name('video.upload');
+Route::get('/video/stream/{id}', 'VideoController@stream')->name('video.stream');
 
 /*Route::get('/admin/testsend', 'MailController@testsend');
 Route::get('admin/welcomeview', function (){

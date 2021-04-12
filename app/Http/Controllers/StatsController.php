@@ -50,6 +50,7 @@ class StatsController extends Controller
 
         if (Auth::user()->isTeacher()) {
             return view('stats.teacher', [
+                "user" => Auth::user(),
                 "posts" => sizeof($__posts),
                 "tags_posted" => $tags_used,
                 "worksheets" => $self_posted,

@@ -190,7 +190,7 @@
 
                     <!-- Worksheet-specific data -->
 
-                    <div class="row m-1">
+                    <div class="row ml-1">
                         <div class="dropdown m-1">
                             <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButtonWSQuestions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" <?php if (count($worksheets) == 0) echo "disabled"; ?>>
                                 Question
@@ -203,6 +203,19 @@
                     <div class="row m-1">
                         <div class="col-md-6" id="ws-q-card-holder"></div>
                         <div class="col-md-6" id="ws-q-att-card-holder">
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <div class="justify-content-between align-items-center">
+                                <span style="display: flex">
+                                    <h3 class="text-dark mb-0">All Videos</h3>
+                                    <button class="m-1 btn btn-sm btn-primary" id="upload-video">
+                                        Upload Video
+                                    </button>
+                                </span>
+                            </div>
                         </div>
                     </div>
 
@@ -222,6 +235,52 @@
                     <canvas id="topic-stats-chart">
                     </canvas>
                 </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal shadow" id="UploadVideoModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="text-secondary">
+                    Upload Video
+                </h3>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('video.upload') }}" method="post" enctype="multipart/form-data">
+                    @csrf
+
+                    <div class="form-group">
+                        <label for="video">Video</label>
+                        <input type="file" class="form-control-file" id="video" name="video">
+                    </div>
+
+                    <div class="form-group">
+                        <select class="custom-select" required name="qtype">
+                            <option value="">Question Type</option>
+                            <option value="MCQ">MCQ</option>
+                            <option value="SAQ">SAQ</option>
+                            <option value="SQA">SQA</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="qid" class="text-muted">Question ID</label>
+                        <input class="form-control" type="number" name="qid" id="qid" required>
+                    </div>
+
+
+                    <button type="submit" class="btn btn-md btn-primary">
+                        Upload
+                    </button>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">

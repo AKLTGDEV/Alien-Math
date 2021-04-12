@@ -27,7 +27,7 @@
                 method: 'get',
                 data: rep_data,
                 success: function(result) {
-                    if(result.status){
+                    if (result.status) {
                         $("#report-modal").modal('hide');
                     }
                 }

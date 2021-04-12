@@ -498,5 +498,13 @@
 
             ws_user_chart.update();
         }
+
+
+
+        // Video
+
+        $("#upload-video").click(function(e) {
+            $("#UploadVideoModal").modal('show');
+        })
     })
 </script>

@@ -7,6 +7,7 @@ use App\RatingsModel;
 use App\Report;
 use App\SAQ;
 use App\SQA;
+use App\Video;
 use App\WorksheetModel;
 use App\worksheets;
 use App\wsAttemptsModel;
@@ -167,9 +168,22 @@ class QuizController extends Controller
                 $r->SAQ($data['id'], $r_stat);
             }
 
+            /**
+             * Get the videos
+             * 
+             */
+            $videos = [];
+            foreach (Video::where("Qtype", "SAQ")
+                ->where("Qid", $data['id'])
+                ->get() as $v) {
+
+                $videos[] = route('video.stream', [$v->id]);
+            }
+
             return [
                 "correct" => $data['correct'],
                 "explanation" => $data['explanation'],
+                "videos" => $videos,
             ];
         } else if ($request->type == "MCQ") {
             if ($request->answer != null) {
@@ -216,9 +230,22 @@ class QuizController extends Controller
                 $r->SAQ($data['id'], $r_stat);
             }
 
+            /**
+             * Get the videos
+             * 
+             */
+            $videos = [];
+            foreach (Video::where("Qtype", "MCQ")
+                ->where("Qid", $data['id'])
+                ->get() as $v) {
+
+                $videos[] = route('video.stream', [$v->id]);
+            }
+
             return [
                 "correct" => $correct,
                 "explanation" => $data['explanation'],
+                "videos" => $videos,
             ];
         } else if ($request->type == "SQA") {
 
@@ -272,9 +299,22 @@ class QuizController extends Controller
                 $r->SAQ($data['id'], $r_stat);
             }
 
+            /**
+             * Get the videos
+             * 
+             */
+            $videos = [];
+            foreach (Video::where("Qtype", "SQA")
+                ->where("Qid", $data['id'])
+                ->get() as $v) {
+
+                $videos[] = route('video.stream', [$v->id]);
+            }
+
             return [
                 "correct" => $data['opts'],
                 "explanation" => $data['explanation'],
+                "videos" => $videos,
             ];
         }
     }
