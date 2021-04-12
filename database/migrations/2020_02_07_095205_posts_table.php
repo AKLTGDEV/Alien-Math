@@ -37,6 +37,8 @@ class PostsTable extends Migration
             $table->bigInteger('success')->default(0);
             $table->string('title')->default("--");
 
+            $table->string("videos")->default("[]");
+
             $table->timestamps();
         });
     }

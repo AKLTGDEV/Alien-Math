@@ -72,4 +72,27 @@ class PostModel extends Model
     {
         return UserModel::where("id", $this->author)->first()->username;
     }
+
+    public function addVideo($id)
+    {
+        $videos = json_decode($this->videos);
+        if (!in_array($id, $videos)) {
+            $videos[] = $id;
+            $this->videos = json_encode($videos);
+            $this->save();
+        }
+    }
+
+    public function deleteVideo($id)
+    {
+        $videos = json_decode($this->videos);
+        $videos_new = [];
+        foreach ($videos as $v) {
+            if ($v != $id) {
+                $videos_new[] = $v;
+            }
+        }
+        $this->videos = json_encode($videos_new);
+        $this->save();
+    }
 }

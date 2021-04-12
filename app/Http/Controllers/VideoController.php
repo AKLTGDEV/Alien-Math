@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\PostModel;
+use App\SAQ;
+use App\SQA;
 use App\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -36,8 +39,33 @@ class VideoController extends Controller
 
         if (Storage::putFileAs("videos", $vid, $v->encname)) {
             $v->uploader = Auth::user()->username;
-            $v->Qtype = $request->qtype;
-            $v->Qid = $request->qid;
+            $v->save();
+
+            switch ($request->qtype) {
+                case 'MCQ':
+                    PostModel::where("id", $request->qid)
+                        ->first()
+                        ->addVideo($v->id);
+                    break;
+
+                case 'SAQ':
+                    SAQ::where("id", $request->qid)
+                        ->first()
+                        ->addVideo($v->id);
+                    break;
+
+                case 'SQA':
+                    SQA::where("id", $request->qid)
+                        ->first()
+                        ->addVideo($v->id);
+                    break;
+
+                default:
+                    dd("Somethng broke");
+                    break;
+            }
+
+            $v->attached++;
             $v->save();
         }
 
@@ -57,6 +85,16 @@ class VideoController extends Controller
                 'Content-Type' => $mime_type,
                 'Content-Disposition' => 'inline; filename="video"'
             ]);
+        }
+    }
+
+    public function modify($id)
+    {
+        $v = Video::where("id", $id)->first();
+        if ($v == null) {
+            return abort(404);
+        } else {
+            return $v;
         }
     }
 }

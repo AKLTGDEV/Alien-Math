@@ -13,6 +13,7 @@ use App\WorksheetModel;
 use App\UserModel;
 use App\worksheets;
 use App\users;
+use App\Video;
 use App\wsAttemptsModel;
 use Illuminate\Support\Facades\Storage;
 
@@ -49,11 +50,17 @@ class StatsController extends Controller
 
 
         if (Auth::user()->isTeacher()) {
+            $videos = Video::where("uploader", Auth::user()->username)
+                ->orderBy('id', 'desc')
+                ->take(6)
+                ->get(); // Get last 6 videos
+
             return view('stats.teacher', [
                 "user" => Auth::user(),
                 "posts" => sizeof($__posts),
                 "tags_posted" => $tags_used,
                 "worksheets" => $self_posted,
+                "videos" => $videos,
                 "daily_record" => rating::get_dr(Auth::user()),
 
                 "searchbar" => true

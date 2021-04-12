@@ -168,16 +168,15 @@ class QuizController extends Controller
                 $r->SAQ($data['id'], $r_stat);
             }
 
+
             /**
              * Get the videos
-             * 
              */
             $videos = [];
-            foreach (Video::where("Qtype", "SAQ")
-                ->where("Qid", $data['id'])
-                ->get() as $v) {
-
-                $videos[] = route('video.stream', [$v->id]);
+            foreach (json_decode(SAQ::where("id", $data['id'])
+                ->first()
+                ->videos) as $v_id) {
+                $videos[] = route('video.stream', [$v_id]);
             }
 
             return [
@@ -232,14 +231,12 @@ class QuizController extends Controller
 
             /**
              * Get the videos
-             * 
              */
             $videos = [];
-            foreach (Video::where("Qtype", "MCQ")
-                ->where("Qid", $data['id'])
-                ->get() as $v) {
-
-                $videos[] = route('video.stream', [$v->id]);
+            foreach (json_decode(PostModel::where("id", $data['id'])
+                ->first()
+                ->videos) as $v_id) {
+                $videos[] = route('video.stream', [$v_id]);
             }
 
             return [
@@ -301,14 +298,12 @@ class QuizController extends Controller
 
             /**
              * Get the videos
-             * 
              */
             $videos = [];
-            foreach (Video::where("Qtype", "SQA")
-                ->where("Qid", $data['id'])
-                ->get() as $v) {
-
-                $videos[] = route('video.stream', [$v->id]);
+            foreach (json_decode(SQA::where("id", $data['id'])
+                ->first()
+                ->videos) as $v_id) {
+                $videos[] = route('video.stream', [$v_id]);
             }
 
             return [

@@ -265,6 +265,7 @@ Route::get('/admin/adjust-difficulty', 'AdminController@adjust_difficulties')->n
 
 Route::post('/video/upload', 'VideoController@upload')->name('video.upload');
 Route::get('/video/stream/{id}', 'VideoController@stream')->name('video.stream');
+Route::get('/video/modify/{id}', 'VideoController@modify')->name('video.modify');
 
 /*Route::get('/admin/testsend', 'MailController@testsend');
 Route::get('admin/welcomeview', function (){

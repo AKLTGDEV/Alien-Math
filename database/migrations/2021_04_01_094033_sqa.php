@@ -33,6 +33,8 @@ class Sqa extends Migration
             $table->longText("digest")->nullable();
             $table->string("uploader"); //username
 
+            $table->string("videos")->default("[]");
+
             $table->timestamps();
         });
     }

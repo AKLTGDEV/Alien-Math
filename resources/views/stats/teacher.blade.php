@@ -8,8 +8,12 @@
         padding: 5px;
     }
 </style>
+
 <script type="text/javascript" src="{{ config('app.url') }}/thirdparty/bs-charts.js"></script>
 <script type="text/javascript" src="{{ config('app.url') }}/thirdparty/chart.min.js"></script>
+
+<link href="https://vjs.zencdn.net/7.11.4/video-js.css" rel="stylesheet" />
+<script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
 
 @include('stats.logic.teacher')
 
@@ -217,6 +221,33 @@
                                 </span>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        @foreach($videos as $video)
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    Video <b>#{{ $video->id }} ({{ $video->filename }})</b>
+                                </div>
+                                <div class="card-body">
+                                    <video id="video-{{ $video->id }}" class="video-js" controls preload="auto" style="width: 100%;" data-setup="{}">
+                                        <source src="{{ route('video.stream', [$video->id]) }}" type="video/mp4" />
+                                        <p class="vjs-no-js">
+                                            To view this video please enable JavaScript, and consider upgrading to a
+                                            web browser that
+                                            <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                                        </p>
+                                    </video>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="{{ route('video.modify', [$video->id]) }}" class="btn btn-sm btn-warning">
+                                        Modify
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
                     </div>
 
                 </div>
