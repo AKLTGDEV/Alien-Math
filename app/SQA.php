@@ -217,6 +217,9 @@ class SQA extends Model
             $videos[] = $id;
             $this->videos = json_encode($videos);
             $this->save();
+
+            $vid = Video::where("id", $id)->first();
+            $vid->addSQA($this->id);
         }
     }
 
@@ -224,12 +227,21 @@ class SQA extends Model
     {
         $videos = json_decode($this->videos);
         $videos_new = [];
+
+        $flag = false;
         foreach ($videos as $v) {
             if ($v != $id) {
                 $videos_new[] = $v;
+            } else {
+                $flag = true;
             }
         }
         $this->videos = json_encode($videos_new);
         $this->save();
+
+        if ($flag) {
+            $vid = Video::where("id", $id)->first();
+            $vid->deleteSQA($this->id);
+        }
     }
 }

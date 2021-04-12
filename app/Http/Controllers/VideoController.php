@@ -90,11 +90,124 @@ class VideoController extends Controller
 
     public function modify($id)
     {
-        $v = Video::where("id", $id)->first();
+        $v = Video::where("id", $id)
+            ->first();
         if ($v == null) {
             return abort(404);
         } else {
-            return $v;
+            /**
+             * Emit all the attatched posts
+             * 
+             */
+
+            $posts = [];
+
+            foreach (json_decode($v->MCQ) as $mcq) {
+                $posts[] = [
+                    "type" => "MCQ",
+                    "id" => $mcq,
+                    "url" => route('question.MCQ', [$mcq]),
+                    "detach" => route('video.detach.MCQ', [$v->id, $mcq]),
+                ];
+            }
+
+            foreach (json_decode($v->SAQ) as $saq) {
+                $posts[] = [
+                    "type" => "SAQ",
+                    "id" => $saq,
+                    "url" => route('question.SAQ', [$saq]),
+                    "detach" => route('video.detach.SAQ', [$v->id, $saq]),
+                ];
+            }
+
+            foreach (json_decode($v->SQA) as $sqa) {
+                $posts[] = [
+                    "type" => "SQA",
+                    "id" => $sqa,
+                    "url" => route('question.SQA', [$sqa]),
+                    "detach" => route('video.detach.SQA', [$v->id, $sqa]),
+                ];
+            }
+
+            return view('video.modify', [
+                "video" => $v,
+                "posts" => $posts,
+            ]);
+        }
+    }
+
+    public function detach_mcq($id, $qid)
+    {
+        $v = Video::where("id", $id)
+            ->first();
+        if ($v == null) {
+            return abort(404);
+        } else {
+            $q = PostModel::where("id", $qid)->first();
+            $q->deleteVideo($id);
+
+            return redirect()->back();
+        }
+    }
+
+    public function detach_saq($id, $qid)
+    {
+        $v = Video::where("id", $id)
+            ->first();
+        if ($v == null) {
+            return abort(404);
+        } else {
+            $q = SAQ::where("id", $qid)->first();
+            $q->deleteVideo($id);
+
+            return redirect()->back();
+        }
+    }
+
+    public function detach_sqa($id, $qid)
+    {
+        $v = Video::where("id", $id)
+            ->first();
+        if ($v == null) {
+            return abort(404);
+        } else {
+            $q = SQA::where("id", $qid)->first();
+            $q->deleteVideo($id);
+
+            return redirect()->back();
+        }
+    }
+
+    public function attach(Request $request, $id)
+    {
+        $v = Video::where("id", $id)
+            ->first();
+        if ($v == null) {
+            return abort(404);
+        } else {
+            switch ($request->qtype) {
+                case 'MCQ':
+                    $q = PostModel::where("id", $request->qid)->first();
+                    break;
+
+                case 'SAQ':
+                    $q = SAQ::where("id", $request->qid)->first();
+                    break;
+
+                case 'SQA':
+                    $q = SQA::where("id", $request->qid)->first();
+                    break;
+
+                default:
+                    dd("something went wrong");
+                    break;
+            }
+
+            $q->addVideo($id);
+            $v->attached++;
+            $v->save();
+
+            return redirect()->back();
         }
     }
 }

@@ -266,6 +266,10 @@ Route::get('/admin/adjust-difficulty', 'AdminController@adjust_difficulties')->n
 Route::post('/video/upload', 'VideoController@upload')->name('video.upload');
 Route::get('/video/stream/{id}', 'VideoController@stream')->name('video.stream');
 Route::get('/video/modify/{id}', 'VideoController@modify')->name('video.modify');
+Route::get('/video/detach/{id}/MCQ/{qid}', 'VideoController@detach_mcq')->name('video.detach.MCQ');
+Route::get('/video/detach/{id}/SAQ/{qid}', 'VideoController@detach_saq')->name('video.detach.SAQ');
+Route::get('/video/detach/{id}/SQA/{qid}', 'VideoController@detach_sqa')->name('video.detach.SQA');
+Route::get('/video/attach/{id}', 'VideoController@attach')->name('video.attach');
 
 /*Route::get('/admin/testsend', 'MailController@testsend');
 Route::get('admin/welcomeview', function (){

@@ -19,14 +19,10 @@ class Videos extends Migration
             $table->string("uploader");
             $table->string("encname")->index();
             $table->string("searchterm")->nullable();
-
-            /*$table->enum("Qtype", [
-                "MCQ",
-                "SAQ",
-                "SQA"
-            ]);
-            $table->integer("Qid");*/
             $table->integer("attached")->default(0);
+            $table->string("MCQ")->default("[]");
+            $table->string("SAQ")->default("[]");
+            $table->string("SQA")->default("[]");
 
             $table->timestamps();
         });
