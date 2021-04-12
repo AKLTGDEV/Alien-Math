@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
+use TeamTNT\TNTSearch\TNTSearch;
 
 class VideoController extends Controller
 {
@@ -27,6 +28,12 @@ class VideoController extends Controller
 
         $v = new Video;
         $v->filename = $vid->getClientOriginalName();
+
+        $v->searchterm = pathinfo($v->filename, PATHINFO_FILENAME);
+        $v->searchterm = str_replace("-", " ", $v->searchterm);
+        $v->searchterm = str_replace("_", " ", $v->searchterm);
+        //return $v->searchterm;
+
         $v->encname = md5(
             Carbon::now()->toDayDateTimeString()
                 . $v->filename
@@ -67,6 +74,23 @@ class VideoController extends Controller
 
             $v->attached++;
             $v->save();
+
+            $tnt = new TNTSearch;
+            $tnt->loadConfig([
+                'driver'    => 'mysql',
+                'host'      => env('DB_HOST', '127.0.0.1'),
+                'database'  => env('DB_DATABASE', 'forge'),
+                'username'  => env('DB_USERNAME', 'forge'),
+                'password'  => env('DB_PASSWORD', ''),
+                'storage'   => storage_path('app') . "/indices//",
+            ]);
+            $tnt->selectIndex("videos.index");
+            $index = $tnt->getIndex();
+
+            $index->insert([
+                'id' => $v->id,
+                'searchterm' => $v->searchterm
+            ]); // Not Now..
         }
 
         return redirect()->back();
@@ -209,5 +233,39 @@ class VideoController extends Controller
 
             return redirect()->back();
         }
+    }
+
+    public function search(Request $request)
+    {
+        $search = $request->q;
+
+        $hits = 0;
+        $exec_time = 0;
+        $results = [];
+
+        $tnt = new TNTSearch;
+
+        $tnt->loadConfig([
+            'driver'    => 'mysql',
+            'host'      => env('DB_HOST', 'localhost'),
+            'database'  => env('DB_DATABASE', ''),
+            'username'  => env('DB_USERNAME', ''),
+            'password'  => env('DB_PASSWORD', ''),
+            'storage'   => storage_path('app') . "/indices//",
+        ]);
+
+        $tnt->selectIndex("videos.index");
+        $res = $tnt->search($search);
+        $exec_time += explode(" ", $res['execution_time'])[0];
+        $hits += $res['hits'];
+        foreach ($res['ids'] as $id) {
+            $results[] = Video::where("id", $id)->first();
+        }
+
+        return view("video.search", [
+            "results" => $results,
+            "exec_time" => round($exec_time, 3),
+            "hits" => count($results),
+        ]);
     }
 }

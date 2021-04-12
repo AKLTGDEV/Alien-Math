@@ -125,6 +125,10 @@ class searchindex extends Command
             $sqa_indexer = $tnt->createIndex('sqa.index');
             $sqa_indexer->query('SELECT id, digest FROM SQA;');
             $sqa_indexer->run();
+
+            $vid_indexer = $tnt->createIndex('videos.index');
+            $vid_indexer->query('SELECT id, searchterm FROM videos;');
+            $vid_indexer->run();
         }
     }
 }

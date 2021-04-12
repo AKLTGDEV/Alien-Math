@@ -218,7 +218,36 @@
                                     <button class="m-1 btn btn-sm btn-primary" id="upload-video">
                                         Upload Video
                                     </button>
+
+                                    <a href="#" class="m-1 btn btn-sm btn-outline-primary">
+                                        All Videos
+                                    </a>
                                 </span>
+
+                                @if(count($videos) > 0)
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                Search Posted Videos
+                                            </div>
+                                            <div class="card-body">
+                                                <ul class="list-group">
+                                                    <form action="{{ route('video.search') }}" method="get">
+                                                        <div class="input-group mb-3">
+                                                            <input type="text" class="form-control" placeholder="Enter search terms" name="q">
+                                                            <div class="input-group-append">
+                                                                <button class="btn btn-outline-secondary" type="submit">Search</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endif
+
                             </div>
                         </div>
                     </div>
