@@ -268,4 +268,20 @@ class VideoController extends Controller
             "hits" => count($results),
         ]);
     }
+
+    public function delete($id)
+    {
+        // Remove the file from local storage
+        $v = Video::where("id", $id)
+            ->first();
+        if ($v == null) {
+            return abort(404);
+        } else {
+            Storage::delete("videos/$v->encname");
+
+            // Remove the DB entry
+            $v->delete();
+            return redirect()->route('stats');
+        }
+    }
 }

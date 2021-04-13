@@ -107,4 +107,14 @@ class PostModel extends Model
             $vid->deleteMCQ($this->id);
         }
     }
+
+    public function videos()
+    {
+        $vids = [];
+        foreach (json_decode($this->videos) as $vid) {
+            $vids[] = Video::where("id", $vid)->first();
+        }
+
+        return $vids;
+    }
 }

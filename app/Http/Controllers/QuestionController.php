@@ -29,6 +29,8 @@ class QuestionController extends Controller
             //return redirect()->route("viewpost", [$id]);
             return view("question.mcq", [
                 "question" => $q,
+                "type" => "MCQ",
+                "videos" => $q->videos(),
             ]);
         } else {
             return abort(404);
@@ -39,11 +41,11 @@ class QuestionController extends Controller
     {
         $q = SAQ::where("id", $id)->first();
 
-        //return $q;
-
         if ($q != null) {
             return view("question.saq", [
                 "question" => $q,
+                "type" => "SAQ",
+                "videos" => $q->videos(),
             ]);
         } else {
             return abort(404);
@@ -59,6 +61,8 @@ class QuestionController extends Controller
         if ($q != null) {
             return view("question.sqa", [
                 "question" => $q,
+                "type" => "SQA",
+                "videos" => $q->videos(),
             ]);
         } else {
             return abort(404);
