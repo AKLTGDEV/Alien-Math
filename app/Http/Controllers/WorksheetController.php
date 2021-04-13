@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\activitylog;
 use App\NotifsModel;
 use App\rating;
+use App\RatingsModel;
 use App\Rules\tagexists;
 use App\Rules\tags_min_2;
 use App\Rules\usersexist;
@@ -477,6 +478,30 @@ class WorksheetController extends Controller
                         ];
                     }
 
+                    $ratings = [];
+                    $all_ratings = RatingsModel::where("of", Auth::user()->username)
+                        ->get();
+
+                    foreach ($all_ratings as $r) {
+                        $topic = TagsModel::where("id", $r->topic)->first();
+
+                        /**
+                         * See the average for other users in this topic
+                         */
+                        $others = RatingsModel::where("topic", $topic->id)->get();
+                        $others_rating_net = 0;
+                        foreach ($others as $o) {
+                            $others_rating_net += $o->rating;
+                        }
+
+                        $ratings[] = [
+                            'topic' => $topic->name,
+                            'self_rating' => round(($r->rating / 1500) * 100, 3),
+                            'change' => $r->lastchange(),
+                            'others_rating' => round((($others_rating_net / count($others)) / 1500) * 100, 3),
+                        ];
+                    }
+
                     return view("worksheet.answer.wsanswer-3", [
                         "ws" => $worksheet,
                         "fucked" => false,
@@ -489,7 +514,11 @@ class WorksheetController extends Controller
                         //"mins" => round($wsa_metrics['clock_hits']/60, 3),
                         "mins" => round($secs / 60, 3),
                         "topics" => $topics,
-                        "average" => round($all_right__ / count($all_attempts)),
+                        "average" => round((($all_right__ / count($all_attempts)) / $worksheet->nos) * 100, 2),
+
+                        "right_perc" => round(($right__ / $worksheet->nos) * 100, 2),
+                        "ratings" => $ratings,
+
                         "shareid" => $shareid,
                         "searchbar" => false
                     ]);

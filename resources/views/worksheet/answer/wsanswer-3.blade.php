@@ -125,13 +125,13 @@
                     <div class="card-text text-center mt-1">
                         <div class="row">
                             <div class="col-md-6">
-                                <h3 class="text-muted">You</h3>
-                                <h1 class="text-bold">{{$right}}</h1>
+                                <h3 class="text-muted">Your Score</h3>
+                                <h1 class="text-bold">{{$right_perc}}%</h1>
                                 <h4>Completed in {{$mins}} minutes</h4>
                             </div>
                             <div class="col-md-6">
-                                <h3 class="text-muted">Average</h3>
-                                <h1 class="text-bold">{{$average}}</h1>
+                                <h3 class="text-muted">Average Score</h3>
+                                <h1 class="text-bold">{{$average}}%</h1>
                             </div>
                         </div>
 
@@ -164,7 +164,7 @@
                             </div>
                         </div>
 
-                        <div class="row mt-1">
+                        <!--<div class="row mt-1">
                             <div class="col-md-12" id="topicwise-stats-holder">
                                 <div class="card">
                                     <div class="card-header">
@@ -184,7 +184,6 @@
                                             @endforeach
                                         </ul>
 
-                                        <!-- Tab panes -->
                                         <div class="tab-content">
                                             <?php $count = 1; ?>
                                             @foreach($topics as $topic)
@@ -208,6 +207,35 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>-->
+
+                        <div class="row mt-1">
+                            <div class="col-md-12">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Topic</th>
+                                            <th scope="col">Overall ELO</th>
+                                            <th scope="col">Change</th>
+                                            <th scope="col">Average User ELO</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php $i = 1; ?>
+                                        @foreach($ratings as $r)
+                                        <tr>
+                                            <th scope="row">{{ $i }}</th>
+                                            <td>{{ $r['topic'] }}</td>
+                                            <td>{{ $r['self_rating'] }}%</td>
+                                            <td>{{ $r['change'] }} points</td>
+                                            <td>{{ $r['others_rating'] }}%</td>
+                                        </tr>
+                                        <?php $i++; ?>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
 

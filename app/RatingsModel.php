@@ -133,4 +133,23 @@ class RatingsModel extends Model
             return true;
         }
     }
+
+    public function lastchange()
+    {
+        $record = json_decode(Storage::get("rating_changes/$this->id"), true);
+
+        switch (count($record)) {
+            case 0:
+                return $this->rating;
+
+            case 1:
+                return 0;
+
+            default:                
+                $last = $record[count($record) - 1];
+                $second_last = $record[count($record) - 2];
+
+                return $last['rating'] - $second_last['rating'];
+        }
+    }
 }
