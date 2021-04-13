@@ -29,24 +29,6 @@
             }
         })
 
-
-
-
-        var ctx = document.getElementById('topics-chart').getContext('2d');
-        var topicschart = new Chart(ctx, {
-            "type": "doughnut",
-            "data": {},
-            "options": {
-                "maintainAspectRatio": false,
-                "legend": {
-                    "display": false
-                },
-                "title": {}
-            }
-        })
-
-        //update_topics_chart("posted");
-
         var ctx2 = document.getElementById('ws-user-chart').getContext('2d');
         var ws_user_chart = new Chart(ctx2, {
             "type": "bar",

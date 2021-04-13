@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\PostModel;
 use App\posts;
 use App\rating;
+use App\RatingsModel;
 use App\SAQ;
 use App\SQA;
 use App\TagsModel;
@@ -48,6 +49,13 @@ class StatsController extends Controller
             ->where("attempts", ">", 0)
             ->get();
 
+        $ratings = RatingsModel::where("of", Auth::user()->username)->get();
+        $net_rating = 0;
+        $rating_sum = 0;
+        foreach ($ratings as $r) {
+            $rating_sum += $r->rating;
+        }
+        $net_rating = count($ratings) == 0 ? 0 : round($rating_sum / count($ratings), 2);
 
         if (Auth::user()->isTeacher()) {
             $videos = Video::where("uploader", Auth::user()->username)
@@ -80,6 +88,7 @@ class StatsController extends Controller
                 "worksheets" => $wslist,
                 "daily_record" => rating::get_dr(Auth::user()),
                 "user" => Auth::user(),
+                "rating" => $net_rating,
 
                 "searchbar" => true
             ]);

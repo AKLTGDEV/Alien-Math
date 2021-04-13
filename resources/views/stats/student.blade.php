@@ -36,22 +36,20 @@
                             </div>
                         </div>
                         <div class="col-lg-5 col-xl-4">
-                            <div class="card shadow mb-4">
-                                <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h6 id="topics-heading" class="text-primary font-weight-bold m-0">Topics</h6>
-                                    <div class="dropdown no-arrow">
-                                        <button class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
-                                        <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
-                                            <p class="text-center dropdown-header">Stats for:</p>
-                                            <a href="#" id="topics-posted" class="dropdown-item active" role="presentation">&nbsp;Posted</a>
-                                            <a href="#" id="topics-answered" class="dropdown-item" role="presentation">&nbsp;Answered</a>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="card shadow border-left-primary py-2">
                                 <div class="card-body">
-                                    <div class="chart-area">
-                                        <canvas id="topics-chart">
-                                        </canvas>
+                                    <div class="row align-items-center no-gutters">
+                                        <div class="col mr-2">
+                                            <div class="text-uppercase text-primary font-weight-bold text-xs mb-1">
+                                                <span>
+                                                    Your ELO Rating
+                                                </span>
+                                            </div>
+                                            <div class="text-dark font-weight-bold h5 mb-0">
+                                                <span>{{ $rating }}</span>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
