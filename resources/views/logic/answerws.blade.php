@@ -129,6 +129,8 @@
                     _token: CSRF_TOKEN,
                 },
                 success: function(result) {
+                    $("#subq").prop("disabled", false);
+
                     if (result.status == "error") {
                         $("#content-body").html(`
 

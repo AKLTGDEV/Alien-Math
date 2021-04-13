@@ -9,6 +9,7 @@ function ans_submit_saq(j, ans, clock_hits) {
             hits: clock_hits,
         },
         success: function(result) {
+            $("#subq").prop("disabled", true);
             var videos = "";
             (result.videos).forEach(v => {
                 videos += `

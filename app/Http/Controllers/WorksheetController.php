@@ -430,14 +430,18 @@ class WorksheetController extends Controller
                                  * Get the average stats first
                                  */
                                 foreach ($all_attempts as $a) {
-                                    switch ($a->results()[$i]) {
-                                        case 'T':
-                                            $all_right++;
-                                            break;
+                                    if (count($a->results()) < $i + 1) {
+                                        $left++;
+                                    } else {
+                                        switch ($a->results()[$i]) {
+                                            case 'T':
+                                                $all_right++;
+                                                break;
 
-                                        default:
-                                            # code...
-                                            break;
+                                            default:
+                                                # code...
+                                                break;
+                                        }
                                     }
                                 }
 
@@ -471,7 +475,6 @@ class WorksheetController extends Controller
 
                             "average_right" => round(($all_right / $all_net) * 100, 3),
                         ];
-
                     }
 
                     return view("worksheet.answer.wsanswer-3", [
