@@ -123,8 +123,17 @@
                 <div class="card-body">
                     @if(!$fucked)
                     <div class="card-text text-center mt-1">
-                        <h1 class="text-bold">{{$right}}/{{$total}}</h1>
-                        <h4>Completed in {{$mins}} minutes</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3 class="text-muted">You</h3>
+                                <h1 class="text-bold">{{$right}}</h1>
+                                <h4>Completed in {{$mins}} minutes</h4>
+                            </div>
+                            <div class="col-md-6">
+                                <h3 class="text-muted">Average</h3>
+                                <h1 class="text-bold">{{$average}}</h1>
+                            </div>
+                        </div>
 
                         <a class="btn btn-sm btn-secondary mt-1 mb-2" href="{{ route('stats') }}">
                             Stats
@@ -149,6 +158,53 @@
                                     <div class="card-body">
                                         <div class="chart-area">
                                             <canvas id="overview"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-1">
+                            <div class="col-md-12" id="topicwise-stats-holder">
+                                <div class="card">
+                                    <div class="card-header">
+                                        Topic-wise breakdown: <b>{{ "@".$self->username }}</b>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <ul class="nav nav-tabs">
+                                            <?php $count = 1; ?>
+                                            @foreach(array_keys($topics) as $t)
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-toggle="tab" href="#body-{{ $count }}">
+                                                    {{ $t }}
+                                                </a>
+                                            </li>
+                                            <?php $count++; ?>
+                                            @endforeach
+                                        </ul>
+
+                                        <!-- Tab panes -->
+                                        <div class="tab-content">
+                                            <?php $count = 1; ?>
+                                            @foreach($topics as $topic)
+                                            <div class="tab-pane container" id="body-{{ $count }}">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <h3 class="text-muted">You</h3>
+
+                                                        <h4 class="mt-1">{{ $topic['right'] }}% of questions attempted correctly</h4>
+                                                        <h4>{{ $topic['left'] }}% of questions left</h4>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <h3 class="text-muted">Average</h3>
+
+                                                        <h4 class="mt-1">{{ $topic['average_right'] }}% of questions attempted correctly</h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <?php $count++; ?>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>

@@ -372,9 +372,106 @@ class WorksheetController extends Controller
 
                     $results__ = array_count_values($attempt->results());
 
-                    $right = 0;
+                    $right__ = 0;
                     if (array_key_exists("T", $results__)) {
-                        $right = $results__['T'];
+                        $right__ = $results__['T'];
+                    }
+
+
+
+                    /**
+                     * Get the average
+                     * 
+                     */
+                    $all_right__ = 0;
+                    $all_attempts = wsAttemptsModel::where("wsid", $worksheet->id)
+                        ->get();
+
+                    foreach ($all_attempts as $__a) {
+                        $all_right__ += $__a->right;
+                    }
+
+                    $topics = [];
+
+                    //$results = json_decode($attempt->results);
+                    $results = $attempt->results();
+                    $ws_info = json_decode(Storage::get("WS/$worksheet->ws_name"), true);
+                    $questions = $ws_info['content'];
+                    foreach ($worksheet->topics() as $t) {
+                        $topic = TagsModel::where("name", $t)->first();
+
+                        /**
+                         * Stats Under each topic:
+                         * 
+                         * 1. % of questions attempted successfully
+                         * 2. % of questions left
+                         * 3. Average time spent
+                         * 4. Other info (TODO)
+                         * 
+                         */
+
+                        $right = 0;
+                        $wrong = 0;
+                        $left = 0;
+
+                        $all_right = 0;
+                        $all_net = 0;
+
+                        $i = 0;
+
+                        $net_q = 0;
+                        foreach ($questions as $q) {
+                            if (in_array($topic->id, $q['topics'])) {
+                                // Current topic IS atatched with this question
+                                $net_q++;
+                                $all_net++;
+
+                                /**
+                                 * Get the average stats first
+                                 */
+                                foreach ($all_attempts as $a) {
+                                    switch ($a->results()[$i]) {
+                                        case 'T':
+                                            $all_right++;
+                                            break;
+
+                                        default:
+                                            # code...
+                                            break;
+                                    }
+                                }
+
+                                if (count($results) < $i + 1) {
+                                    $left++;
+                                } else {
+                                    switch ($results[$i]) {
+                                        case 'T':
+                                            $right++;
+                                            break;
+                                        case 'F':
+                                            $wrong++;
+                                            break;
+                                        case 'L':
+                                            $left++;
+                                            break;
+
+                                        default:
+                                            // This should not be happening
+                                            break;
+                                    }
+                                }
+                            }
+
+                            $i++;
+                        }
+
+                        $topics[$topic->name] = [
+                            "right" => round(($right / $net_q) * 100, 3),
+                            "left" => round(($left / $net_q) * 100, 3),
+
+                            "average_right" => round(($all_right / $all_net) * 100, 3),
+                        ];
+
                     }
 
                     return view("worksheet.answer.wsanswer-3", [
@@ -385,9 +482,11 @@ class WorksheetController extends Controller
                         //"total" => $attempt->right + $attempt->wrong + $attempt->left,
                         "total" => $worksheet->nos,
                         //"right" => $results__['T'],
-                        "right" => $right,
+                        "right" => $right__,
                         //"mins" => round($wsa_metrics['clock_hits']/60, 3),
                         "mins" => round($secs / 60, 3),
+                        "topics" => $topics,
+                        "average" => round($all_right__ / count($all_attempts)),
                         "shareid" => $shareid,
                         "searchbar" => false
                     ]);
