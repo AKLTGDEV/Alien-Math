@@ -37,6 +37,11 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->dateTime('email_verified_at')->nullable(true);
+
+            $table->string('vid_MCQ')->default("[]");
+            $table->string('vid_SAQ')->default("[]");
+            $table->string('vid_SQA')->default("[]");
+
             $table->integer('rating')->default(0);
             $table->integer('answers_t')->default(0);
             $table->integer('answers_f')->default(0);

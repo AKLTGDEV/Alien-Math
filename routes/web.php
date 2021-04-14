@@ -274,8 +274,11 @@ Route::get('/video/attach/{id}', 'VideoController@attach')->name('video.attach')
 Route::get('/video/search', 'VideoController@search')->name('video.search');
 Route::get('/video/delete/{id}', 'VideoController@delete')->name('video.delete');
 Route::get('/video/all', 'VideoController@all')->name('video.all');
-Route::get('/video/all', 'VideoController@all')->name('video.all');
 Route::get('/video/q-attach/{type}/{id}', 'QuestionController@attach_videos')->name('video.q-attach');
+Route::get('/video/bookmark/MCQ/{qid}', 'VideoController@bookmark_mcq')->name('video.bookmark.MCQ');
+Route::get('/video/bookmark/SAQ/{qid}', 'VideoController@bookmark_saq')->name('video.bookmark.SAQ');
+Route::get('/video/bookmark/SQA/{qid}', 'VideoController@bookmark_sqa')->name('video.bookmark.SQA');
+Route::get('/video/bokmarked', 'VideoController@bookmarked')->name('video.bookmarked');
 
 /*Route::get('/admin/testsend', 'MailController@testsend');
 Route::get('admin/welcomeview', function (){

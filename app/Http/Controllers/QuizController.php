@@ -176,7 +176,10 @@ class QuizController extends Controller
             foreach (json_decode(SAQ::where("id", $data['id'])
                 ->first()
                 ->videos) as $v_id) {
-                $videos[] = route('video.stream', [$v_id]);
+                $videos[] = [
+                    "id" => $v_id,
+                    "loc" => route('video.stream', [$v_id]),
+                ];
             }
 
             return [
@@ -236,7 +239,10 @@ class QuizController extends Controller
             foreach (json_decode(PostModel::where("id", $data['id'])
                 ->first()
                 ->videos) as $v_id) {
-                $videos[] = route('video.stream', [$v_id]);
+                $videos[] = [
+                    "id" => $v_id,
+                    "loc" => route('video.stream', [$v_id]),
+                ];
             }
 
             return [
@@ -303,7 +309,10 @@ class QuizController extends Controller
             foreach (json_decode(SQA::where("id", $data['id'])
                 ->first()
                 ->videos) as $v_id) {
-                $videos[] = route('video.stream', [$v_id]);
+                $videos[] = [
+                    "id" => $v_id,
+                    "loc" => route('video.stream', [$v_id]),
+                ];
             }
 
             return [

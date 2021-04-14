@@ -90,11 +90,41 @@ class UserModel extends Model
             ->where("topic", $topic)
             ->first();
 
-        if($r == null){
+        if ($r == null) {
             RatingsModel::new($this->username, $topic, 1000);
             return $this->rating($topic);
         } else {
             return $r->rating;
         }
+    }
+
+    public function bookmark_mcq($id)
+    {
+        $list = json_decode($this->vid_MCQ);
+        if (!in_array($id, $list)) {
+            $list[] = $id;
+        }
+        $this->vid_MCQ = json_encode($list);
+        $this->save();
+    }
+
+    public function bookmark_saq($id)
+    {
+        $list = json_decode($this->vid_SAQ);
+        if (!in_array($id, $list)) {
+            $list[] = $id;
+        }
+        $this->vid_SAQ = json_encode($list);
+        $this->save();
+    }
+
+    public function bookmark_sqa($id)
+    {
+        $list = json_decode($this->vid_SQA);
+        if (!in_array($id, $list)) {
+            $list[] = $id;
+        }
+        $this->vid_SQA = json_encode($list);
+        $this->save();
     }
 }

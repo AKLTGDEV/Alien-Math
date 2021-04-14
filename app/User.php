@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use function GuzzleHttp\json_decode;
+
 class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
@@ -80,7 +82,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function isAdmin()
     {
-        if($this->type == "admin"){
+        if ($this->type == "admin") {
             return true;
         } else {
             return false;
@@ -89,7 +91,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function isTeacher()
     {
-        if($this->type == "creator"){
+        if ($this->type == "creator") {
             return true;
         } else {
             return false;
@@ -98,10 +100,40 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function isStudent()
     {
-        if($this->type == "student"){
+        if ($this->type == "student") {
             return true;
         } else {
             return false;
         }
+    }
+
+    public function bookmark_mcq($id)
+    {
+        $list = json_decode($this->vid_MCQ);
+        if (!in_array($id, $list)) {
+            $list[] = $id;
+        }
+        $this->vid_MCQ = json_encode($list);
+        $this->save();
+    }
+
+    public function bookmark_saq($id)
+    {
+        $list = json_decode($this->vid_SAQ);
+        if (!in_array($id, $list)) {
+            $list[] = $id;
+        }
+        $this->vid_SAQ = json_encode($list);
+        $this->save();
+    }
+
+    public function bookmark_sqa($id)
+    {
+        $list = json_decode($this->vid_SQA);
+        if (!in_array($id, $list)) {
+            $list[] = $id;
+        }
+        $this->vid_SQA = json_encode($list);
+        $this->save();
     }
 }

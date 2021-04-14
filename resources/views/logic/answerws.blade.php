@@ -268,5 +268,21 @@
                 }
             });
         }
+
+        $('.exp-holder').on('click', '.qbookmark', function() {
+            var qid = $(this).attr("qid");
+            var qtype = $(this).attr("qtype");
+
+            $.ajax({
+                url: `{{ config('app.url') }}/video/bookmark/${qtype}/${qid}`,
+                method: 'get',
+                data: {
+                    _token: CSRF_TOKEN,
+                },
+                success: function(result) {
+                    console.log(result)
+                }
+            })
+        })
     })
 </script>

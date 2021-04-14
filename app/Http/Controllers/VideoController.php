@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\PostModel;
 use App\SAQ;
 use App\SQA;
+use App\UserModel;
 use App\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -293,6 +294,76 @@ class VideoController extends Controller
             ->orderBy('id', 'desc')
             ->get(); // Get all videos
         return view("video.all", [
+            "videos" => $videos,
+        ]);
+    }
+
+    public function bookmark_mcq($qid)
+    {
+        $user = Auth::user();
+        if ($user != null) {
+            if (PostModel::where("id", $qid)->first() != null) {
+                $user->bookmark_mcq($qid);
+                return [
+                    "status" => "ok"
+                ];
+            }
+        }
+
+        return [
+            "status" => "error"
+        ];
+    }
+
+    public function bookmark_saq($qid)
+    {
+        $user = Auth::user();
+        if ($user != null) {
+            if (SAQ::where("id", $qid)->first() != null) {
+                $user->bookmark_saq($qid);
+                return [
+                    "status" => "ok"
+                ];
+            }
+        }
+
+        return [
+            "status" => "error"
+        ];
+    }
+
+    public function bookmark_sqa($qid)
+    {
+        $user = Auth::user();
+        if ($user != null) {
+            if (SQA::where("id", $qid)->first() != null) {
+                $user->bookmark_sqa($qid);
+                return [
+                    "status" => "ok"
+                ];
+            }
+        }
+
+        return [
+            "status" => "error"
+        ];
+    }
+
+    public function bookmarked()
+    {
+        $vid_ids = array_unique(array_merge(
+            json_decode(Auth::user()->vid_MCQ, true),
+            json_decode(Auth::user()->vid_SAQ, true),
+            json_decode(Auth::user()->vid_SQA, true),
+        ));
+
+        $videos = [];
+
+        foreach ($vid_ids as $vid) {
+            $videos[] = Video::where("id", $vid)
+                ->first();
+        }
+        return view("video.bookmarked", [
             "videos" => $videos,
         ]);
     }
