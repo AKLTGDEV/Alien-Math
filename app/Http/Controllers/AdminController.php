@@ -422,6 +422,14 @@ class AdminController extends Controller
         } else {
             $user->password = bcrypt($request->password);
         }
+
+        if (
+            $request->utype == "admin" ||
+            $request->utype == "creator" ||
+            $request->utype == "student"
+        ) {
+            $user->type = $request->utype;
+        }
         $user->username = $request->username;
         $user->save();
 
