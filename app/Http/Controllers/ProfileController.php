@@ -117,7 +117,8 @@ class ProfileController extends Controller
                     "classes_goals" => true,
                     "classrooms_list" => $classes,
                     "following_flag" => $following_flag,
-                    "newuser" => $first_time,
+                    //"newuser" => $first_time,
+                    "newuser" => false,
                     "TS" => $TS_list,
 
                     "tags_suggested" => tags::top20(),
@@ -133,7 +134,8 @@ class ProfileController extends Controller
                     "classes_goals" => true,
                     "classrooms_list" => $classes,
                     "following_flag" => $following_flag,
-                    "newuser" => $first_time,
+                    //"newuser" => $first_time,
+                    "newuser" => false,
                     "TS" => $TS_list,
         
                     "tags_suggested" => tags::top20(),
@@ -149,7 +151,8 @@ class ProfileController extends Controller
                     "classes_goals" => true,
                     "classrooms_list" => $classes,
                     "following_flag" => $following_flag,
-                    "newuser" => $first_time,
+                    //"newuser" => $first_time,
+                    "newuser" => false,
                     "TS" => $TS_list,
         
                     "tags_suggested" => tags::top20(),
@@ -158,22 +161,6 @@ class ProfileController extends Controller
                 ]);
             }
         }
-
-        /*return view("profile.$profile_view_file", [
-            "user" => $user,
-            "self" => $self,
-            "items" => $items,
-            "notifs" => false, //FIXME
-            "classes_goals" => true,
-            "classrooms_list" => $classes,
-            "following_flag" => $following_flag,
-            "newuser" => $first_time,
-            "TS" => $TS_list,
-
-            "tags_suggested" => tags::top20(),
-
-            "searchbar" => true
-        ]);*/
     }
 
     public function getfeed(Request $request, $uname)

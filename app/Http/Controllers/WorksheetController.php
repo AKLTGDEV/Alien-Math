@@ -502,6 +502,17 @@ class WorksheetController extends Controller
                         ];
                     }
 
+                    $self = Auth::user();
+                    $right_perc = round(($right__ / $worksheet->nos) * 100, 2);
+                    $feedback = null;
+                    if($right_perc < 33){
+                        $feedback = "Sorry, $self->name! try Harder Next Time!";
+                    } else if ($right_perc < 66){
+                        $feedback = "Good Job, $self->name! But you could perform better!";
+                    } else {
+                        $feedback = "Excellent, $self->name! You did great at the test";
+                    }
+
                     return view("worksheet.answer.wsanswer-3", [
                         "ws" => $worksheet,
                         "fucked" => false,
@@ -516,8 +527,9 @@ class WorksheetController extends Controller
                         "topics" => $topics,
                         "average" => round((($all_right__ / count($all_attempts)) / $worksheet->nos) * 100, 2),
 
-                        "right_perc" => round(($right__ / $worksheet->nos) * 100, 2),
+                        "right_perc" => $right_perc,
                         "ratings" => $ratings,
+                        "feedback" => $feedback,
 
                         "shareid" => $shareid,
                         "searchbar" => false
