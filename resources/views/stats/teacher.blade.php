@@ -219,7 +219,7 @@
                                         Upload Video
                                     </button>
 
-                                    <a href="#" class="m-1 btn btn-sm btn-outline-primary">
+                                    <a href="{{ route('video.all') }}" class="m-1 btn btn-sm btn-outline-primary">
                                         All Videos
                                     </a>
                                 </span>
@@ -323,7 +323,7 @@
                     </div>
 
                     <div class="form-group">
-                        <select class="custom-select" required name="qtype">
+                        <select class="custom-select" name="qtype">
                             <option value="">Question Type</option>
                             <option value="MCQ">MCQ</option>
                             <option value="SAQ">SAQ</option>
@@ -333,7 +333,7 @@
 
                     <div class="form-group">
                         <label for="qid" class="text-muted">Question ID</label>
-                        <input class="form-control" type="number" name="qid" id="qid" required>
+                        <input class="form-control" type="number" name="qid" id="qid">
                     </div>
 
 

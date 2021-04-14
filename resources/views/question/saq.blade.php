@@ -63,6 +63,14 @@
 
             <div class="row justify-content-center mt-4">
                 <div class="col-md-8">
+                    <a href="{{ route('video.q-attach', [$question->Table(), $question->id]) }}" class="btn btn-outline-primary" style="width: 100%">
+                        Attach Videos to this Question
+                    </a>
+                </div>
+            </div>
+
+            <div class="row justify-content-center mt-4">
+                <div class="col-md-8">
                     <a href="{{ route('editsaq', [$question->id]) }}" class="btn btn-outline-primary" style="width: 100%">
                         Edit This Question
                     </a>

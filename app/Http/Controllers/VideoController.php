@@ -53,26 +53,28 @@ class VideoController extends Controller
                     PostModel::where("id", $request->qid)
                         ->first()
                         ->addVideo($v->id);
+                    $v->attached++;
                     break;
 
                 case 'SAQ':
                     SAQ::where("id", $request->qid)
                         ->first()
                         ->addVideo($v->id);
+                    $v->attached++;
                     break;
 
                 case 'SQA':
                     SQA::where("id", $request->qid)
                         ->first()
                         ->addVideo($v->id);
+                    $v->attached++;
                     break;
 
                 default:
-                    dd("Somethng broke");
+                    //dd("Somethng broke");
                     break;
             }
 
-            $v->attached++;
             $v->save();
 
             $tnt = new TNTSearch;
@@ -283,5 +285,15 @@ class VideoController extends Controller
             $v->delete();
             return redirect()->route('stats');
         }
+    }
+
+    public function all()
+    {
+        $videos = Video::where("uploader", Auth::user()->username)
+            ->orderBy('id', 'desc')
+            ->get(); // Get all videos
+        return view("video.all", [
+            "videos" => $videos,
+        ]);
     }
 }

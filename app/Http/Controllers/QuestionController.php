@@ -7,6 +7,7 @@ use App\Report;
 use Illuminate\Http\Request;
 use App\SAQ;
 use App\SQA;
+use App\Video;
 use Illuminate\Support\Facades\Auth;
 
 class QuestionController extends Controller
@@ -129,5 +130,57 @@ class QuestionController extends Controller
 
         $report->save();
         return redirect()->route('home');
+    }
+
+    public function attach_videos($type, $id)
+    {
+        /**
+         * Attach videos to Question ID $id
+         * 
+         * Leave out the videos that are already attached
+         */
+
+        $videos_fin = [];
+        $videos = Video::where("uploader", Auth::user()->username)
+            ->orderBy('id', 'desc')
+            ->get(); // Get all videos
+
+        switch ($type) {
+            case 'MCQ':
+                $q = PostModel::where("id", $id)->first();
+                foreach ($videos as $v) {
+                    if (!in_array($id, $v->getMCQs())) {
+                        $videos_fin[] = $v;
+                    }
+                }
+                break;
+
+            case 'SAQ':
+                $q = SAQ::where("id", $id)->first();
+                foreach ($videos as $v) {
+                    if (!in_array($id, $v->getSAQs())) {
+                        $videos_fin[] = $v;
+                    }
+                }
+                break;
+
+            case 'SQA':
+                $q = SQA::where("id", $id)->first();
+                foreach ($videos as $v) {
+                    if (!in_array($id, $v->getSQAs())) {
+                        $videos_fin[] = $v;
+                    }
+                }
+                break;
+
+            default:
+                # code...
+                break;
+        }
+
+        return view("question.attach-video", [
+            "question" => $q,
+            "videos" => $videos_fin,
+        ]);
     }
 }

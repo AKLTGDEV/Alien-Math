@@ -273,6 +273,9 @@ Route::get('/video/detach/{id}/SQA/{qid}', 'VideoController@detach_sqa')->name('
 Route::get('/video/attach/{id}', 'VideoController@attach')->name('video.attach');
 Route::get('/video/search', 'VideoController@search')->name('video.search');
 Route::get('/video/delete/{id}', 'VideoController@delete')->name('video.delete');
+Route::get('/video/all', 'VideoController@all')->name('video.all');
+Route::get('/video/all', 'VideoController@all')->name('video.all');
+Route::get('/video/q-attach/{type}/{id}', 'QuestionController@attach_videos')->name('video.q-attach');
 
 /*Route::get('/admin/testsend', 'MailController@testsend');
 Route::get('admin/welcomeview', function (){

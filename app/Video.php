@@ -81,4 +81,19 @@ class Video extends Model
         $this->SQA = json_encode($list_new);
         $this->save();
     }
+
+    public function getMCQs()
+    {
+        return json_decode($this->MCQ);
+    }
+
+    public function getSAQs()
+    {
+        return json_decode($this->SAQ);
+    }
+
+    public function getSQAs()
+    {
+        return json_decode($this->SQA);
+    }
 }
