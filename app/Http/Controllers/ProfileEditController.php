@@ -32,29 +32,40 @@ class ProfileEditController extends Controller
     public function setup()
     {
         /**
-         * This function will be called when the user is new to CrowDoubt.
-         * The profile setup page is basically a modified version of useredit.
+         * Check if the User has grade/level set to null.
          * 
-         * Even the setup forms will submit to useredit.
          */
 
         $user = Auth::user();
+        if ($user->grade == null || $user->level == null) {
+            $first_time = false;
+            if (count(json_decode(users::gettags($user->username), true)) == 0) {
+                $first_time = true;
+            }
 
-        $first_time = false;
-        if (count(json_decode(users::gettags($user->username), true)) == 0) {
-            $first_time = true;
-        }
-
-        if (!$first_time) {
-            return redirect()->route('home');
+            if (!$first_time) {
+                return redirect()->route('home');
+            } else {
+                //return view("profile.setup", [ // Select Tags
+                return view("profile.setup2", [ // Select Grade and Level (New)
+                    "user" => $user,
+                    "ext" => users::get_ext($user->username),
+                    "searchbar" => false,
+                    "tags_suggested" => tags::top20(),
+                ]);
+            }
         } else {
-            return view("profile.setup", [
-                "user" => $user,
-                "ext" => users::get_ext($user->username),
-                "searchbar" => false,
-                "tags_suggested" => tags::top20(),
-            ]);
+            return redirect()->route('stats');
         }
+    }
+
+    public function setup_submit(Request $request)
+    {
+        Auth::user()->grade = $request->grade;
+        Auth::user()->level = $request->level;
+        Auth::user()->save();
+
+        return redirect()->back();
     }
 
     public function view()

@@ -127,6 +127,7 @@ Route::post('/useredit', 'ProfileEditController@validator')->name('usereditsubmi
 Route::post('/useredit-subimage', 'ProfileEditController@subimage')->name('useredit-subimage');
 Route::get('/useredit/account', 'ProfileEditController@account')->name('useredit_acc');
 Route::get('/usersetup', 'ProfileEditController@setup')->name('usersetup');
+Route::get('/usersetup/submit', 'ProfileEditController@setup_submit')->name('usersetup.submit');
 Route::get('/create-username', 'ProfileEditController@create_username')->name('createusername');
 Route::post('/create-username', 'ProfileEditController@create_username_submit')->name('createusername_submit');
 Route::post('/u/{uname}/getfeed', 'ProfileController@getfeed')->name('getfeed_profile');

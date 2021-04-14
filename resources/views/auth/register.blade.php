@@ -138,33 +138,6 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label for="grade" class="text-muted">Select Grade</label>
-                        <select class="form-control" id="grade" name="grade">
-                            <option value="P1">Primary 1</option>
-                            <option value="P2">Primary 2</option>
-                            <option value="P3">Primary 3</option>
-                            <option value="P4">Primary 4</option>
-                            <option value="P5">Primary 5</option>
-                            <option value="P6">Primary 6</option>
-
-                            <option value="S1">Secondary 1</option>
-                            <option value="S2">Secondary 2</option>
-                            <option value="S3">Secondary 3</option>
-                            <option value="S4">Secondary 4</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="level" class="col-md-4 col-form-label text-md-right">Level</label>
-
-                        <select class="form-control col-md-6" id="level" name="level">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                        </select>
-                    </div>
-
                     <h3 class="text-muted text-center mt-2">
                         Parent/Guardian
                     </h3>
