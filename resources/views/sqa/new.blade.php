@@ -31,6 +31,18 @@
             $("#TopicsModal").modal('show');
         });
 
+        $("#save").click(function(e) {
+            e.preventDefault();
+            $("#submit_mode").val(1);
+            $("#f").submit();
+        });
+
+        $("#save-and-continue").click(function(e) {
+            e.preventDefault();
+            $("#submit_mode").val(2);
+            $("#f").submit();
+        });
+
         $("#tags-done").click(function(e) {
             var tag_selections = [];
 
@@ -53,7 +65,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <div class="card">
+            <div class="card mt-2">
                 <div class="card-header">{{ __('Create SQA') }}</div>
 
                 <div class="card-body">
@@ -65,8 +77,13 @@
                     </div>
                     @endif
 
-                    <form action="{{ route('newsqasubmit') }}" method="post">
+                    <form id="f" action="{{ route('newsqasubmit') }}" method="post">
                         @csrf
+
+                        <input id="submit_mode" name="submit_mode" type="text" style="display:none;" value="1" />
+                        <!-- MODE 1: Submit and Show the Q
+                             MODE 2: Submit and Post Another
+                        -->
 
                         <div class="container-fluid">
                             <div class="form-group">
@@ -153,7 +170,12 @@
 
                         </div>
 
-                        <button class="btn ntn-md btn-primary" type="submit">Submit</button>
+                        <button class="btn btn-primary" id="save">
+                            Save
+                        </button>
+                        <button class="btn btn-primary" id="save-and-continue">
+                            Save and Continue
+                        </button>
 
                     </form>
 

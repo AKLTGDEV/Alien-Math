@@ -60,12 +60,30 @@ class SQAController extends Controller
 
         $data = $validator->validated();
 
-        SQA::new($data);
+        $q = SQA::new($data);
 
-        return Redirect::to(route('namedprofile', [Auth::user()->username]))->with([
+        switch ($request->submit_mode) {
+            case 1:
+                return redirect()
+                    ->route('question.SQA', [
+                        $q->id
+                    ]);
+                break;
+
+            case 2:
+                return redirect()
+                    ->route('q.gateway.add');
+                break;
+
+            default:
+                return abort(501);
+                break;
+        }
+
+        /*return Redirect::to(route('namedprofile', [Auth::user()->username]))->with([
             "status" => "success",
             "message" => "SQA Posted",
-        ]);
+        ]);*/
     }
 
     public function upload()
