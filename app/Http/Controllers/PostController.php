@@ -316,7 +316,7 @@ class PostController extends Controller
             $count = 0;
             foreach ($records as $record) {
                 //Each row is a seperate Question.
-                $post = posts::newsubmit([
+                $q = [
                     "Qbody" => $record['question'],
                     "option1" => $record['O1'],
                     "option2" => $record['O2'],
@@ -328,8 +328,13 @@ class PostController extends Controller
                     "question_tags" => $record['tags'],
                     "opt_nos" => 4,
                     "title" => "...", //TODO
-                    //"explanation" => $record['explanation']
-                ], $author, false);
+                ];
+
+                if (isset($record['explanation'])) {
+                    $q["explanation"] = $record['explanation'];
+                }
+
+                $post = posts::newsubmit($q, $author, false);
 
                 $pretext = "$post->title MCQ by $author->username $post->id";
                 $post->slug = str_slug($pretext);

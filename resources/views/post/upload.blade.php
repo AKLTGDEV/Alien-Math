@@ -23,17 +23,22 @@
                                 <strong>
                                     Upload the CSV file below. Required Headers are:
                                     <ul>
-                                        <li>Question: The Question Body</li>
-                                        <li>Grade: P1->P6 / S1->S4</li>
-                                        <li>Difficulty: 1/2/3</li>
-                                        <li>Options: A1, A2, A3, A4</li>
-                                        <li>Correct: 1/2/3/4</li>
-                                        <li>Topics: Comma-seperated list of topics</li>
+                                        <li>question: The Question Body</li>
+                                        <li>grade: P1->P6 / S1->S4</li>
+                                        <li>difficulty: 1/2/3</li>
+                                        <li>options: A1, A2, A3, A4</li>
+                                        <li>correct: 1/2/3/4</li>
+                                        <li>tags: Comma-seperated list of topics</li>
                                     </ul>
 
                                     Optional Headers:
                                     <ul>
-                                        <li>Explanation: Detailed Explanation of the answer</li>
+                                        <li>explanation: Detailed Explanation of the answer</li>
+                                    </ul>
+
+                                    Sample CSV:
+                                    <ul>
+                                        <li><a href="/sample/sample_mcq.csv">Download</a></li>
                                     </ul>
                                 </strong>
                             </div>

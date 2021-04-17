@@ -23,16 +23,21 @@
                                 <strong>
                                     Upload the CSV file below. Required Headers are:
                                     <ul>
-                                        <li>Question: The Question Body</li>
-                                        <li>Grade: P1->P6 / S1->S4</li>
-                                        <li>Difficulty: 1/2/3</li>
-                                        <li>Options in correct order: O1, O2, O3, O4</li>
-                                        <li>Topics: Comma-seperated list of topics</li>
+                                        <li>question: The Question Body</li>
+                                        <li>grade: P1->P6 / S1->S4</li>
+                                        <li>difficulty: 1/2/3</li>
+                                        <li>options in correct order: O1, O2, O3, O4</li>
+                                        <li>tags: Comma-seperated list of topics</li>
                                     </ul>
 
                                     Optional Headers:
                                     <ul>
-                                        <li>Explanation: Detailed Explanation of the answer</li>
+                                        <li>explanation: Detailed Explanation of the answer</li>
+                                    </ul>
+
+                                    Sample CSV:
+                                    <ul>
+                                        <li><a href="/sample/sample_sqa.csv">Download</a></li>
                                     </ul>
                                 </strong>
                             </div>

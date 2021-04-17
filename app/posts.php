@@ -29,7 +29,9 @@ class posts
         foreach ($tags as $tag) {
             $tag = trim($tag);
             $tag_entry = TagsModel::where('name', $tag)->first();
-            array_push($tags_new, $tag_entry->name);
+            if ($tag_entry != null) {
+                array_push($tags_new, $tag_entry->name);
+            }
         }
         $tags = $tags_new;
 
