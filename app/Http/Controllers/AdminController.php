@@ -60,6 +60,7 @@ class AdminController extends Controller
 
             return view("admin.admin", [
                 "docs" => $docs_final,
+                "all_users" => UserModel::all(),
                 "searchbar" => true
             ]);
         }

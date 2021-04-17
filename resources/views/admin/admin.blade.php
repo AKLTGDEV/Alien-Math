@@ -138,6 +138,19 @@ $isadmin = groups::ismod(Auth::user()->username);
                             </div>
 
                             <div class="card shadow mb-4">
+                                <div class="card-header">
+                                    All Users
+                                </div>
+                                <div class="card-body">
+                                    <ol>
+                                        @foreach($all_users as $u)
+                                        <li>{{ $u->name }} <b>({{ "@".$u->username }})</b></li>
+                                        @endforeach
+                                    </ol>
+                                </div>
+                            </div>
+
+                            <div class="card shadow mb-4">
                                 <div class="card-header py-3">
                                     <h6 class="text-primary font-weight-bold m-0">Create Users</h6>
                                 </div>
