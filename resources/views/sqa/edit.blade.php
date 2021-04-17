@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('content')
 
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 <link href="https://cdn.jsdelivr.net/npm/suneditor@latest/dist/css/suneditor.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/suneditor@latest/dist/suneditor.min.js"></script>
@@ -25,32 +27,15 @@
             exp_editor.save();
         }
 
-        $('#topics').tagsInput();
         var tags_src = JSON.parse('<?php echo json_encode($topics); ?>');
+        $('#topics').tagsInput({
+            autocomplete: {
+                source: tags_src
+            }
+        });
 
         $("#grade").val("{{ $question->type }}");
         $("#difficulty").val("{{ $question->difficulty }}");
-
-        $("#topics-holder").click(function(e) {
-            $("#TopicsModal").modal('show');
-        });
-
-        $("#tags-done").click(function(e) {
-            var tag_selections = [];
-
-            for (let k = 0; k < tags_src.length; k++) {
-                if ($("#tag-" + k).is(':checked')) {
-                    tag_selections.push(tags_src[k]);
-                }
-            }
-
-            tag_selections.forEach(T => {
-                $("#topics").addTag(T)
-            });
-
-            $("#TopicsModal").modal('hide')
-
-        })
     })
 </script>
 

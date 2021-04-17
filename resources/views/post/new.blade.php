@@ -14,6 +14,9 @@
     }
 </style>
 
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-bs4.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-bs4.min.js"></script>
 
@@ -29,8 +32,6 @@ use Illuminate\Support\Facades\Input; ?>
         $("#body").summernote();
         $("#explanation").summernote();
         inputNumber($('.input-number'));
-        $('#tags').tagsInput();
-
         var opt_nos = 2;
 
         $("#save").click(function(e) {
@@ -46,30 +47,11 @@ use Illuminate\Support\Facades\Input; ?>
         });
 
         var tags_src = JSON.parse('<?php echo json_encode($tags_suggested); ?>');
-        //console.log(tags_src)
-
-        $("#tag_h").click(function(e) {
-            $("#TagsModal").modal('show');
-        });
-
-        $("#tags-done").click(function(e) {
-            //console.log("Done")
-            var tag_selections = [];
-
-            for (let k = 0; k < tags_src.length; k++) {
-                //console.log($("#tag-"+k).is(':checked'));
-                if ($("#tag-" + k).is(':checked')) {
-                    tag_selections.push(tags_src[k]);
-                }
+        $('#tags').tagsInput({
+            autocomplete: {
+                source: tags_src
             }
-
-            tag_selections.forEach(T => {
-                $("#tags").addTag(T)
-            });
-
-            $("#TagsModal").modal('hide')
-
-        })
+        });
 
         $("#add-opt-btn").click(function(e) {
             opt_nos++;
@@ -291,94 +273,6 @@ use Illuminate\Support\Facades\Input; ?>
             </div>
         </div>
     </div>
-</div>
-
-
-
-<style>
-    /* Important part */
-    .modal-dialog {
-        overflow-y: initial !important
-    }
-
-    .modal-body {
-        height: 250px;
-        overflow-y: auto;
-    }
-
-    .searchable-container label.btn-default.active {
-        background-color: #007ba7;
-        color: #FFF
-    }
-
-    .searchable-container label.btn-default {
-        width: 100%;
-        border: 1px solid #efefef;
-
-
-    }
-
-    .searchable-container label .bizcontent {
-        width: 100%;
-    }
-
-    .searchable-container .btn-group {
-        width: 100%;
-    }
-
-    .searchable-container .btn span.glyphicon {
-        opacity: 0;
-    }
-
-    .searchable-container .btn.active span.glyphicon {
-        opacity: 1;
-    }
-</style>
-
-<div class="modal shadow" id="TagsModal">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-body">
-
-                <p class="text-center text-info">
-                    Select Tags
-                </p>
-
-                <div class="container-fluid searchable-container">
-                    <div class="row">
-                        <?php
-                        $i = 0;
-                        foreach ($tags_suggested as $t) {
-                            ?>
-                            <div class="col items">
-                                <div class="info-block block-info clearfix">
-                                    <div class="square-box pull-left">
-                                        <span class="glyphicon glyphicon-tags glyphicon-lg"></span>
-                                    </div>
-                                    <div data-toggle="buttons" class="btn-group bizmoduleselect">
-                                        <label class="btn btn-default">
-                                            <div class="bizcontent">
-                                                <input type="checkbox" id="tag-{{ $i }}" name="" autocomplete="off">
-                                                <span class="glyphicon glyphicon-ok glyphicon-lg"></span>
-                                                <h5>
-                                                    {{ $t }}
-                                                </h5>
-                                            </div>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php $i++;
-                        } ?>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button id="tags-done" type="button" class="btn btn-primary">Finish</button>
-            </div>
-        </div>
-    </div>
-</div>
 </div>
 
 @endsection
