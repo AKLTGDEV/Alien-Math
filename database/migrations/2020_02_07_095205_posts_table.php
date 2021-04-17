@@ -26,7 +26,8 @@ class PostsTable extends Migration
             $table->integer("rating")->default(0);
 
             $table->string('image')->nullable(true);
-            $table->string('slug')->nullable(true);
+            //$table->string('slug')->nullable(true);
+            $table->longText('slug');
             $table->string('text')->unique();
             $table->string('tags');
             $table->string('opts');
@@ -35,7 +36,8 @@ class PostsTable extends Migration
             $table->bigInteger('attempts')->default(0);
             /*$table->string('attemptees')->default("[]");*/
             $table->bigInteger('success')->default(0);
-            $table->string('title')->default("--");
+            //$table->string('title')->default("--");
+            $table->longText('title');
 
             $table->string("videos")->default("[]");
 

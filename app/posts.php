@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use App\activitylog;
 use App\rating;
+use Html2Text\Html2Text;
 
 class posts
 {
@@ -69,11 +70,16 @@ class posts
         $post->attempts = 0;
         $post->success = 0;
         $post->tags = json_encode($tags);
+        $post->type = $all['grade'];
+        $post->difficulty = $all['difficulty'];
 
-        /*if (array_key_exists("title", $all)) {
-            $post->title = $all['title'];
-        }*/
-        $post->title = $all['title'];
+        $digest = new Html2Text($all['Qbody']);
+        $digest = $digest->getText();
+        $digest = str_replace("_", " ", $digest);
+        $digest = strtolower($digest);
+        $post->title = $digest;
+
+        $post->slug = "--";
 
         Storage::put("posts/" . $body_md, $all['Qbody']);
 
@@ -98,7 +104,7 @@ class posts
          * Generate notification for followers.
          */
 
-        if ($author->followers != "[]") {
+        /*if ($author->followers != "[]") {
             $followers_id_list = json_decode($author->followers);
             foreach ($followers_id_list as $fid) {
                 $newNotif = new NotifsModel;
@@ -110,7 +116,7 @@ class posts
 
                 $newNotif->save();
             }
-        }
+        }*/
 
         activitylog::post_question($author->username, $post->id);
         return $post;

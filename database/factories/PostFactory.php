@@ -21,7 +21,8 @@ $factory->define(App\PostModel::class, function (Faker $faker) {
     $text_body = $faker->unique()->paragraph(3);
     $body_md = md5($text_body);
 
-    $title = $faker->unique()->paragraph(1);
+    //$title = $faker->unique()->paragraph(1);
+    $title = $text_body;
 
     Storage::put("posts/" . $body_md, $text_body);
 

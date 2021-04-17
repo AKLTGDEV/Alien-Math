@@ -15,6 +15,7 @@ use App\rating;
 use Illuminate\Support\Facades\Storage;
 use App\Rules\tagexists;
 use App\Rules\tags_min_2;
+use Html2Text\Html2Text;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use Illuminate\Support\Facades\Redirect;
@@ -101,7 +102,23 @@ class PostController extends Controller
             'title' => $post->title
         ]); // Not Now..
 
-        return redirect()->route('viewpost', [$post->id]);
+        switch ($all['submit_mode']) {
+            case 1:
+                return redirect()
+                    ->route('question.MCQ', [
+                        $post->id
+                    ]);
+                break;
+
+            case 2:
+                return redirect()
+                    ->route('q.gateway.add');
+                break;
+
+            default:
+                return abort(501);
+                break;
+        }
     }
 
     public function answer(Request $request)
@@ -124,7 +141,7 @@ class PostController extends Controller
     {
         $rules = array(
             'Qbody'             => 'required',
-            'title'             => 'required',
+            //'title'             => 'required',
             'correct'           => 'required',
             'question_tags'     => ['required', 'string', new tagexists, new tags_min_2],
         );
@@ -278,7 +295,14 @@ class PostController extends Controller
             $post->opts = $options;
             $post->correctopt = $correct_opt;
             $post->tags = json_encode($tags);
-            $post->title = $all['title'];
+            $post->type = $all['grade'];
+            $post->difficulty = $all['difficulty'];
+            $digest = new Html2Text($all['Qbody']);
+            $digest = $digest->getText();
+            $digest = str_replace("_", " ", $digest);
+            $digest = strtolower($digest);
+            //$post->title = $all['title'];
+            $post->title = $digest;
 
             Storage::put("posts/" . $post->text, $all['Qbody']);
 
@@ -286,7 +310,27 @@ class PostController extends Controller
 
             $post->saveExplanation($request->explanation);
 
-            return redirect()->route("viewpost", [$post->id]);
+            $tnt = new TNTSearch;
+            $tnt->loadConfig([
+                'driver'    => 'mysql',
+                'host'      => env('DB_HOST', 'localhost'),
+                'database'  => env('DB_DATABASE', ''),
+                'username'  => env('DB_USERNAME', ''),
+                'password'  => env('DB_PASSWORD', ''),
+                'storage'   => storage_path('app') . "/indices//",
+            ]);
+
+            $tnt->selectIndex("posts.index");
+            $index = $tnt->getIndex();
+
+            $index->update($post->id, [
+                'id' => $post->id,
+                'title' => $post->title,
+            ]);
+
+            return redirect()->route("question.MCQ", [
+                $post->id
+            ]);
         } else {
             return abort(404);
         }
