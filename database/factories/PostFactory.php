@@ -6,12 +6,14 @@ use App\UserModel;
 use App\numbersT;
 
 $factory->define(App\PostModel::class, function (Faker $faker) {
-    $tags_halfmark = floor(numbersT::tags() / 2);
+    $nos_tags = count(TagsModel::all());
+
+    $tags_halfmark = floor($nos_tags / 2);
     $tag1 = TagsModel::where('id', rand(1, $tags_halfmark))->first();
-    $tag2 = TagsModel::where('id', rand($tags_halfmark + 1, numbersT::tags()))->first();
-    $tag3 = TagsModel::where('id', rand(1, numbersT::tags()))->first();
+    $tag2 = TagsModel::where('id', rand($tags_halfmark + 1, $nos_tags))->first();
+    $tag3 = TagsModel::where('id', rand(1, $nos_tags))->first();
     while ($tag3 == $tag1 || $tag3 == $tag2) {
-        $tag3 = TagsModel::where('id', rand(1, numbersT::tags()))->first();
+        $tag3 = TagsModel::where('id', rand(1, $nos_tags))->first();
     }
     $taglist = json_encode([$tag1->name, $tag2->name, $tag3->name]);
     $opts = "[\"A\",\"B\",\"C\",\"D\"]";
