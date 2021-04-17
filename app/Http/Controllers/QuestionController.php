@@ -183,4 +183,18 @@ class QuestionController extends Controller
             "videos" => $videos_fin,
         ]);
     }
+
+    public function gateway_add()
+    {
+        return view("question.gateway.add", [
+            //
+        ]);
+    }
+
+    public function gateway_upload()
+    {
+        return view("question.gateway.upload", [
+            //
+        ]);
+    }
 }

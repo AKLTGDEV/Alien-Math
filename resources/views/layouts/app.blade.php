@@ -189,40 +189,18 @@
 
                     <ul class="dropdown-menu" role="menu">
                         <li>
-                            <a class="dropdown-item" href="{{ route('newpost') }}">
-                                Post MCQ
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="{{ route('newsaq') }}">
-                                Post SAQ
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="{{ route('newsqa') }}">
-                                Post SQA
+                            <a class="dropdown-item" href="{{ route('q.gateway.add') }}">
+                                Add Question
                             </a>
                         </li>
 
                         <li>
-                            <a class="dropdown-item" href="{{ route('uploadpost') }}">
-                                Upload MCQs
+                            <a class="dropdown-item" href="{{ route('q.gateway.upload') }}">
+                                Upload Question
                             </a>
                         </li>
 
-                        <li>
-                            <a class="dropdown-item" href="{{ route('uploadsaq') }}">
-                                Upload SAQs
-                            </a>
-                        </li>
-
-                        <li>
-                            <a class="dropdown-item" href="{{ route('uploadsqa') }}">
-                                Upload SQAs
-                            </a>
-                        </li>
-
-                        <li>
+                        <!--<li>
                             <a class="dropdown-item" href="{{ route('createworksheet') }}">
                                 Create Worksheet
                             </a>
@@ -231,7 +209,8 @@
                             <a class="dropdown-item" href="{{ route('createclassroom') }}">
                                 Create Classroom
                             </a>
-                        </li>
+                        </li>-->
+                        
                         <!--<li>
                             <a class="dropdown-item" href="{{ route('createTS') }}">
                                 Create Test Series

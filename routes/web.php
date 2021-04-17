@@ -99,6 +99,8 @@ Route::get('/sqa/edit/{id}', 'SQAController@edit')->name('editsqa');
 Route::post('/sqa/edit/{id}', 'SQAController@edit_submit')->name('editsqa.submit');
 
 
+Route::get('/question/add', 'QuestionController@gateway_add')->name('q.gateway.add');
+Route::get('/question/upload', 'QuestionController@gateway_upload')->name('q.gateway.upload');
 Route::get('/question/search', 'SearchController@question_search')->name('q.search');
 Route::get('/question/mcq/{id}', 'QuestionController@view_mcq')->name('question.MCQ');
 Route::get('/question/saq/{id}', 'QuestionController@view_saq')->name('question.SAQ');
