@@ -25,6 +25,18 @@
             exp_editor.save();
         }
 
+        $("#save").click(function(e) {
+            e.preventDefault();
+            $("#submit_mode").val(1);
+            $("#f").submit();
+        });
+
+        $("#save-and-continue").click(function(e) {
+            e.preventDefault();
+            $("#submit_mode").val(2);
+            $("#f").submit();
+        });
+
         $('#topics').tagsInput();
         var tags_src = JSON.parse('<?php echo json_encode($topics); ?>');
 
@@ -54,7 +66,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <div class="card">
+            <div class="card mt-2">
                 <div class="card-header">{{ __('Create SAQ') }}</div>
 
                 <div class="card-body">
@@ -64,8 +76,13 @@
                     </div>
                     @endif
 
-                    <form action="{{ route('newsaqsubmit') }}" method="post">
+                    <form id="f" action="{{ route('newsaqsubmit') }}" method="post">
                         @csrf
+
+                        <input id="submit_mode" name="submit_mode" type="text" style="display:none;" value="1" />
+                        <!-- MODE 1: Submit and Show the Q
+                             MODE 2: Submit and Post Another
+                        -->
 
                         <div class="container-fluid">
                             <div class="form-group">
@@ -121,14 +138,19 @@
                             </div>
 
                             <div class="form-group" id="topics-holder">
-                                
+
                                 <label for="topics" class="text-muted">Attach Topics</label>
                                 <input class="form-control" type="text" name="topics" data-role="tagsinput" id="topics">
                             </div>
 
                         </div>
 
-                        <button class="btn ntn-md btn-primary" type="submit">Submit</button>
+                        <button class="btn btn-primary" id="save">
+                            Save
+                        </button>
+                        <button class="btn btn-primary" id="save-and-continue">
+                            Save and Continue
+                        </button>
 
                     </form>
 

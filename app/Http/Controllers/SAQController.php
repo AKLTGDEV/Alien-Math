@@ -62,12 +62,30 @@ class SAQController extends Controller
         $digest = strtolower($digest);
 
         //Create the Question
-        SAQ::new($data);
+        $q = SAQ::new($data);
 
-        return Redirect::to(route('namedprofile', [Auth::user()->username]))->with([
+        switch ($request->submit_mode) {
+            case 1:
+                return redirect()
+                    ->route('question.SAQ', [
+                        $q->id
+                    ]);
+                break;
+
+            case 2:
+                return redirect()
+                    ->route('q.gateway.add');
+                break;
+
+            default:
+                return abort(501);
+                break;
+        }
+
+        /*return Redirect::to(route('namedprofile', [Auth::user()->username]))->with([
             "status" => "success",
             "message" => "SAQ Posted",
-        ]);
+        ]);*/
     }
 
     public function upload()

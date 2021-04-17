@@ -92,6 +92,8 @@ class SAQ extends Model
 
         //Update Activity Log
         activitylog::post_saq(Auth::user()->username, $q->id);
+
+        return $q;
     }
 
     public function data_update($data)
